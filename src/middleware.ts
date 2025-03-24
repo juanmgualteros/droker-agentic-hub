@@ -42,6 +42,7 @@ export default authMiddleware({
   },
   publicRoutes,
   ignoredRoutes,
+  debug: process.env.NODE_ENV === "development",
   afterAuth(auth, req) {
     const { userId, sessionId } = auth;
     const { pathname } = req.nextUrl;
@@ -84,7 +85,7 @@ export default authMiddleware({
       return NextResponse.next();
     }
 
-    // Handle sign-in pages (removed sign-up reference)
+    // Handle sign-in pages
     if (pathname.includes("/sign-in")) {
       if (userId) {
         // If user is authenticated, redirect to home page
@@ -100,7 +101,18 @@ export default authMiddleware({
   },
 });
 
-// Configure middleware to run on all routes except static files and Next.js internals
+// Configure middleware to run on specified routes only, avoiding static and internal routes
 export const config = {
-  matcher: ["/((?!.+\\.[\\w]+$|_next).*)", "/", "/(api|trpc)(.*)"],
+  matcher: [
+    // Match all paths except those that start with:
+    // - _next (Next.js internals)
+    // - static files with extensions (.jpg, .png, etc.)
+    // Include specific paths we DO want to run middleware on
+    "/((?!_next|.*\\..*$).*)",
+    "/", 
+    "/:locale/admin/(.*)$",
+    "/:locale/superadmin/(.*)$",
+    "/:locale/login$",
+    "/:locale/sign-in$"
+  ],
 }; 

@@ -3,6 +3,12 @@ const withNextIntl = require('next-intl/plugin')();
 /** @type {import('next').NextConfig} */
 const nextConfig = {
   reactStrictMode: true,
+  // Force specific runtime for middleware to avoid Edge Runtime issues
+  experimental: {
+    serverComponentsExternalPackages: ['@clerk/backend'],
+  },
+  // Disable Edge Runtime in middleware
+  transpilePackages: ['@clerk/nextjs'],
   async headers() {
     return [
       {
