@@ -34,7 +34,11 @@ const nextConfig = {
       tls: false,
     };
     return config;
+  },
+  output: 'standalone',
+  images: {
+    domains: ['res.cloudinary.com'],
   }
-}
+};
 
 module.exports = withNextIntl(nextConfig); 

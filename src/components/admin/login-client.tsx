@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useRouter, useSearchParams, useParams } from "next/navigation";
 import { Button } from "@/components/ui/button";
 import { Copy, Check } from "lucide-react";
 
@@ -13,16 +13,20 @@ export function LoginClient() {
   const [copiedPassword, setCopiedPassword] = useState(false);
   const router = useRouter();
   const searchParams = useSearchParams();
+  const params = useParams();
+  const locale = params.locale || 'en';
 
   useEffect(() => {
     // Check if already authenticated
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
     if (isAuthenticated) {
-      // Get the intended destination from the URL or default to admin
-      const destination = searchParams.get("destination") || "/admin";
+      const userRole = localStorage.getItem("userRole");
+      // Get the intended destination from the URL or default to admin/superadmin with locale
+      const destination = searchParams.get("destination") || 
+        (userRole === "superadmin" ? `/${locale}/superadmin` : `/${locale}/admin`);
       router.push(destination);
     }
-  }, [router, searchParams]);
+  }, [router, searchParams, locale]);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -32,11 +36,13 @@ export function LoginClient() {
       // Store the authentication state
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("userRole", "superadmin");
-      // Set a cookie for server-side authentication
-      document.cookie = "isAuthenticated=true; path=/";
-      document.cookie = "userRole=superadmin; path=/";
-      // Get the intended destination from the URL or default to superadmin
-      const destination = searchParams.get("destination") || "/superadmin";
+      
+      // Set secure cookies with proper configuration for production
+      document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
+      document.cookie = "userRole=superadmin; path=/; max-age=86400; SameSite=Lax";
+      
+      // Get the intended destination from the URL or default to superadmin with locale
+      const destination = searchParams.get("destination") || `/${locale}/superadmin`;
       router.push(destination);
     }
     // Check for admin credentials
@@ -44,11 +50,13 @@ export function LoginClient() {
       // Store the authentication state
       localStorage.setItem("isAuthenticated", "true");
       localStorage.setItem("userRole", "admin");
-      // Set a cookie for server-side authentication
-      document.cookie = "isAuthenticated=true; path=/";
-      document.cookie = "userRole=admin; path=/";
-      // Get the intended destination from the URL or default to admin
-      const destination = searchParams.get("destination") || "/admin";
+      
+      // Set secure cookies with proper configuration for production
+      document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
+      document.cookie = "userRole=admin; path=/; max-age=86400; SameSite=Lax";
+      
+      // Get the intended destination from the URL or default to admin with locale
+      const destination = searchParams.get("destination") || `/${locale}/admin`;
       router.push(destination);
     } else {
       setError("Invalid credentials");

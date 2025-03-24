@@ -2,6 +2,7 @@ import { prisma } from "@/lib/db";
 import { notFound } from "next/navigation";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import crypto from "crypto";
 
 interface NewUserPageProps {
   params: {
@@ -31,10 +32,12 @@ export default async function NewUserPage({ params }: NewUserPageProps) {
 
     await prisma.user.create({
       data: {
+        id: crypto.randomUUID(),
         email,
-        name: name || null,
+        name: name || "",
         role,
         organizationId: params.id,
+        updatedAt: new Date(),
       },
     });
 

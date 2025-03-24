@@ -14,7 +14,6 @@ export async function getOrganization(id: string) {
     include: {
       users: true,
       products: true,
-      agents: true,
       subscription: true,
     },
   })
@@ -22,15 +21,6 @@ export async function getOrganization(id: string) {
 
 export async function getUser(id: string) {
   return prisma.user.findUnique({
-    where: { id },
-    include: {
-      organization: true,
-    },
-  })
-}
-
-export async function getAgent(id: string) {
-  return prisma.agent.findUnique({
     where: { id },
     include: {
       organization: true,

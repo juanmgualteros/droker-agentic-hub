@@ -36,7 +36,6 @@ export default async function EditOrganizationPage({
     "use server";
 
     const name = formData.get("name") as string;
-    const state = formData.get("state") as string;
     const subscriptionType = formData.get("subscriptionType") as string;
     const subscriptionStatus = formData.get("subscriptionStatus") as string;
 
@@ -49,10 +48,9 @@ export default async function EditOrganizationPage({
         where: { id: params.id },
         data: {
           name,
-          state: state as 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'SUSPENDED',
           subscription: {
             update: {
-              type: subscriptionType as "NONE" | "FREE" | "BASIC" | "PRO" | "ENTERPRISE",
+              type: subscriptionType as "FREE" | "BASIC" | "PRO" | "ENTERPRISE",
               status: subscriptionStatus as "ACTIVE" | "INACTIVE" | "CANCELLED" | "EXPIRED",
             },
           },
@@ -100,27 +98,6 @@ export default async function EditOrganizationPage({
 
         <div>
           <label
-            htmlFor="state"
-            className="block text-sm font-medium text-gray-700"
-          >
-            State
-          </label>
-          <select
-            id="state"
-            name="state"
-            required
-            defaultValue={organization.state}
-            className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-          >
-            <option value="ACTIVE">Active</option>
-            <option value="INACTIVE">Inactive</option>
-            <option value="PENDING">Pending</option>
-            <option value="SUSPENDED">Suspended</option>
-          </select>
-        </div>
-
-        <div>
-          <label
             htmlFor="subscriptionType"
             className="block text-sm font-medium text-gray-700"
           >
@@ -130,10 +107,9 @@ export default async function EditOrganizationPage({
             id="subscriptionType"
             name="subscriptionType"
             required
-            defaultValue={organization.subscription?.type || "NONE"}
+            defaultValue={organization.subscription?.type || "FREE"}
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           >
-            <option value="NONE">None</option>
             <option value="FREE">Free</option>
             <option value="BASIC">Basic</option>
             <option value="PRO">Pro</option>

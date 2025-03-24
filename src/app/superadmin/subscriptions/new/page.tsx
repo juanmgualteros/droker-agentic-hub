@@ -1,5 +1,8 @@
 import { redirect } from 'next/navigation'
-import { prisma } from '@/lib/db/prisma'
+import { prisma } from '@/lib/db'
+import crypto from 'crypto'
+
+export const dynamic = 'force-dynamic';
 
 async function getOrganizations() {
   return prisma.organization.findMany({
@@ -26,11 +29,13 @@ async function createSubscription(formData: FormData) {
   
   await prisma.subscription.create({
     data: {
+      id: crypto.randomUUID(),
       organizationId,
-      plan,
+      type: plan as "FREE" | "BASIC" | "PRO" | "ENTERPRISE",
       status: 'ACTIVE',
       startDate: new Date(startDate),
       endDate: endDate ? new Date(endDate) : null,
+      updatedAt: new Date(),
     },
   })
   

@@ -19,8 +19,12 @@ function transformOrganization(org: any) {
       type: key.type,
       openai_key: key.type === 'OPENAI' ? key.value : undefined,
       supabase_key: key.type === 'SUPABASE' ? key.value : undefined,
-      created_at: key.createdAt.toISOString()
-    })) || []
+    })) || [],
+    users: org.users || [],
+    products: org.products || [],
+    updatedAt: org.updatedAt || new Date(),
+    createdAt: org.createdAt || new Date(),
+    subscription: org.subscription || null
   };
 }
 

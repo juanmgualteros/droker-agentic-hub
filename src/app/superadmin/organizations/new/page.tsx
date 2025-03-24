@@ -1,14 +1,14 @@
-import { prisma } from "@/lib/db";
-import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
+import { revalidatePath } from "next/cache";
 import { Prisma } from "@prisma/client";
+import { prisma } from "@/lib/db";
+import crypto from "crypto";
 
 export default function NewOrganizationPage() {
   async function createOrganization(formData: FormData) {
     "use server";
 
     const name = formData.get("name") as string;
-    const state = formData.get("state") as string;
     const subscriptionType = formData.get("subscriptionType") as string;
 
     if (!name) {
@@ -18,12 +18,15 @@ export default function NewOrganizationPage() {
     try {
       const organization = await prisma.organization.create({
         data: {
+          id: crypto.randomUUID(),
           name,
-          state: state as 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'SUSPENDED',
+          updatedAt: new Date(),
           subscription: {
             create: {
-              type: subscriptionType as "NONE" | "FREE" | "BASIC" | "PRO" | "ENTERPRISE",
+              id: crypto.randomUUID(),
+              type: subscriptionType as "FREE" | "BASIC" | "PRO" | "ENTERPRISE",
               status: "ACTIVE",
+              updatedAt: new Date(),
             },
           },
         },
@@ -56,37 +59,13 @@ export default function NewOrganizationPage() {
           >
             Organization Name
           </label>
-          <div className="mt-1">
-            <input
-              type="text"
-              name="name"
-              id="name"
-              required
-              className="block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              placeholder="Enter organization name"
-            />
-          </div>
-        </div>
-
-        <div>
-          <label
-            htmlFor="state"
-            className="block text-sm font-medium text-gray-700"
-          >
-            State
-          </label>
-          <select
-            id="state"
-            name="state"
+          <input
+            type="text"
+            name="name"
+            id="name"
             required
-            defaultValue="ACTIVE"
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-          >
-            <option value="ACTIVE">Active</option>
-            <option value="INACTIVE">Inactive</option>
-            <option value="PENDING">Pending</option>
-            <option value="SUSPENDED">Suspended</option>
-          </select>
+          />
         </div>
 
         <div>
@@ -102,7 +81,6 @@ export default function NewOrganizationPage() {
             required
             className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
           >
-            <option value="NONE">None</option>
             <option value="FREE">Free</option>
             <option value="BASIC">Basic</option>
             <option value="PRO">Pro</option>

@@ -14,7 +14,8 @@ export default function LoginClient() {
   const [copiedEmail, setCopiedEmail] = useState(false);
   const [copiedPassword, setCopiedPassword] = useState(false);
   const router = useRouter();
-  const { locale } = useParams();
+  const params = useParams();
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -24,12 +25,26 @@ export default function LoginClient() {
       // Here you would typically make an API call to authenticate
       // For now, we'll use a simple mock authentication
       if (email === 'admin@example.com' && password === 'password') {
+        // Set cookies that work in production (secure, SameSite, etc.)
+        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
+        document.cookie = "userRole=admin; path=/; max-age=86400; SameSite=Lax";
+        
+        // Also set localStorage for client-side checks
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userRole', 'admin');
+        
+        // Navigate to admin dashboard with locale
         router.push(`/${locale}/admin`);
       } else if (email === 'superadmin@example.com' && password === 'password') {
+        // Set cookies that work in production (secure, SameSite, etc.)
+        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
+        document.cookie = "userRole=superadmin; path=/; max-age=86400; SameSite=Lax";
+        
+        // Also set localStorage for client-side checks
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userRole', 'superadmin');
+        
+        // Navigate to superadmin dashboard with locale
         router.push(`/${locale}/superadmin`);
       } else {
         setError('Invalid email or password');

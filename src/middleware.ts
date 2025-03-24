@@ -16,6 +16,7 @@ const publicRoutes = [
   "/:locale",
   "/:locale/sign-in",
   "/:locale/admin/login",
+  "/:locale/login",
   "/:locale/chat/:productId/test",
   "/:locale/chat/:productId",
   "/api/webhook",
@@ -53,36 +54,42 @@ export default authMiddleware({
     }
 
     // Handle login page - completely bypass authentication
-    if (pathname === "/login") {
+    if (pathname === "/login" || pathname.includes("/login")) {
       return NextResponse.next();
     }
 
     // Handle admin routes
     if (pathname.includes("/admin")) {
-      // Check for local authentication and admin role
-      const isAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
+      // Check for either Clerk authentication OR local cookie authentication
+      const isClerkAuthenticated = !!userId;
+      const isLocalAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
       const userRole = req.cookies.get("userRole")?.value;
-      if (!isAuthenticated || userRole !== "admin") {
-        // If not authenticated or not admin, redirect to login
-        const locale = pathname.split("/")[1] || "en";
-        return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
+      
+      // If either authentication method is valid, allow access
+      if (isClerkAuthenticated || (isLocalAuthenticated && userRole === "admin")) {
+        return NextResponse.next();
       }
-      // If authenticated and admin, allow access
-      return NextResponse.next();
+      
+      // If not authenticated, redirect to login
+      const locale = pathname.split("/")[1] || "en";
+      return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
     }
 
     // Handle superadmin routes
     if (pathname.includes("/superadmin")) {
-      // Check for local authentication and superadmin role
-      const isAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
+      // Check for either Clerk authentication OR local cookie authentication
+      const isClerkAuthenticated = !!userId;
+      const isLocalAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
       const userRole = req.cookies.get("userRole")?.value;
-      if (!isAuthenticated || userRole !== "superadmin") {
-        // If not authenticated or not superadmin, redirect to login
-        const locale = pathname.split("/")[1] || "en";
-        return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
+      
+      // If either authentication method is valid, allow access
+      if (isClerkAuthenticated || (isLocalAuthenticated && userRole === "superadmin")) {
+        return NextResponse.next();
       }
-      // If authenticated and superadmin, allow access
-      return NextResponse.next();
+      
+      // If not authenticated, redirect to login
+      const locale = pathname.split("/")[1] || "en";
+      return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
     }
 
     // Handle sign-in pages

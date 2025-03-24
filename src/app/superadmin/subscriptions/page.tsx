@@ -3,6 +3,8 @@ import Link from 'next/link'
 import { format } from 'date-fns'
 import { SubscriptionWithRelations } from '@/types/subscription'
 
+export const dynamic = 'force-dynamic'
+
 async function getSubscriptions(): Promise<SubscriptionWithRelations[]> {
   return prisma.subscription.findMany({
     include: {
@@ -69,7 +71,7 @@ export default async function SubscriptionsPage() {
                         {subscription.organization.name}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm text-gray-500">
-                        {subscription.plan}
+                        {subscription.type}
                       </td>
                       <td className="whitespace-nowrap px-3 py-4 text-sm">
                         <span className={`inline-flex rounded-full px-2 text-xs font-semibold leading-5 ${
@@ -77,7 +79,7 @@ export default async function SubscriptionsPage() {
                             ? 'bg-green-100 text-green-800'
                             : subscription.status === 'CANCELLED'
                             ? 'bg-red-100 text-red-800'
-                            : subscription.status === 'SUSPENDED'
+                            : subscription.status === 'INACTIVE'
                             ? 'bg-yellow-100 text-yellow-800'
                             : 'bg-gray-100 text-gray-800'
                         }`}>

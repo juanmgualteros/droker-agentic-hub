@@ -14,7 +14,6 @@ export default async function OrganizationPage({ params }: OrganizationPageProps
     include: {
       users: true,
       products: true,
-      agents: true,
       subscription: true,
     },
   });
@@ -124,14 +123,6 @@ export default async function OrganizationPage({ params }: OrganizationPageProps
                 </dt>
                 <dd className="mt-1 text-3xl font-semibold text-gray-900">
                   {organization.products.length}
-                </dd>
-              </div>
-              <div>
-                <dt className="text-sm font-medium text-gray-500">
-                  Total Agents
-                </dt>
-                <dd className="mt-1 text-3xl font-semibold text-gray-900">
-                  {organization.agents.length}
                 </dd>
               </div>
             </dl>
