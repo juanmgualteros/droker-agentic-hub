@@ -20,7 +20,6 @@ async function main() {
       name: 'Tatiana Calderon',
       organizationId: organization.id,
       role: 'ADMIN',
-      clerkId: 'temp-clerk-id',
       updatedAt: new Date(),
     },
   });
