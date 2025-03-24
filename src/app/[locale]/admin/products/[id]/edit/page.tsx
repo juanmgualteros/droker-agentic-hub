@@ -15,7 +15,6 @@ export default async function EditProductPage({ params }: EditProductPageProps) 
   // Get the admin's organization
   const user = await prisma.user.findFirst({
     where: {
-      clerkId: userId,
       role: "ADMIN",
     },
     include: {
