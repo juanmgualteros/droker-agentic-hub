@@ -3,12 +3,37 @@
 import Link from "next/link";
 import { Shield, Users, UserCircle } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
-import { useLocale } from "next-intl";
+import { useParams } from "next/navigation";
 import { PortalHeader } from "@/components/ui/portal-header";
+import { useState, useEffect } from 'react';
 
 export default function HomeClient() {
   const t = useTranslations('Index');
-  const locale = useLocale();
+  const params = useParams();
+  const locale = params.locale as string;
+  const [isClient, setIsClient] = useState(false);
+  
+  useEffect(() => {
+    setIsClient(true);
+  }, []);
+
+  // Render a simple skeleton during server-side rendering
+  if (!isClient) {
+    return (
+      <div className="min-h-screen bg-[hsl(var(--background))]">
+        <div className="py-8">
+          <div className="animate-pulse max-w-5xl mx-auto">
+            <div className="h-10 bg-gray-200 rounded-md w-1/3 mx-auto mb-12"></div>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+              <div className="h-60 bg-gray-200 rounded-lg"></div>
+              <div className="h-60 bg-gray-200 rounded-lg"></div>
+              <div className="h-60 bg-gray-200 rounded-lg"></div>
+            </div>
+          </div>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-[hsl(var(--background))]">

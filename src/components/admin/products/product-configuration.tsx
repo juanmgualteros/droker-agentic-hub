@@ -8,7 +8,7 @@ import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
 import { Switch } from "@/components/ui/switch";
-import { FileText, MessageSquare, Upload, Save, Database, Bot, Globe, X, HelpCircle, Users, Download, Link as LinkIcon, Code, TestTube } from "lucide-react";
+import { FileText, MessageSquare, Save, Database, Bot, Globe, X, HelpCircle, Users, Download, Link as LinkIcon, Code, TestTube, Mic, PaintBucket, Palette, BarChart, LineChart, PieChart } from "lucide-react";
 import {
   Tooltip,
   TooltipContent,
@@ -38,6 +38,7 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
   const [primaryColor, setPrimaryColor] = useState("#0066cc");
   const [secondaryColor, setSecondaryColor] = useState("#f3f4f6");
   const [fontFamily, setFontFamily] = useState("Comfortaa");
+  const [selectedPromptTemplate, setSelectedPromptTemplate] = useState("default");
 
   // Temporary mock data - this would come from your API/database
   const product = {
@@ -62,6 +63,14 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
       temperature: 0.7,
       maxTokens: 1000,
     },
+  };
+
+  // System prompt templates
+  const promptTemplates = {
+    default: "You are a helpful assistant that answers questions based on the provided context...",
+    customer_service: "You are a friendly customer service representative. Be polite, helpful, and concise in your responses...",
+    technical_support: "You are a technical support specialist. Focus on providing step-by-step solutions to technical problems...",
+    sales: "You are a professional sales assistant. Help customers find the right products based on their needs..."
   };
 
   const handleFileChange = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -134,16 +143,24 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="rag" className="flex items-center">
+        <TabsList className="grid w-full grid-cols-5 bg-white rounded-xl">
+          <TabsTrigger value="rag" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
             <Database className="mr-2 h-4 w-4" />
-            RAG Configuration
+            Sources
           </TabsTrigger>
-          <TabsTrigger value="chat" className="flex items-center">
+          <TabsTrigger value="chat" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
             <Bot className="mr-2 h-4 w-4" />
-            Agent
+            Prompt
           </TabsTrigger>
-          <TabsTrigger value="users" className="flex items-center">
+          <TabsTrigger value="appearance" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+            <Palette className="mr-2 h-4 w-4" />
+            Appearance
+          </TabsTrigger>
+          <TabsTrigger value="analytics" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+            <BarChart className="mr-2 h-4 w-4" />
+            Analytics
+          </TabsTrigger>
+          <TabsTrigger value="users" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
             <Users className="mr-2 h-4 w-4" />
             Users
           </TabsTrigger>
@@ -151,285 +168,347 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
 
         <TabsContent value="rag">
           <div className="space-y-6">
-            {/* System Prompt Section */}
-            <Card className="p-6">
-              <div className="space-y-4">
-                <div className="flex items-center gap-2">
-                  <h3 className="text-lg font-medium">System Prompt</h3>
-                  <TooltipProvider delayDuration={200}>
-                    <Tooltip>
-                      <TooltipTrigger asChild>
-                        <Button 
-                          variant="ghost" 
-                          className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
-                        >
-                          <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                        </Button>
-                      </TooltipTrigger>
-                      <TooltipContent 
-                        side="right" 
-                        className="max-w-[280px] p-3 text-sm leading-relaxed"
-                      >
-                        {tooltips.systemPrompt}
-                      </TooltipContent>
-                    </Tooltip>
-                  </TooltipProvider>
-                </div>
-                <div className="space-y-2">
-                  <Label htmlFor="ragPrompt">Prompt</Label>
-                  <Textarea
-                    id="ragPrompt"
-                    defaultValue={product.ragSettings.systemPrompt}
-                    rows={4}
-                    className="resize-none"
-                  />
-                </div>
-              </div>
-            </Card>
-
             {/* Sources Section */}
-            <Card className="p-6">
+            <Card className="p-6 bg-white border border-gray-200 rounded-xl">
               <div className="space-y-6">
                 <div>
-                  <h3 className="text-lg font-medium">Sources</h3>
-                  <p className="text-sm text-gray-500">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-comfortaa font-light text-gray-900">Sources</h3>
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                          >
+                            <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent 
+                          side="right" 
+                          className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                        >
+                          Configure different types of data sources that the AI will use to answer questions.
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <p className="text-base font-comfortaa font-light text-gray-500">
                     Configure the different types of sources
                   </p>
                 </div>
 
                 <Tabs defaultValue="files" className="w-full">
-                  <TabsList className="grid w-full grid-cols-3">
-                    <TabsTrigger value="files" className="flex items-center">
+                  <TabsList className="grid w-full grid-cols-4 bg-white rounded-xl">
+                    <TabsTrigger value="files" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
                       <FileText className="mr-2 h-4 w-4" />
-                      Files
+                      <span className="flex items-center gap-1">
+                        Files
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                              >
+                                <HelpCircle className="h-3 w-3 text-gray-400" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent 
+                              side="top" 
+                              className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                            >
+                              {tooltips.files}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </span>
                     </TabsTrigger>
-                    <TabsTrigger value="websites" className="flex items-center">
+                    <TabsTrigger value="websites" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
                       <Globe className="mr-2 h-4 w-4" />
-                      Websites
+                      <span className="flex items-center gap-1">
+                        Websites
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                              >
+                                <HelpCircle className="h-3 w-3 text-gray-400" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent 
+                              side="top" 
+                              className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                            >
+                              {tooltips.websites}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </span>
                     </TabsTrigger>
-                    <TabsTrigger value="qa" className="flex items-center">
-                      <Upload className="mr-2 h-4 w-4" />
-                      Q&A Pairs
+                    <TabsTrigger value="qa" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+                      <MessageSquare className="mr-2 h-4 w-4" />
+                      <span className="flex items-center gap-1">
+                        Q&A Pairs
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                              >
+                                <HelpCircle className="h-3 w-3 text-gray-400" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent 
+                              side="top" 
+                              className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                            >
+                              {tooltips.qa}
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </span>
+                    </TabsTrigger>
+                    <TabsTrigger value="interview" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+                      <Mic className="mr-2 h-4 w-4" />
+                      <span className="flex items-center gap-1">
+                        Interview Me
+                        <TooltipProvider delayDuration={200}>
+                          <Tooltip>
+                            <TooltipTrigger asChild>
+                              <Button 
+                                variant="ghost" 
+                                className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                              >
+                                <HelpCircle className="h-3 w-3 text-gray-400" />
+                              </Button>
+                            </TooltipTrigger>
+                            <TooltipContent 
+                              side="top" 
+                              className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                            >
+                              AI will interview you to better understand your company and adjust its responses accordingly.
+                            </TooltipContent>
+                          </Tooltip>
+                        </TooltipProvider>
+                      </span>
                     </TabsTrigger>
                   </TabsList>
 
                   {/* Files Tab */}
                   <TabsContent value="files" className="mt-6">
                     <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-medium">Files</h4>
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
-                              >
-                                <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent 
-                              side="right" 
-                              className="max-w-[280px] p-3 text-sm leading-relaxed"
-                            >
-                              {tooltips.files}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                      <Input
-                        type="file"
-                        onChange={handleFileChange}
-                        className="hidden"
-                        id="file-upload"
-                        multiple
-                        accept=".pdf,.doc,.docx,.txt"
-                      />
-                      <label htmlFor="file-upload">
-                        <Button variant="outline" size="sm" className="w-full" asChild>
-                          <span>Upload Files</span>
-                        </Button>
-                      </label>
-                      {files.length > 0 && (
-                        <div className="mt-4">
-                          <ul className="space-y-1">
+                      <div className="flex flex-col gap-4">
+                        <Input
+                          type="file"
+                          onChange={handleFileChange}
+                          className="hidden"
+                          id="file-upload"
+                          multiple
+                          accept=".pdf,.doc,.docx,.txt"
+                        />
+                        <label htmlFor="file-upload">
+                          <Button 
+                            variant="outline" 
+                            size="sm" 
+                            className="w-full font-comfortaa font-light border-gray-200 hover:bg-gray-50 rounded-xl" 
+                            asChild
+                          >
+                            <span>Upload Files</span>
+                          </Button>
+                        </label>
+
+                        {files.length > 0 && (
+                          <div className="space-y-2">
                             {files.map((file, index) => (
-                              <li key={index} className="text-sm text-gray-600 flex items-center justify-between">
-                                <span className="truncate">{file.name}</span>
+                              <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-xl">
+                                <span className="text-sm font-comfortaa font-light text-gray-700">{file.name}</span>
                                 <Button
                                   variant="ghost"
                                   size="sm"
                                   onClick={() => handleRemoveFile(index)}
-                                  className="h-4 w-4 p-0"
+                                  className="h-8 w-8 p-0 hover:bg-transparent hover:text-red-600 rounded-xl"
                                 >
                                   <X className="h-4 w-4" />
                                 </Button>
-                              </li>
+                              </div>
                             ))}
-                          </ul>
-                        </div>
-                      )}
+                          </div>
+                        )}
+                      </div>
                     </div>
                   </TabsContent>
 
                   {/* Websites Tab */}
                   <TabsContent value="websites" className="mt-6">
                     <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-medium">Websites</h4>
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
-                              >
-                                <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent 
-                              side="right" 
-                              className="max-w-[280px] p-3 text-sm leading-relaxed"
-                            >
-                              {tooltips.websites}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
                       <div className="flex gap-2">
                         <Input
+                          type="url"
                           placeholder="Enter website URL"
                           value={websiteInput}
                           onChange={(e) => setWebsiteInput(e.target.value)}
-                          onKeyDown={(e: React.KeyboardEvent<HTMLInputElement>) => e.key === 'Enter' && handleAddWebsite()}
+                          className="font-comfortaa font-light rounded-xl"
                         />
-                        <Button variant="outline" size="sm" onClick={handleAddWebsite}>
-                          Add URL
+                        <Button 
+                          onClick={handleAddWebsite}
+                          className="font-comfortaa font-light rounded-xl"
+                        >
+                          Add
                         </Button>
                       </div>
+
                       {websites.length > 0 && (
-                        <div className="mt-4">
-                          <ul className="space-y-1">
-                            {websites.map((url, index) => (
-                              <li key={index} className="text-sm text-gray-600 flex items-center justify-between">
-                                <span className="truncate">{url}</span>
-                                <Button
-                                  variant="ghost"
-                                  size="sm"
-                                  onClick={() => handleRemoveWebsite(index)}
-                                  className="h-4 w-4 p-0"
-                                >
-                                  <X className="h-4 w-4" />
-                                </Button>
-                              </li>
-                            ))}
-                          </ul>
+                        <div className="space-y-2">
+                          {websites.map((website, index) => (
+                            <div key={index} className="flex items-center justify-between p-2 bg-gray-50 rounded-xl">
+                              <span className="text-sm font-comfortaa font-light text-gray-700">{website}</span>
+                              <Button
+                                variant="ghost"
+                                size="sm"
+                                onClick={() => handleRemoveWebsite(index)}
+                                className="h-8 w-8 p-0 hover:bg-transparent hover:text-red-600 rounded-xl"
+                              >
+                                <X className="h-4 w-4" />
+                              </Button>
+                            </div>
+                          ))}
                         </div>
                       )}
                     </div>
                   </TabsContent>
 
-                  {/* Q&A Tab */}
+                  {/* Q&A Pairs Tab */}
                   <TabsContent value="qa" className="mt-6">
                     <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-medium">Q&A Pairs</h4>
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                      <div className="flex items-center justify-between">
+                        <div className="flex items-center gap-2">
+                          <h4 className="text-sm font-comfortaa font-light text-gray-900">Q&A Pairs</h4>
+                          <TooltipProvider delayDuration={200}>
+                            <Tooltip>
+                              <TooltipTrigger asChild>
+                                <Button 
+                                  variant="ghost" 
+                                  className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                                >
+                                  <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                                </Button>
+                              </TooltipTrigger>
+                              <TooltipContent 
+                                side="right" 
+                                className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
                               >
-                                <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent 
-                              side="right" 
-                              className="max-w-[280px] p-3 text-sm leading-relaxed"
-                            >
-                              {tooltips.qa}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                      {!showQAForm ? (
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          className="w-full"
+                                {tooltips.qa}
+                              </TooltipContent>
+                            </Tooltip>
+                          </TooltipProvider>
+                        </div>
+                        <Button 
                           onClick={() => setShowQAForm(true)}
+                          className="font-comfortaa font-light rounded-xl"
                         >
                           Add Q&A Pair
                         </Button>
-                      ) : (
-                        <div className="space-y-4 border rounded-lg p-4">
-                          <div className="space-y-2">
-                            <Label htmlFor="question">Question</Label>
-                            <Input
-                              id="question"
-                              value={newQA.question}
-                              onChange={(e) => setNewQA(prev => ({ ...prev, question: e.target.value }))}
-                              placeholder="Enter question"
-                            />
+                      </div>
+
+                      {showQAForm && (
+                        <Card className="p-4 bg-white border border-gray-200 rounded-xl">
+                          <div className="space-y-4">
+                            <div className="space-y-2">
+                              <Label htmlFor="question" className="font-comfortaa font-light text-gray-700">Question</Label>
+                              <Input
+                                id="question"
+                                value={newQA.question}
+                                onChange={(e) => setNewQA({ ...newQA, question: e.target.value })}
+                                className="font-comfortaa font-light rounded-xl"
+                              />
+                            </div>
+                            <div className="space-y-2">
+                              <Label htmlFor="answer" className="font-comfortaa font-light text-gray-700">Answer</Label>
+                              <Textarea
+                                id="answer"
+                                value={newQA.answer}
+                                onChange={(e) => setNewQA({ ...newQA, answer: e.target.value })}
+                                className="font-comfortaa font-light rounded-xl"
+                                rows={3}
+                              />
+                            </div>
+                            <div className="flex justify-end gap-2">
+                              <Button 
+                                variant="outline" 
+                                onClick={() => setShowQAForm(false)}
+                                className="font-comfortaa font-light rounded-xl"
+                              >
+                                Cancel
+                              </Button>
+                              <Button 
+                                onClick={handleAddQAPair}
+                                className="font-comfortaa font-light rounded-xl"
+                              >
+                                Add
+                              </Button>
+                            </div>
                           </div>
-                          <div className="space-y-2">
-                            <Label htmlFor="answer">Answer</Label>
-                            <Textarea
-                              id="answer"
-                              value={newQA.answer}
-                              onChange={(e) => setNewQA(prev => ({ ...prev, answer: e.target.value }))}
-                              placeholder="Enter answer"
-                              rows={3}
-                            />
-                          </div>
-                          <div className="flex gap-2">
-                            <Button
-                              variant="outline"
-                              size="sm"
-                              className="flex-1"
-                              onClick={() => {
-                                setShowQAForm(false);
-                                setNewQA({ question: "", answer: "" });
-                              }}
-                            >
-                              Cancel
-                            </Button>
-                            <Button
-                              variant="default"
-                              size="sm"
-                              className="flex-1"
-                              onClick={handleAddQAPair}
-                            >
-                              Save
-                            </Button>
-                          </div>
-                        </div>
+                        </Card>
                       )}
+
                       {qaPairs.length > 0 && (
-                        <div className="mt-4">
-                          <div className="space-y-2">
-                            {qaPairs.map((qa) => (
-                              <div key={qa.id} className="border rounded-lg p-3 space-y-2">
-                                <div className="flex justify-between items-start">
-                                  <div className="space-y-1 flex-1">
-                                    <p className="text-sm font-medium">{qa.question}</p>
-                                    <p className="text-sm text-gray-500">{qa.answer}</p>
-                                  </div>
-                                  <Button
-                                    variant="ghost"
-                                    size="sm"
-                                    onClick={() => handleRemoveQAPair(qa.id)}
-                                    className="h-4 w-4 p-0 ml-2"
-                                  >
-                                    <X className="h-4 w-4" />
-                                  </Button>
+                        <div className="space-y-2">
+                          {qaPairs.map((qa) => (
+                            <div key={qa.id} className="p-4 bg-gray-50 rounded-xl">
+                              <div className="flex justify-between items-start">
+                                <div className="space-y-2">
+                                  <p className="font-comfortaa font-light text-gray-900">{qa.question}</p>
+                                  <p className="text-sm font-comfortaa font-light text-gray-700">{qa.answer}</p>
                                 </div>
+                                <Button
+                                  variant="ghost"
+                                  size="sm"
+                                  onClick={() => handleRemoveQAPair(qa.id)}
+                                  className="h-8 w-8 p-0 hover:bg-transparent hover:text-red-600 rounded-xl"
+                                >
+                                  <X className="h-4 w-4" />
+                                </Button>
                               </div>
-                            ))}
-                          </div>
+                            </div>
+                          ))}
                         </div>
                       )}
+                    </div>
+                  </TabsContent>
+
+                  {/* Interview Me Tab */}
+                  <TabsContent value="interview" className="mt-6">
+                    <div className="space-y-4">
+                      <Card className="p-6 bg-white border border-gray-200 rounded-xl">
+                        <div className="space-y-4">
+                          <p className="font-comfortaa font-light text-gray-700">
+                            Start a conversation with the AI to provide information about your company. 
+                            The AI will ask questions to better understand your business context.
+                          </p>
+                          
+                          <div className="bg-gray-50 p-4 rounded-xl font-comfortaa font-light">
+                            <p className="text-gray-700 mb-3">Sample questions the AI might ask:</p>
+                            <ul className="space-y-2 text-gray-600 list-disc pl-5">
+                              <li>What industry is your company in?</li>
+                              <li>What products or services do you offer?</li>
+                              <li>Who are your typical customers?</li>
+                              <li>What are common questions your customers ask?</li>
+                              <li>What tone would you like the AI to use when responding?</li>
+                            </ul>
+                          </div>
+                          
+                          <Button 
+                            className="font-comfortaa font-light rounded-xl w-full"
+                          >
+                            <Mic className="mr-2 h-4 w-4" />
+                            Start Interview
+                          </Button>
+                        </div>
+                      </Card>
                     </div>
                   </TabsContent>
                 </Tabs>
@@ -440,238 +519,305 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
 
         <TabsContent value="chat">
           <div className="space-y-6">
-            <Card className="p-6">
-              <div className="space-y-6">
-                <div>
-                  <h3 className="text-lg font-medium">Agent Configuration</h3>
-                  <p className="text-sm text-gray-500">Configure the agent's behavior and appearance</p>
+            <Card className="p-6 bg-white border border-gray-200 rounded-xl">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-comfortaa font-light text-gray-900">Prompt Configuration</h3>
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                        >
+                          <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent 
+                        side="right" 
+                        className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                      >
+                        Configure your AI's behavior with system prompts and parameters
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
 
-                {/* System Prompt */}
                 <div className="space-y-4">
+                  {/* System Prompt with Templates */}
                   <div className="space-y-2">
-                    <Label htmlFor="systemPrompt">System Prompt</Label>
+                    <Label htmlFor="promptTemplate" className="font-comfortaa font-light text-gray-700">System Prompt Template</Label>
+                    <select
+                      id="promptTemplate"
+                      value={selectedPromptTemplate}
+                      onChange={(e) => setSelectedPromptTemplate(e.target.value)}
+                      className="w-full p-2 border border-gray-200 rounded-xl font-comfortaa font-light text-gray-700"
+                    >
+                      <option value="default">Default Assistant</option>
+                      <option value="customer_service">Customer Service</option>
+                      <option value="technical_support">Technical Support</option>
+                      <option value="sales">Sales Assistant</option>
+                    </select>
+                  </div>
+
+                  <div className="space-y-2">
+                    <Label htmlFor="systemPrompt" className="font-comfortaa font-light text-gray-700">System Prompt</Label>
                     <Textarea
                       id="systemPrompt"
-                      defaultValue={product.chatSettings.systemPrompt}
+                      value={promptTemplates[selectedPromptTemplate as keyof typeof promptTemplates]}
+                      onChange={(e) => {
+                        // Create a new template if the user modifies it
+                        if (e.target.value !== promptTemplates[selectedPromptTemplate as keyof typeof promptTemplates]) {
+                          setSelectedPromptTemplate("custom");
+                          // In a real implementation, you would save the custom template
+                        }
+                      }}
+                      className="font-comfortaa font-light rounded-xl"
                       rows={4}
                     />
                   </div>
 
-                  {/* Model Parameters */}
                   <div className="grid grid-cols-2 gap-4">
                     <div className="space-y-2">
-                      <Label htmlFor="temperature">Temperature</Label>
+                      <Label htmlFor="temperature" className="font-comfortaa font-light text-gray-700">Temperature</Label>
                       <Input
                         id="temperature"
                         type="number"
                         min="0"
-                        max="1"
+                        max="2"
                         step="0.1"
                         defaultValue={product.chatSettings.temperature}
+                        className="font-comfortaa font-light rounded-xl"
                       />
                     </div>
                     <div className="space-y-2">
-                      <Label htmlFor="maxTokens">Max Tokens</Label>
+                      <Label htmlFor="maxTokens" className="font-comfortaa font-light text-gray-700">Max Tokens</Label>
                       <Input
                         id="maxTokens"
                         type="number"
-                        min="100"
-                        max="4000"
-                        step="100"
+                        min="1"
                         defaultValue={product.chatSettings.maxTokens}
+                        className="font-comfortaa font-light rounded-xl"
                       />
                     </div>
                   </div>
                 </div>
+              </div>
+            </Card>
+          </div>
+        </TabsContent>
 
-                {/* Chat Appearance */}
-                <div className="space-y-4 border-t pt-6">
-                  <div className="flex items-center gap-2">
-                    <h4 className="text-sm font-medium">Chat Appearance</h4>
-                    <TooltipProvider delayDuration={200}>
-                      <Tooltip>
-                        <TooltipTrigger asChild>
-                          <Button variant="ghost" className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70">
-                            <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                          </Button>
-                        </TooltipTrigger>
-                        <TooltipContent side="right" className="max-w-[280px] p-3">
-                          {tooltips.chatAppearance}
-                        </TooltipContent>
-                      </Tooltip>
-                    </TooltipProvider>
-                  </div>
-
-                  <div className="grid grid-cols-2 gap-4">
-                    <div className="space-y-2">
-                      <Label htmlFor="primaryColor">Primary Color</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="primaryColor"
-                          type="color"
-                          value={primaryColor}
-                          onChange={(e) => setPrimaryColor(e.target.value)}
-                          className="w-12 h-9 p-1"
-                        />
-                        <Input
-                          type="text"
-                          value={primaryColor}
-                          onChange={(e) => setPrimaryColor(e.target.value)}
-                          className="flex-1"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="secondaryColor">Secondary Color</Label>
-                      <div className="flex gap-2">
-                        <Input
-                          id="secondaryColor"
-                          type="color"
-                          value={secondaryColor}
-                          onChange={(e) => setSecondaryColor(e.target.value)}
-                          className="w-12 h-9 p-1"
-                        />
-                        <Input
-                          type="text"
-                          value={secondaryColor}
-                          onChange={(e) => setSecondaryColor(e.target.value)}
-                          className="flex-1"
-                        />
-                      </div>
-                    </div>
-                    <div className="space-y-2">
-                      <Label htmlFor="fontFamily">Font Family</Label>
-                      <select
-                        id="fontFamily"
-                        value={fontFamily}
-                        onChange={(e) => setFontFamily(e.target.value)}
-                        className="w-full h-9 rounded-[var(--radius)] border border-[hsl(var(--input))] bg-[hsl(var(--background))] px-3"
+        <TabsContent value="appearance">
+          <div className="space-y-6">
+            <Card className="p-6 bg-white border border-gray-200 rounded-xl">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-comfortaa font-light text-gray-900">Chat Appearance</h3>
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                        >
+                          <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent 
+                        side="right" 
+                        className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
                       >
-                        <option value="Comfortaa">Comfortaa Light</option>
-                      </select>
-                    </div>
-                  </div>
+                        Customize the look and feel of your chat interface
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
                 </div>
 
-                {/* Privacy Settings */}
-                <div className="space-y-4 border-t pt-6">
-                  <div className="flex items-center justify-between">
+                <div className="space-y-6">
+                  {/* Colors Section */}
+                  <div className="space-y-4">
                     <div className="flex items-center gap-2">
-                      <h4 className="text-sm font-medium">Chat Privacy</h4>
+                      <h4 className="text-sm font-comfortaa font-medium text-gray-900">Colors</h4>
                       <TooltipProvider delayDuration={200}>
                         <Tooltip>
                           <TooltipTrigger asChild>
-                            <Button variant="ghost" className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70">
-                              <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
+                            <Button 
+                              variant="ghost" 
+                              className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                            >
+                              <HelpCircle className="h-3 w-3 text-gray-400" />
                             </Button>
                           </TooltipTrigger>
-                          <TooltipContent side="right" className="max-w-[280px] p-3">
-                            {tooltips.chatPrivacy}
+                          <TooltipContent 
+                            side="right" 
+                            className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                          >
+                            Choose the primary and secondary colors for your chat interface
                           </TooltipContent>
                         </Tooltip>
                       </TooltipProvider>
                     </div>
-                    <Switch
-                      checked={isPrivateChat}
-                      onCheckedChange={setIsPrivateChat}
-                      id="privacy-mode"
-                    />
-                  </div>
-                  <p className="text-sm text-gray-500">
-                    {isPrivateChat ? "Users must be authenticated to access the chat" : "Chat is publicly accessible"}
-                  </p>
-                </div>
-
-                {/* Test and Live Chat */}
-                <div className="space-y-4 border-t pt-6">
-                  <div className="grid grid-cols-2 gap-6">
-                    {/* Test Chat */}
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-medium">Test Chat</h4>
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button variant="ghost" className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70">
-                                <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="right" className="max-w-[280px] p-3">
-                              {tooltips.testChat}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                      <div className="flex gap-2">
-                        <Input
-                          readOnly
-                          value={`https://yourdomain.com/chat/${productId}/test`}
-                          className="flex-1"
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(`https://yourdomain.com/chat/${productId}/test`)}
-                        >
-                          <LinkIcon className="h-4 w-4" />
-                        </Button>
-                      </div>
-                      <Button variant="outline" size="sm" className="w-full">
-                        <TestTube className="mr-2 h-4 w-4" />
-                        Open Test Chat
-                      </Button>
-                    </div>
-
-                    {/* Live Chat */}
-                    <div className="space-y-4">
-                      <div className="flex items-center gap-2">
-                        <h4 className="text-sm font-medium">Live Chat</h4>
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button variant="ghost" className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70">
-                                <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent side="right" className="max-w-[280px] p-3">
-                              {tooltips.liveChat}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </div>
-                      <div className="flex gap-2">
-                        <Input
-                          readOnly
-                          value={`https://yourdomain.com/chat/${productId}`}
-                          className="flex-1"
-                        />
-                        <Button
-                          variant="outline"
-                          size="sm"
-                          onClick={() => copyToClipboard(`https://yourdomain.com/chat/${productId}`)}
-                        >
-                          <LinkIcon className="h-4 w-4" />
-                        </Button>
-                      </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
                       <div className="space-y-2">
-                        <Label htmlFor="embed-code">Embed Code</Label>
-                        <div className="relative">
-                          <Textarea
-                            id="embed-code"
-                            readOnly
-                            value={`<script src="https://yourdomain.com/embed.js"></script>\n<div id="chat-widget" data-product-id="${productId}"></div>`}
-                            rows={3}
-                            className="pr-10"
+                        <Label htmlFor="primaryColor" className="font-comfortaa font-light text-gray-700">Primary Color</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="primaryColor"
+                            type="color"
+                            value={primaryColor}
+                            onChange={(e) => setPrimaryColor(e.target.value)}
+                            className="w-12 h-9 p-1 rounded-xl"
                           />
-                          <Button
-                            variant="ghost"
-                            size="sm"
-                            className="absolute top-2 right-2"
-                            onClick={() => copyToClipboard(`<script src="https://yourdomain.com/embed.js"></script>\n<div id="chat-widget" data-product-id="${productId}"></div>`)}
+                          <Input
+                            type="text"
+                            value={primaryColor}
+                            onChange={(e) => setPrimaryColor(e.target.value)}
+                            className="flex-1 font-comfortaa font-light rounded-xl"
+                          />
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-2">
+                        <Label htmlFor="secondaryColor" className="font-comfortaa font-light text-gray-700">Secondary Color</Label>
+                        <div className="flex gap-2">
+                          <Input
+                            id="secondaryColor"
+                            type="color"
+                            value={secondaryColor}
+                            onChange={(e) => setSecondaryColor(e.target.value)}
+                            className="w-12 h-9 p-1 rounded-xl"
+                          />
+                          <Input
+                            type="text"
+                            value={secondaryColor}
+                            onChange={(e) => setSecondaryColor(e.target.value)}
+                            className="flex-1 font-comfortaa font-light rounded-xl"
+                          />
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Typography Section */}
+                  <div className="space-y-4 border-t pt-4">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-comfortaa font-medium text-gray-900">Typography</h4>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                            >
+                              <HelpCircle className="h-3 w-3 text-gray-400" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent 
+                            side="right" 
+                            className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
                           >
-                            <Code className="h-4 w-4" />
-                          </Button>
+                            Select fonts and text styles for your chat interface
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    
+                    <div className="grid grid-cols-2 gap-4">
+                      <div className="space-y-2">
+                        <Label htmlFor="fontFamily" className="font-comfortaa font-light text-gray-700">Font Family</Label>
+                        <select
+                          id="fontFamily"
+                          value={fontFamily}
+                          onChange={(e) => setFontFamily(e.target.value)}
+                          className="w-full p-2 border border-gray-200 rounded-xl font-comfortaa font-light text-gray-700"
+                        >
+                          <option value="Comfortaa">Comfortaa Light</option>
+                          <option value="Arial">Arial</option>
+                          <option value="Helvetica">Helvetica</option>
+                          <option value="Georgia">Georgia</option>
+                        </select>
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* Layout Section */}
+                  <div className="space-y-4 border-t pt-4">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-comfortaa font-medium text-gray-900">Layout</h4>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                            >
+                              <HelpCircle className="h-3 w-3 text-gray-400" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent 
+                            side="right" 
+                            className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                          >
+                            Configure the layout and access settings for your chat
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    
+                    <div className="space-y-4">
+                      <div className="flex items-center justify-between">
+                        <Label htmlFor="isPrivateChat" className="font-comfortaa font-light text-gray-700">Private Chat</Label>
+                        <Switch
+                          id="isPrivateChat"
+                          checked={isPrivateChat}
+                          onCheckedChange={setIsPrivateChat}
+                        />
+                      </div>
+                      <p className="text-sm font-comfortaa font-light text-gray-500">
+                        {isPrivateChat ? "Users must be authenticated to access the chat" : "Chat is publicly accessible"}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* Preview Section */}
+                  <div className="space-y-4 border-t pt-4">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-comfortaa font-medium text-gray-900">Preview</h4>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                            >
+                              <HelpCircle className="h-3 w-3 text-gray-400" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent 
+                            side="right" 
+                            className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                          >
+                            See how your chat will look with the selected settings
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    
+                    <div className="border rounded-xl p-4 bg-gray-50">
+                      <div className="flex flex-col gap-3">
+                        <div className="flex gap-3">
+                          <div className="h-8 w-8 rounded-full bg-gray-200 flex-shrink-0"></div>
+                          <div className="bg-white p-3 rounded-lg border" style={{ maxWidth: '80%' }}>
+                            <p className="text-sm font-comfortaa">Hello! How can I help you today?</p>
+                          </div>
+                        </div>
+                        
+                        <div className="flex gap-3 justify-end">
+                          <div className="p-3 rounded-lg text-white" 
+                               style={{ backgroundColor: primaryColor, maxWidth: '80%' }}>
+                            <p className="text-sm font-comfortaa">Can you tell me more about your services?</p>
+                          </div>
                         </div>
                       </div>
                     </div>
@@ -682,40 +828,317 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
           </div>
         </TabsContent>
 
-        <TabsContent value="users">
-          <Card className="p-6">
-            <div className="space-y-4">
-              <div className="flex items-center gap-2">
-                <h3 className="text-lg font-medium">Product Users</h3>
-                <TooltipProvider delayDuration={200}>
-                  <Tooltip>
-                    <TooltipTrigger asChild>
-                      <Button variant="ghost" className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70">
-                        <HelpCircle className="h-3.5 w-3.5 text-muted-foreground" />
-                      </Button>
-                    </TooltipTrigger>
-                    <TooltipContent side="right" className="max-w-[280px] p-3">
-                      {tooltips.users}
-                    </TooltipContent>
-                  </Tooltip>
-                </TooltipProvider>
+        <TabsContent value="analytics">
+          <div className="space-y-6">
+            <Card className="p-6 bg-white border border-gray-200 rounded-xl">
+              <div className="space-y-4">
+                <div className="flex items-center gap-2">
+                  <h3 className="text-lg font-comfortaa font-light text-gray-900">Usage Analytics</h3>
+                  <TooltipProvider delayDuration={200}>
+                    <Tooltip>
+                      <TooltipTrigger asChild>
+                        <Button 
+                          variant="ghost" 
+                          className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                        >
+                          <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                        </Button>
+                      </TooltipTrigger>
+                      <TooltipContent 
+                        side="right" 
+                        className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                      >
+                        View usage metrics and analytics for your AI assistant
+                      </TooltipContent>
+                    </Tooltip>
+                  </TooltipProvider>
+                </div>
+                
+                {/* Overview Cards */}
+                <div className="grid grid-cols-3 gap-4">
+                  <Card className="p-4 bg-white border border-gray-200 rounded-xl">
+                    <div className="flex flex-col items-center">
+                      <p className="text-sm font-comfortaa font-medium text-gray-500">Total Conversations</p>
+                      <h4 className="text-3xl font-comfortaa font-light text-gray-900 mt-2">1,285</h4>
+                      <p className="text-xs font-comfortaa text-green-600 mt-1 flex items-center">
+                        <span>↑ 12% from last month</span>
+                      </p>
+                    </div>
+                  </Card>
+                  <Card className="p-4 bg-white border border-gray-200 rounded-xl">
+                    <div className="flex flex-col items-center">
+                      <p className="text-sm font-comfortaa font-medium text-gray-500">Active Users</p>
+                      <h4 className="text-3xl font-comfortaa font-light text-gray-900 mt-2">432</h4>
+                      <p className="text-xs font-comfortaa text-green-600 mt-1 flex items-center">
+                        <span>↑ 8% from last month</span>
+                      </p>
+                    </div>
+                  </Card>
+                  <Card className="p-4 bg-white border border-gray-200 rounded-xl">
+                    <div className="flex flex-col items-center">
+                      <p className="text-sm font-comfortaa font-medium text-gray-500">Avg. Response Time</p>
+                      <h4 className="text-3xl font-comfortaa font-light text-gray-900 mt-2">1.2s</h4>
+                      <p className="text-xs font-comfortaa text-green-600 mt-1 flex items-center">
+                        <span>↓ 0.3s from last month</span>
+                      </p>
+                    </div>
+                  </Card>
+                </div>
+                
+                {/* Usage Over Time Chart */}
+                <div className="mt-8 space-y-2">
+                  <div className="flex items-center gap-2">
+                    <h4 className="text-sm font-comfortaa font-medium text-gray-900">Monthly Usage</h4>
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                          >
+                            <HelpCircle className="h-3 w-3 text-gray-400" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent 
+                          side="right" 
+                          className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                        >
+                          Number of conversations and messages over the past 6 months
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  
+                  {/* SVG Chart for Monthly Usage */}
+                  <div className="w-full h-64 bg-white border border-gray-200 rounded-xl p-4">
+                    <div className="flex items-center justify-between mb-4">
+                      <div className="flex items-center gap-4">
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                          <span className="text-xs font-comfortaa text-gray-700">Conversations</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                          <span className="text-xs font-comfortaa text-gray-700">Messages</span>
+                        </div>
+                      </div>
+                      <select className="text-xs font-comfortaa p-1 border border-gray-200 rounded">
+                        <option>Last 6 months</option>
+                        <option>Last 12 months</option>
+                        <option>Last 30 days</option>
+                      </select>
+                    </div>
+                    
+                    {/* SVG Chart */}
+                    <svg width="100%" height="200" className="mt-2">
+                      {/* X-axis */}
+                      <line x1="40" y1="180" x2="100%" y2="180" stroke="#e5e7eb" strokeWidth="1" />
+                      
+                      {/* Y-axis */}
+                      <line x1="40" y1="20" x2="40" y2="180" stroke="#e5e7eb" strokeWidth="1" />
+                      
+                      {/* Mock Data Points - Conversations */}
+                      <polyline 
+                        points="80,150 180,120 280,140 380,90 480,70 580,50" 
+                        fill="none" 
+                        stroke="#3b82f6" 
+                        strokeWidth="2"
+                      />
+                      
+                      {/* Mock Data Points - Messages */}
+                      <polyline 
+                        points="80,160 180,140 280,130 380,100 480,80 580,60" 
+                        fill="none" 
+                        stroke="#22c55e" 
+                        strokeWidth="2"
+                      />
+                      
+                      {/* X-axis Labels */}
+                      <text x="80" y="195" textAnchor="middle" fontSize="10" fill="#6b7280">Jan</text>
+                      <text x="180" y="195" textAnchor="middle" fontSize="10" fill="#6b7280">Feb</text>
+                      <text x="280" y="195" textAnchor="middle" fontSize="10" fill="#6b7280">Mar</text>
+                      <text x="380" y="195" textAnchor="middle" fontSize="10" fill="#6b7280">Apr</text>
+                      <text x="480" y="195" textAnchor="middle" fontSize="10" fill="#6b7280">May</text>
+                      <text x="580" y="195" textAnchor="middle" fontSize="10" fill="#6b7280">Jun</text>
+                      
+                      {/* Y-axis Labels */}
+                      <text x="30" y="180" textAnchor="end" fontSize="10" fill="#6b7280">0</text>
+                      <text x="30" y="140" textAnchor="end" fontSize="10" fill="#6b7280">100</text>
+                      <text x="30" y="100" textAnchor="end" fontSize="10" fill="#6b7280">200</text>
+                      <text x="30" y="60" textAnchor="end" fontSize="10" fill="#6b7280">300</text>
+                      <text x="30" y="20" textAnchor="end" fontSize="10" fill="#6b7280">400</text>
+                    </svg>
+                  </div>
+                </div>
+                
+                {/* Top Questions and User Distribution */}
+                <div className="grid grid-cols-2 gap-6 mt-8">
+                  {/* Top Questions */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-comfortaa font-medium text-gray-900">Top Questions</h4>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                            >
+                              <HelpCircle className="h-3 w-3 text-gray-400" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent 
+                            side="right" 
+                            className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                          >
+                            Most common questions asked by users
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    
+                    <Card className="p-4 bg-white border border-gray-200 rounded-xl">
+                      <ul className="space-y-3">
+                        <li className="flex items-center justify-between">
+                          <span className="text-sm font-comfortaa font-light text-gray-700">What services do you offer?</span>
+                          <span className="text-xs font-comfortaa bg-gray-100 px-2 py-1 rounded-full">128 times</span>
+                        </li>
+                        <li className="flex items-center justify-between">
+                          <span className="text-sm font-comfortaa font-light text-gray-700">How much does it cost?</span>
+                          <span className="text-xs font-comfortaa bg-gray-100 px-2 py-1 rounded-full">95 times</span>
+                        </li>
+                        <li className="flex items-center justify-between">
+                          <span className="text-sm font-comfortaa font-light text-gray-700">Do you offer support?</span>
+                          <span className="text-xs font-comfortaa bg-gray-100 px-2 py-1 rounded-full">82 times</span>
+                        </li>
+                        <li className="flex items-center justify-between">
+                          <span className="text-sm font-comfortaa font-light text-gray-700">How do I get started?</span>
+                          <span className="text-xs font-comfortaa bg-gray-100 px-2 py-1 rounded-full">76 times</span>
+                        </li>
+                        <li className="flex items-center justify-between">
+                          <span className="text-sm font-comfortaa font-light text-gray-700">Can I integrate with my system?</span>
+                          <span className="text-xs font-comfortaa bg-gray-100 px-2 py-1 rounded-full">67 times</span>
+                        </li>
+                      </ul>
+                    </Card>
+                  </div>
+                  
+                  {/* User Distribution */}
+                  <div className="space-y-2">
+                    <div className="flex items-center gap-2">
+                      <h4 className="text-sm font-comfortaa font-medium text-gray-900">User Distribution</h4>
+                      <TooltipProvider delayDuration={200}>
+                        <Tooltip>
+                          <TooltipTrigger asChild>
+                            <Button 
+                              variant="ghost" 
+                              className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                            >
+                              <HelpCircle className="h-3 w-3 text-gray-400" />
+                            </Button>
+                          </TooltipTrigger>
+                          <TooltipContent 
+                            side="right" 
+                            className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                          >
+                            Breakdown of users by source/device
+                          </TooltipContent>
+                        </Tooltip>
+                      </TooltipProvider>
+                    </div>
+                    
+                    <Card className="p-4 bg-white border border-gray-200 rounded-xl">
+                      <div className="flex justify-center mb-4">
+                        {/* SVG Pie Chart */}
+                        <svg width="180" height="180" viewBox="0 0 180 180">
+                          <circle cx="90" cy="90" r="80" fill="#f3f4f6" />
+                          {/* Segments */}
+                          <path d="M90,10 A80,80 0 0,1 162,118 L90,90 Z" fill="#3b82f6" /> {/* 45% - Desktop */}
+                          <path d="M90,90 L162,118 A80,80 0 0,1 17,125 L90,90 Z" fill="#10b981" /> {/* 30% - Mobile */}
+                          <path d="M90,90 L17,125 A80,80 0 0,1 36,25 L90,90 Z" fill="#f59e0b" /> {/* 20% - Tablet */}
+                          <path d="M90,90 L36,25 A80,80 0 0,1 90,10 L90,90 Z" fill="#ef4444" /> {/* 5% - Other */}
+                          <circle cx="90" cy="90" r="40" fill="white" />
+                        </svg>
+                      </div>
+                      
+                      {/* Legend */}
+                      <div className="grid grid-cols-2 gap-2">
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-full bg-blue-500"></div>
+                          <span className="text-xs font-comfortaa text-gray-700">Desktop (45%)</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-full bg-green-500"></div>
+                          <span className="text-xs font-comfortaa text-gray-700">Mobile (30%)</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-full bg-yellow-500"></div>
+                          <span className="text-xs font-comfortaa text-gray-700">Tablet (20%)</span>
+                        </div>
+                        <div className="flex items-center gap-1">
+                          <div className="w-3 h-3 rounded-full bg-red-500"></div>
+                          <span className="text-xs font-comfortaa text-gray-700">Other (5%)</span>
+                        </div>
+                      </div>
+                    </Card>
+                  </div>
+                </div>
+                
+                {/* Export Section */}
+                <div className="flex justify-end mt-4">
+                  <Button 
+                    variant="outline"
+                    className="font-comfortaa font-light text-gray-700 border-gray-200 hover:bg-gray-50 rounded-xl"
+                  >
+                    <FileText className="mr-2 h-4 w-4" />
+                    Export Report
+                  </Button>
+                </div>
               </div>
+            </Card>
+          </div>
+        </TabsContent>
 
-              <div className="flex justify-between items-center">
-                <p className="text-sm text-gray-500">
-                  Manage users who have access to this product
-                </p>
-                <div className="flex gap-2">
-                  <div className="relative">
+        <TabsContent value="users">
+          <div className="space-y-6">
+            <Card className="p-6 bg-white border border-gray-200 rounded-xl">
+              <div className="space-y-4">
+                <div className="flex items-center justify-between">
+                  <div className="flex items-center gap-2">
+                    <h3 className="text-lg font-comfortaa font-light text-gray-900">User Management</h3>
+                    <TooltipProvider delayDuration={200}>
+                      <Tooltip>
+                        <TooltipTrigger asChild>
+                          <Button 
+                            variant="ghost" 
+                            className="h-5 w-5 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
+                          >
+                            <HelpCircle className="h-3.5 w-3.5 text-gray-400" />
+                          </Button>
+                        </TooltipTrigger>
+                        <TooltipContent 
+                          side="right" 
+                          className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
+                        >
+                          {tooltips.users}
+                        </TooltipContent>
+                      </Tooltip>
+                    </TooltipProvider>
+                  </div>
+                  <div className="flex gap-2">
                     <Input
                       type="file"
-                      onChange={handleBulkImport}
                       className="hidden"
                       id="bulk-import"
-                      accept=".csv,.xlsx,.xls"
+                      accept=".csv,.xlsx"
+                      onChange={handleBulkImport}
                     />
                     <label htmlFor="bulk-import">
-                      <Button variant="outline" size="sm" className="flex items-center" asChild>
+                      <Button 
+                        variant="outline" 
+                        className="font-comfortaa font-light rounded-xl" 
+                        asChild
+                      >
                         <span>
                           <Download className="mr-2 h-4 w-4" />
                           Import Users
@@ -723,21 +1146,18 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
                       </Button>
                     </label>
                   </div>
-                  <Button variant="outline" size="sm" className="flex items-center">
-                    <Users className="mr-2 h-4 w-4" />
-                    Add User
-                  </Button>
                 </div>
               </div>
-
-              {/* ... rest of the users section remains the same ... */}
-            </div>
-          </Card>
+            </Card>
+          </div>
         </TabsContent>
       </Tabs>
 
       <div className="flex justify-end">
-        <Button onClick={handleSave} className="flex items-center">
+        <Button 
+          onClick={handleSave}
+          className="font-comfortaa font-light bg-gray-900 hover:bg-gray-800 text-white rounded-xl"
+        >
           <Save className="mr-2 h-4 w-4" />
           Save Changes
         </Button>

@@ -16,5 +16,5 @@ export default async function SuperAdminLayout({
   }
 
   // For all other superadmin pages, use the superadmin layout
-  return <SuperAdminLayoutClient>{children}</SuperAdminLayoutClient>;
+  return <SuperAdminLayoutClient title="Super Admin Portal">{children}</SuperAdminLayoutClient>;
 } 

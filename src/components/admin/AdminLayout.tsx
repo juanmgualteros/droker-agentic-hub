@@ -1,9 +1,9 @@
 "use client";
 
-import Link from "next/link";
 import { usePathname, useRouter } from "next/navigation";
-import { useEffect, useState } from "react";
+import { useState, useEffect, type ReactNode } from "react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
 import {
   Package,
   Settings,
@@ -13,36 +13,51 @@ import {
 import { useTranslations } from "@/hooks/use-translations";
 import { PortalHeader } from "@/components/ui/portal-header";
 
+interface AdminLayoutProps {
+  children: ReactNode;
+  title: string;
+  description?: string;
+}
+
 const navigation = [
   { name: "Dashboard", href: "/admin", icon: LayoutDashboard },
   { name: "Products", href: "/admin/products", icon: Package },
   { name: "Settings", href: "/admin/settings", icon: Settings },
 ];
 
-interface AdminLayoutClientProps {
-  children: React.ReactNode;
-  title: string;
-  description?: string;
-}
-
-export function AdminLayoutClient({ children, title, description }: AdminLayoutClientProps) {
+export default function AdminLayout({ children, title, description }: AdminLayoutProps) {
   const pathname = usePathname();
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
-  const [sidebarOpen, setSidebarOpen] = useState(false);
   const { translate } = useTranslations("navigation");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Extract locale from pathname
   const locale = pathname.split("/")[1];
 
+  // Update navigation with locale
+  const localizedNavigation = navigation.map(item => ({
+    ...item,
+    href: `/${locale}${item.href}`
+  }));
+
   useEffect(() => {
-    // Check authentication
+    // Check authentication and role
     const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-    if (!isAuthenticated) {
+    const userRole = localStorage.getItem("userRole");
+    if (!isAuthenticated || userRole !== "admin") {
       router.replace(`/${locale}/login`);
     }
     setIsLoading(false);
   }, [router, locale]);
+
+  const handleLogout = () => {
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userRole");
+    document.cookie = "isAuthenticated=false; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = "userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    router.replace(`/${locale}/login`);
+  };
 
   if (isLoading) {
     return (
@@ -53,15 +68,15 @@ export function AdminLayoutClient({ children, title, description }: AdminLayoutC
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <PortalHeader title={translate("adminPortal")} locale={locale} />
+    <div className="min-h-screen bg-gray-100">
+      <PortalHeader title="Admin Portal" locale={locale} />
       <div className="flex h-full">
         {/* Sidebar */}
         <div className="hidden lg:flex lg:flex-shrink-0">
           <div className="flex flex-col w-64">
-            <div className="flex flex-col flex-grow bg-gray-800 pt-5 pb-4 overflow-y-auto">
+            <div className="flex flex-col flex-grow bg-white border-r border-gray-200 pt-5 pb-4 overflow-y-auto">
               <nav className="flex-1 px-2 space-y-1">
-                {navigation.map((item) => {
+                {localizedNavigation.map((item) => {
                   const isActive = pathname === item.href;
                   return (
                     <Link
@@ -69,14 +84,14 @@ export function AdminLayoutClient({ children, title, description }: AdminLayoutC
                       href={item.href}
                       className={cn(
                         isActive
-                          ? 'bg-gray-900 text-white'
-                          : 'text-gray-300 hover:bg-gray-700 hover:text-white',
+                          ? 'bg-gray-100 text-gray-900'
+                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
                         'group flex items-center px-2 py-2 text-base font-comfortaa font-light rounded-md'
                       )}
                     >
                       <item.icon
                         className={cn(
-                          isActive ? 'text-gray-300' : 'text-gray-400 group-hover:text-gray-300',
+                          isActive ? 'text-gray-900' : 'text-gray-400 group-hover:text-gray-900',
                           'mr-3 flex-shrink-0 h-6 w-6'
                         )}
                         aria-hidden="true"
@@ -94,7 +109,7 @@ export function AdminLayoutClient({ children, title, description }: AdminLayoutC
         <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
           {/* Mobile menu button */}
           <div className="lg:hidden">
-            <div className="flex items-center justify-between bg-gray-800 py-2 px-4 sm:px-6 lg:px-8">
+            <div className="flex items-center justify-between bg-white border-b border-gray-200 py-2 px-4 sm:px-6 lg:px-8">
               <button
                 type="button"
                 className="h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900"
