@@ -25,7 +25,7 @@ export default function HomeClient() {
 
         <div className="grid grid-cols-1 md:grid-cols-3 gap-6 max-w-5xl mx-auto">
           <Link
-            href={`/${locale}/superadmin`}
+            href={`/${locale}/superadmin/organizations`}
             className="flex flex-col items-center p-8 bg-white border border-gray-200 rounded-lg shadow-sm hover:shadow-md transition-shadow"
           >
             <Shield className="w-12 h-12 text-gray-800 mb-4" />

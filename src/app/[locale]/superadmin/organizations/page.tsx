@@ -3,8 +3,10 @@
 import { Button } from "@/components/ui/button";
 import { DataTable } from "@/components/ui/data-table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Edit, MoreHorizontal } from "lucide-react";
+import { Edit, MoreHorizontal, Package, Key } from "lucide-react";
 import Link from "next/link";
+import { useState } from "react";
+import { useRouter } from "next/navigation";
 
 interface Organization {
   id: string;
@@ -13,87 +15,149 @@ interface Organization {
   createdAt: string;
 }
 
-const columns = [
+const organizations: Organization[] = [
   {
-    header: "Name",
-    accessorKey: "name" as keyof Organization,
+    id: "1",
+    name: "Acme Corp",
+    state: "ACTIVE",
+    createdAt: "2024-01-01",
   },
   {
-    header: "State",
-    accessorKey: "state" as keyof Organization,
-    className: "capitalize",
-  },
-  {
-    header: "Created At",
-    accessorKey: "createdAt" as keyof Organization,
+    id: "2",
+    name: "Globex Corp",
+    state: "ACTIVE",
+    createdAt: "2024-01-02",
   },
 ];
 
 export default function OrganizationsPage() {
-  const organizations: Organization[] = [
+  const router = useRouter();
+  const [selectedTab, setSelectedTab] = useState<"products" | "api-keys" | null>(null);
+  const [selectedOrg, setSelectedOrg] = useState<Organization | null>(null);
+
+  const columns = [
     {
-      id: "1",
-      name: "Organization 1",
-      state: "active",
-      createdAt: "2024-03-20",
+      header: "NAME",
+      accessorKey: "name" as keyof Organization,
     },
     {
-      id: "2",
-      name: "Organization 2",
-      state: "inactive",
-      createdAt: "2024-03-19",
+      header: "STATE",
+      accessorKey: "state" as keyof Organization,
+    },
+    {
+      header: "CREATED AT",
+      accessorKey: "createdAt" as keyof Organization,
+      cell: (value: string) => new Date(value).toLocaleDateString(),
     },
   ];
 
-  const renderRow = (organization: Organization) => {
-    const cells = columns.map(column => ({
-      key: String(column.accessorKey),
-      content: String(organization[column.accessorKey]),
-    }));
+  const renderActions = (organization: Organization) => (
+    <DropdownMenu>
+      <DropdownMenuTrigger asChild>
+        <Button variant="ghost" className="h-8 w-8 p-0">
+          <span className="sr-only">Open menu</span>
+          <MoreHorizontal className="h-4 w-4" />
+        </Button>
+      </DropdownMenuTrigger>
+      <DropdownMenuContent align="end">
+        <DropdownMenuItem onClick={() => router.push(`/${locale}/superadmin/organizations/${organization.id}/edit`)}>
+          <Edit className="mr-2 h-4 w-4" />
+          Edit
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => {
+          setSelectedOrg(organization);
+          setSelectedTab("products");
+        }}>
+          <Package className="mr-2 h-4 w-4" />
+          View Products
+        </DropdownMenuItem>
+        <DropdownMenuItem onClick={() => {
+          setSelectedOrg(organization);
+          setSelectedTab("api-keys");
+        }}>
+          <Key className="mr-2 h-4 w-4" />
+          View API Keys
+        </DropdownMenuItem>
+      </DropdownMenuContent>
+    </DropdownMenu>
+  );
 
-    const actions = (
-      <DropdownMenu>
-        <DropdownMenuTrigger asChild>
-          <Button variant="ghost" className="h-8 w-8 p-0">
-            <span className="sr-only">Open menu</span>
-            <MoreHorizontal className="h-4 w-4" />
-          </Button>
-        </DropdownMenuTrigger>
-        <DropdownMenuContent align="end">
-          <DropdownMenuItem>
-            <Link
-              href={`/superadmin/organizations/${organization.id}/edit`}
-              className="flex items-center"
-            >
-              <Edit className="mr-2 h-4 w-4" />
-              Edit
-            </Link>
-          </DropdownMenuItem>
-        </DropdownMenuContent>
-      </DropdownMenu>
-    );
-
-    return { cells, actions };
-  };
+  // Get locale from pathname
+  const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en';
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">Organizations</h1>
-        <p className="text-sm text-gray-500">
-          Manage organizations in your system
-        </p>
-      </div>
-      <div className="flex justify-end">
-        <Link href="/superadmin/organizations/new">
+    <div className="space-y-6">
+      <div className="flex justify-between items-center">
+        <div>
+          <h1 className="text-2xl font-light text-gray-900">Organizations</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Manage your customer organizations and their configurations
+          </p>
+        </div>
+        <Link href={`/${locale}/superadmin/organizations/new`}>
           <Button>New Organization</Button>
         </Link>
       </div>
-      <DataTable
-        data={organizations}
-        columns={columns}
-        renderRow={renderRow}
-      />
+
+      {selectedTab && selectedOrg ? (
+        <div>
+          <div className="mb-6">
+            <Button
+              variant="outline"
+              onClick={() => {
+                setSelectedTab(null);
+                setSelectedOrg(null);
+              }}
+            >
+              Back to Organizations
+            </Button>
+          </div>
+
+          {selectedTab === "products" ? (
+            <div className="bg-white shadow-sm rounded-lg">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-light text-gray-900">Products</h3>
+                  <Button>Add Product</Button>
+                </div>
+                <DataTable
+                  data={[]}
+                  columns={[
+                    { header: "NAME", accessorKey: "name" },
+                    { header: "TYPE", accessorKey: "type" },
+                  ]}
+                />
+              </div>
+            </div>
+          ) : (
+            <div className="bg-white shadow-sm rounded-lg">
+              <div className="p-6">
+                <div className="flex justify-between items-center mb-4">
+                  <h3 className="text-lg font-light text-gray-900">API Keys</h3>
+                  <Button>Add API Key</Button>
+                </div>
+                <DataTable
+                  data={[]}
+                  columns={[
+                    { header: "NAME", accessorKey: "name" },
+                    { header: "TYPE", accessorKey: "type" },
+                  ]}
+                />
+              </div>
+            </div>
+          )}
+        </div>
+      ) : (
+        <div className="bg-white shadow-sm rounded-lg">
+          <div className="p-6">
+            <DataTable
+              data={organizations}
+              columns={columns}
+              actions={renderActions}
+            />
+          </div>
+        </div>
+      )}
     </div>
   );
 } 

@@ -6,12 +6,8 @@ import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
   Settings,
-  LayoutDashboard,
   Building2,
-  Users,
-  Key,
   Menu,
-  Package,
 } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { PortalHeader } from "@/components/ui/portal-header";
@@ -33,10 +29,7 @@ export function SuperAdminLayoutClient({ children, title, description }: SuperAd
   const locale = pathname.split("/")[1];
 
   const navigation = [
-    { name: "Dashboard", href: `/${locale}/superadmin`, icon: LayoutDashboard },
     { name: "Organizations", href: `/${locale}/superadmin/organizations`, icon: Building2 },
-    { name: "Products", href: `/${locale}/superadmin/products`, icon: Package },
-    { name: "API Keys", href: `/${locale}/superadmin/api-keys`, icon: Key },
     { name: "Settings", href: `/${locale}/superadmin/settings`, icon: Settings },
   ];
 

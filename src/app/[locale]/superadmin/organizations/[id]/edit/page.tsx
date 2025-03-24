@@ -3,12 +3,11 @@
 import { useRouter } from "next/navigation";
 import { useState } from "react";
 import { Button } from "@/components/ui/button";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
 import { DataTable } from "@/components/ui/data-table";
 import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { Edit, MoreHorizontal, Plus } from "lucide-react";
-import { toast } from "sonner";
+import { Edit, MoreHorizontal } from "lucide-react";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 interface Product {
   id: string;
@@ -24,12 +23,36 @@ interface ApiKey {
   value: string;
 }
 
-export default function NewOrganizationPage() {
+interface Organization {
+  id: string;
+  name: string;
+  products: Product[];
+  apiKeys: ApiKey[];
+}
+
+export default function EditOrganizationPage({ params }: { params: { id: string } }) {
   const router = useRouter();
-  const [name, setName] = useState("");
-  const [products, setProducts] = useState<Product[]>([]);
-  const [apiKeys, setApiKeys] = useState<ApiKey[]>([]);
-  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [isLoading, setIsLoading] = useState(true);
+  const [organization, setOrganization] = useState<Organization>({
+    id: params.id,
+    name: "Sample Organization",
+    products: [
+      {
+        id: "1",
+        name: "Product 1",
+        type: "VALUEFLOWS",
+        category: "SALES",
+      },
+    ],
+    apiKeys: [
+      {
+        id: "1",
+        name: "API Key 1",
+        type: "OPENAI",
+        value: "sk-...",
+      },
+    ],
+  });
 
   // Get locale from pathname
   const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en';
@@ -101,42 +124,24 @@ export default function NewOrganizationPage() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    setIsSubmitting(true);
-
-    try {
-      const response = await fetch('/api/organizations', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          products,
-          apiKeys,
-        }),
-      });
-
-      if (!response.ok) {
-        throw new Error('Failed to create organization');
-      }
-
-      toast.success('Organization created successfully');
-      router.push(`/${locale}/superadmin/organizations`);
-      router.refresh();
-    } catch (error) {
-      console.error('Error creating organization:', error);
-      toast.error('Failed to create organization');
-    } finally {
-      setIsSubmitting(false);
-    }
+    // TODO: Implement API call to update organization
+    router.push(`/${locale}/superadmin/organizations`);
   };
+
+  if (isLoading) {
+    return (
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-light text-gray-900">New Organization</h1>
+        <h1 className="text-2xl font-light text-gray-900">Edit Organization</h1>
         <p className="mt-1 text-sm text-gray-500">
-          Create a new organization and configure its resources
+          Edit organization details and manage its resources
         </p>
       </div>
 
@@ -147,8 +152,8 @@ export default function NewOrganizationPage() {
               <Label htmlFor="name">Organization Name</Label>
               <Input
                 id="name"
-                value={name}
-                onChange={(e) => setName(e.target.value)}
+                value={organization.name}
+                onChange={(e) => setOrganization({ ...organization, name: e.target.value })}
                 placeholder="Enter organization name"
                 required
               />
@@ -156,46 +161,22 @@ export default function NewOrganizationPage() {
           </div>
         </div>
 
-        <div className="bg-white shadow-sm rounded-lg p-6">
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-light text-gray-900">Products</h3>
-                <p className="text-sm text-gray-500">
-                  Configure which products are available for this organization
-                </p>
-              </div>
-              <Button type="button" variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Add Product
-              </Button>
-            </div>
-
+        <div className="bg-white shadow-sm rounded-lg">
+          <div className="p-6">
+            <h2 className="text-lg font-light text-gray-900 mb-4">Products</h2>
             <DataTable
-              data={products}
+              data={organization.products}
               columns={productColumns}
               actions={renderProductActions}
             />
           </div>
         </div>
 
-        <div className="bg-white shadow-sm rounded-lg p-6">
-          <div className="space-y-4">
-            <div className="flex justify-between items-center">
-              <div>
-                <h3 className="text-lg font-light text-gray-900">API Keys</h3>
-                <p className="text-sm text-gray-500">
-                  Configure API keys for this organization
-                </p>
-              </div>
-              <Button type="button" variant="outline">
-                <Plus className="mr-2 h-4 w-4" />
-                Add API Key
-              </Button>
-            </div>
-
+        <div className="bg-white shadow-sm rounded-lg">
+          <div className="p-6">
+            <h2 className="text-lg font-light text-gray-900 mb-4">API Keys</h2>
             <DataTable
-              data={apiKeys}
+              data={organization.apiKeys}
               columns={apiKeyColumns}
               actions={renderApiKeyActions}
             />
@@ -210,9 +191,7 @@ export default function NewOrganizationPage() {
           >
             Cancel
           </Button>
-          <Button type="submit" disabled={isSubmitting}>
-            {isSubmitting ? 'Creating...' : 'Create Organization'}
-          </Button>
+          <Button type="submit">Save Changes</Button>
         </div>
       </form>
     </div>

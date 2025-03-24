@@ -6,24 +6,17 @@ interface Column<T> {
   header: string;
   accessorKey: keyof T;
   className?: string;
-}
-
-interface RowRender<T> {
-  cells: {
-    key: string;
-    content: string;
-  }[];
-  actions: React.ReactNode;
+  cell?: (value: any) => React.ReactNode;
 }
 
 interface DataTableProps<T> {
   data: T[];
   columns: Column<T>[];
-  renderRow: (item: T) => RowRender<T>;
+  actions?: ((item: T) => React.ReactNode) | React.ReactNode;
   className?: string;
 }
 
-export function DataTable<T>({ data, columns, renderRow, className }: DataTableProps<T>) {
+export function DataTable<T>({ data, columns, actions, className }: DataTableProps<T>) {
   return (
     <div className={cn("rounded-md border", className)}>
       <div className="overflow-x-auto">
@@ -41,37 +34,41 @@ export function DataTable<T>({ data, columns, renderRow, className }: DataTableP
                   {column.header}
                 </th>
               ))}
-              <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wide text-gray-500">
-                ACTIONS
-              </th>
+              {actions && (
+                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wide text-gray-500">
+                  ACTIONS
+                </th>
+              )}
             </tr>
           </thead>
           <tbody>
-            {data.map((item, index) => {
-              const row = renderRow(item);
-              return (
-                <tr
-                  key={index}
-                  className="border-b bg-white transition-colors hover:bg-gray-50/50"
-                >
-                  {row.cells.map((cell) => (
-                    <td
-                      key={cell.key}
-                      className="px-4 py-3 text-gray-900"
-                    >
-                      {cell.content}
-                    </td>
-                  ))}
-                  <td className="px-4 py-3 text-right">
-                    {row.actions}
+            {data.map((item, index) => (
+              <tr
+                key={index}
+                className="border-b bg-white transition-colors hover:bg-gray-50/50"
+              >
+                {columns.map((column) => (
+                  <td
+                    key={String(column.accessorKey)}
+                    className="px-4 py-3 text-gray-900"
+                  >
+                    {column.cell 
+                      ? column.cell(item[column.accessorKey])
+                      : String(item[column.accessorKey])
+                    }
                   </td>
-                </tr>
-              );
-            })}
+                ))}
+                {actions && (
+                  <td className="px-4 py-3 text-right">
+                    {typeof actions === 'function' ? actions(item) : actions}
+                  </td>
+                )}
+              </tr>
+            ))}
             {data.length === 0 && (
               <tr>
                 <td
-                  colSpan={columns.length + 1}
+                  colSpan={columns.length + (actions ? 1 : 0)}
                   className="px-4 py-3 text-center text-gray-500"
                 >
                   No data available
