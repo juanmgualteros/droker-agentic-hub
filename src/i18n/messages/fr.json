@@ -1,0 +1,89 @@
+{
+  "common": {
+    "save": "Enregistrer les modifications",
+    "cancel": "Annuler",
+    "add": "Ajouter",
+    "remove": "Supprimer",
+    "edit": "Modifier",
+    "loading": "Chargement...",
+    "error": "Une erreur s'est produite",
+    "success": "Succès"
+  },
+  "navigation": {
+    "dashboard": "Tableau de bord",
+    "products": "Produits",
+    "settings": "Paramètres",
+    "adminPortal": "Portail d'administration"
+  },
+  "products": {
+    "title": "Produits",
+    "description": "Gérer et configurer les produits de votre organisation",
+    "configuration": {
+      "rag": {
+        "title": "Configuration RAG",
+        "systemPrompt": "Prompt système",
+        "systemPromptDescription": "Définissez le comportement et la personnalité de l'IA lors de la réponse aux questions basées sur le contexte fourni.",
+        "sources": {
+          "title": "Sources",
+          "description": "Configurer les différents types de sources",
+          "files": {
+            "title": "Fichiers",
+            "description": "Téléchargez des documents PDF, des fichiers Word ou des fichiers texte que l'IA utilisera comme matériel de référence.",
+            "upload": "Télécharger des fichiers"
+          },
+          "websites": {
+            "title": "Sites Web",
+            "description": "Ajoutez des URLs de sites web que l'IA analysera et utilisera comme matériel de référence.",
+            "addUrl": "Ajouter une URL",
+            "placeholder": "Entrez l'URL du site web"
+          },
+          "qa": {
+            "title": "Paires Q&R",
+            "description": "Créez des paires prédéfinies de questions et réponses que l'IA peut utiliser comme matériel de référence.",
+            "add": "Ajouter une paire Q&R",
+            "question": "Question",
+            "answer": "Réponse"
+          }
+        }
+      },
+      "agent": {
+        "title": "Agent",
+        "description": "Configurer le comportement et l'apparence de l'agent",
+        "systemPrompt": "Prompt système",
+        "parameters": {
+          "temperature": "Température",
+          "maxTokens": "Tokens maximum"
+        },
+        "appearance": {
+          "title": "Apparence du chat",
+          "description": "Personnalisez l'aspect et la convivialité de votre interface de chat",
+          "primaryColor": "Couleur primaire",
+          "secondaryColor": "Couleur secondaire",
+          "fontFamily": "Police de caractères"
+        },
+        "privacy": {
+          "title": "Confidentialité du chat",
+          "description": "Contrôlez si le chat est accessible publiquement ou nécessite une authentification",
+          "private": "Les utilisateurs doivent être authentifiés pour accéder au chat",
+          "public": "Le chat est accessible publiquement"
+        },
+        "testing": {
+          "title": "Chat de test",
+          "description": "Testez votre configuration de chat dans un environnement de test",
+          "openTest": "Ouvrir le chat de test"
+        },
+        "live": {
+          "title": "Chat en direct",
+          "description": "Obtenez des liens partageables et le code pour intégrer votre chat en direct",
+          "embedCode": "Code d'intégration"
+        }
+      },
+      "users": {
+        "title": "Utilisateurs du produit",
+        "description": "Gérer les utilisateurs qui ont accès à ce produit",
+        "import": "Importer des utilisateurs",
+        "add": "Ajouter un utilisateur"
+      }
+    }
+  }
+} 

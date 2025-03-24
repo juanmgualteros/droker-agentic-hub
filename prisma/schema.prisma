@@ -1,0 +1,119 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model ApiKey {
+  id              String            @id
+  name            String
+  type            ApiKeyType
+  value           String
+  organizationId  String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  organization    Organization      @relation(fields: [organizationId], references: [id])
+  apiKeyToProduct ApiKeyToProduct[]
+}
+
+model ApiKeyToProduct {
+  apiKeyId  String
+  productId String
+  createdAt DateTime @default(now())
+  apiKey    ApiKey   @relation(fields: [apiKeyId], references: [id])
+  product   Product  @relation(fields: [productId], references: [id])
+
+  @@id([apiKeyId, productId])
+}
+
+model Organization {
+  id           String        @id
+  name         String
+  createdAt    DateTime      @default(now())
+  updatedAt    DateTime
+  apiKeys      ApiKey[]
+  products     Product[]
+  subscription Subscription?
+  users        User[]
+}
+
+model Product {
+  id              String            @id
+  name            String
+  description     String?
+  price           Float
+  organizationId  String
+  createdAt       DateTime          @default(now())
+  updatedAt       DateTime
+  category        ProductCategory
+  type            ProductType
+  apiKeyToProduct ApiKeyToProduct[]
+  organization    Organization      @relation(fields: [organizationId], references: [id])
+}
+
+model Subscription {
+  id             String           @id
+  type           SubscriptionType
+  startDate      DateTime         @default(now())
+  endDate        DateTime?
+  organizationId String           @unique
+  createdAt      DateTime         @default(now())
+  updatedAt      DateTime
+  status         SubStatus
+  organization   Organization     @relation(fields: [organizationId], references: [id])
+}
+
+model User {
+  id             String       @id
+  email          String       @unique
+  name           String
+  organizationId String
+  createdAt      DateTime     @default(now())
+  updatedAt      DateTime
+  clerkId        String?      @unique
+  role           UserRole     @default(USER)
+  organization   Organization @relation(fields: [organizationId], references: [id])
+}
+
+enum UserRole {
+  SUPERADMIN
+  ADMIN
+  USER
+}
+
+enum ApiKeyType {
+  OPENAI
+  SUPABASE
+  OTHER
+}
+
+enum ProductType {
+  VALUEFLOWS
+  EXPERTS
+}
+
+enum ProductCategory {
+  SALES
+  ONBOARDING
+  COLLECTIONS
+  OPERATIONS
+  NEGOTIATION
+  EXPERT_SALES
+}
+
+enum SubscriptionType {
+  FREE
+  BASIC
+  PRO
+  ENTERPRISE
+}
+
+enum SubStatus {
+  ACTIVE
+  INACTIVE
+  CANCELLED
+  EXPIRED
+}

@@ -1,0 +1,107 @@
+{
+  "common": {
+    "save": "Save Changes",
+    "cancel": "Cancel",
+    "add": "Add",
+    "remove": "Remove",
+    "edit": "Edit",
+    "loading": "Loading...",
+    "error": "An error occurred",
+    "success": "Success"
+  },
+  "navigation": {
+    "dashboard": "Dashboard",
+    "products": "Products",
+    "settings": "Settings",
+    "adminPortal": "Admin Portal"
+  },
+  "products": {
+    "title": "Products",
+    "description": "Manage and configure your organization's products",
+    "configuration": {
+      "rag": {
+        "title": "RAG Configuration",
+        "systemPrompt": "System Prompt",
+        "systemPromptDescription": "Define the AI's behavior and personality when responding to questions based on the provided context.",
+        "sources": {
+          "title": "Sources",
+          "description": "Configure the different types of sources",
+          "files": {
+            "title": "Files",
+            "description": "Upload PDF documents, Word files, or text files that the AI will use as reference material.",
+            "upload": "Upload Files"
+          },
+          "websites": {
+            "title": "Websites",
+            "description": "Add website URLs that the AI will crawl and use as reference material.",
+            "addUrl": "Add URL",
+            "placeholder": "Enter website URL"
+          },
+          "qa": {
+            "title": "Q&A Pairs",
+            "description": "Create predefined question and answer pairs that the AI can use as reference material.",
+            "add": "Add Q&A Pair",
+            "question": "Question",
+            "answer": "Answer"
+          }
+        }
+      },
+      "agent": {
+        "title": "Agent",
+        "description": "Configure the agent's behavior and appearance",
+        "systemPrompt": "System Prompt",
+        "parameters": {
+          "temperature": "Temperature",
+          "maxTokens": "Max Tokens"
+        },
+        "appearance": {
+          "title": "Chat Appearance",
+          "description": "Customize the look and feel of your chat interface",
+          "primaryColor": "Primary Color",
+          "secondaryColor": "Secondary Color",
+          "fontFamily": "Font Family"
+        },
+        "privacy": {
+          "title": "Chat Privacy",
+          "description": "Control whether the chat is publicly accessible or requires authentication",
+          "private": "Users must be authenticated to access the chat",
+          "public": "Chat is publicly accessible"
+        },
+        "testing": {
+          "title": "Test Chat",
+          "description": "Test your chat configuration in a sandbox environment",
+          "openTest": "Open Test Chat"
+        },
+        "live": {
+          "title": "Live Chat",
+          "description": "Get shareable links and embed code for your live chat",
+          "embedCode": "Embed Code"
+        }
+      },
+      "users": {
+        "title": "Product Users",
+        "description": "Manage users who have access to this product",
+        "import": "Import Users",
+        "add": "Add User"
+      }
+    }
+  },
+  "Index": {
+    "title": "Welcome to Agentic Hub",
+    "description": "Access administrator controls and manage your organization",
+    "portals": {
+      "superadmin": {
+        "title": "Super Admin Portal",
+        "description": "Manage system-wide settings and configurations"
+      },
+      "admin": {
+        "title": "Admin Portal",
+        "description": "Manage organization settings and users"
+      },
+      "user": {
+        "title": "User Portal",
+        "description": "Access your workspace and tools"
+      }
+    }
+  }
+} 
