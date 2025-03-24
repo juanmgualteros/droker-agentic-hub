@@ -5,6 +5,7 @@ import { Inter } from "next/font/google";
 import { ClerkProvider } from "@clerk/nextjs";
 import { NextIntlClientProvider, useMessages } from "next-intl";
 import { notFound } from "next/navigation";
+import ErrorBoundary from '@/components/ErrorBoundary';
 
 const inter = Inter({ subsets: ["latin"] });
 
@@ -38,7 +39,9 @@ export default function RootLayout({ children, params: { locale } }: RootLayoutP
       <body className={`font-comfortaa font-light antialiased`}>
         <NextIntlClientProvider locale={locale} messages={messages}>
           <ClerkProvider>
-            {children}
+            <ErrorBoundary>
+              {children}
+            </ErrorBoundary>
           </ClerkProvider>
         </NextIntlClientProvider>
       </body>

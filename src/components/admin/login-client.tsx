@@ -31,35 +31,49 @@ export function LoginClient() {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    // Check for super admin credentials
-    if (email === "juan@droker.co" && password === "password") {
-      // Store the authentication state
-      localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("userRole", "superadmin");
+    try {
+      // Clear any previous errors
+      setError("");
       
-      // Set secure cookies with proper configuration for production
-      document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
-      document.cookie = "userRole=superadmin; path=/; max-age=86400; SameSite=Lax";
-      
-      // Get the intended destination from the URL or default to superadmin with locale
-      const destination = searchParams.get("destination") || `/${locale}/superadmin`;
-      router.push(destination);
-    }
-    // Check for admin credentials
-    else if (email === "tatiana@calderon.com" && password === "password") {
-      // Store the authentication state
-      localStorage.setItem("isAuthenticated", "true");
-      localStorage.setItem("userRole", "admin");
-      
-      // Set secure cookies with proper configuration for production
-      document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
-      document.cookie = "userRole=admin; path=/; max-age=86400; SameSite=Lax";
-      
-      // Get the intended destination from the URL or default to admin with locale
-      const destination = searchParams.get("destination") || `/${locale}/admin`;
-      router.push(destination);
-    } else {
-      setError("Invalid credentials");
+      // Check for super admin credentials
+      if (email === "juan@droker.co" && password === "password") {
+        // Store the authentication state with proper error handling
+        try {
+          localStorage.setItem("isAuthenticated", "true");
+          localStorage.setItem("userRole", "superadmin");
+          
+          // Set secure cookies with proper configuration
+          document.cookie = `isAuthenticated=true; path=/; max-age=86400; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`;
+          document.cookie = `userRole=superadmin; path=/; max-age=86400; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`;
+          
+          const destination = searchParams.get("destination") || `/${locale}/superadmin`;
+          router.push(destination);
+        } catch (storageError) {
+          console.error("Storage error:", storageError);
+          setError("Authentication failed. Please try again.");
+        }
+      }
+      // Check for admin credentials
+      else if (email === "tatiana@calderon.com" && password === "password") {
+        try {
+          localStorage.setItem("isAuthenticated", "true");
+          localStorage.setItem("userRole", "admin");
+          
+          document.cookie = `isAuthenticated=true; path=/; max-age=86400; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`;
+          document.cookie = `userRole=admin; path=/; max-age=86400; SameSite=Lax${process.env.NODE_ENV === 'production' ? '; Secure' : ''}`;
+          
+          const destination = searchParams.get("destination") || `/${locale}/admin`;
+          router.push(destination);
+        } catch (storageError) {
+          console.error("Storage error:", storageError);
+          setError("Authentication failed. Please try again.");
+        }
+      } else {
+        setError("Invalid credentials");
+      }
+    } catch (error) {
+      console.error("Login error:", error);
+      setError("An unexpected error occurred. Please try again.");
     }
   };
 
