@@ -15,7 +15,6 @@ export default async function OrganizationPage() {
 
   const user = await prisma.user.findFirst({
     where: {
-      clerkId: userId,
       role: "ADMIN",
     },
     include: {
