@@ -9,11 +9,17 @@ export async function PATCH(
 ) {
   try {
     const body = await request.json();
-    const { status } = body;
+    const { name, type, value } = body;
 
+    // Update only valid fields for ApiKey
     const apiKey = await prisma.apiKey.update({
       where: { id: params.id },
-      data: { status },
+      data: { 
+        ...(name && { name }),
+        ...(type && { type }),
+        ...(value && { value }),
+        updatedAt: new Date()
+      },
     });
 
     return NextResponse.json(apiKey);

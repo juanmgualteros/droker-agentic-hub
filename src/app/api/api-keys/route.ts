@@ -1,5 +1,6 @@
 import { NextResponse } from 'next/server';
 import { PrismaClient } from '@prisma/client';
+import { v4 as uuidv4 } from 'uuid';
 
 const prisma = new PrismaClient();
 
@@ -30,11 +31,12 @@ export async function POST(request: Request) {
 
     const apiKey = await prisma.apiKey.create({
       data: {
+        id: uuidv4(),
         name,
         value,
         type,
-        status: 'ACTIVE',
         organizationId: organization.id,
+        updatedAt: new Date()
       },
     });
 
@@ -56,6 +58,7 @@ export async function PUT(request: Request) {
         name,
         value,
         type,
+        updatedAt: new Date()
       },
     });
 

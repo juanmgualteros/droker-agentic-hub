@@ -1,5 +1,6 @@
 import { PrismaClient, ProductType, ProductCategory } from '@prisma/client';
 import { NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
 
 const prisma = new PrismaClient();
 
@@ -43,21 +44,18 @@ export async function POST(request: Request) {
 
     // For now, we'll use a default organization ID
     // In a real app, this should come from the authenticated user's context
-    const defaultOrg = await prisma.organization.findFirst({
-      where: {
-        state: 'ACTIVE'
-      }
-    });
+    const defaultOrg = await prisma.organization.findFirst();
 
     if (!defaultOrg) {
       return NextResponse.json(
-        { error: 'No active organization found' },
+        { error: 'No organization found' },
         { status: 400 }
       );
     }
 
     const product = await prisma.product.create({
       data: {
+        id: uuidv4(), // Generate a UUID for the ID
         name: data.name,
         type: data.type,
         category: data.category,

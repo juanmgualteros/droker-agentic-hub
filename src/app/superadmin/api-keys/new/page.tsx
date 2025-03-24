@@ -2,18 +2,25 @@ import { prisma } from "@/lib/db";
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import Link from "next/link";
-import type { Organization } from "@/types/organization";
+import { v4 as uuidv4 } from "uuid";
 
 export default async function NewApiKeyPage() {
   const organizations = await prisma.organization.findMany({
     orderBy: {
       name: 'asc',
     },
-    include: {
-      _count: true,
-      apiKeys: true
-    }
   });
+
+  if (organizations.length === 0) {
+    return (
+      <div className="bg-white rounded-lg border p-6">
+        <p className="text-gray-600">You need to create an organization first before creating API keys.</p>
+        <Link href="/superadmin/organizations/new" className="text-blue-600 hover:text-blue-800">
+          Create Organization
+        </Link>
+      </div>
+    );
+  }
 
   async function createApiKey(formData: FormData) {
     'use server';
@@ -28,6 +35,7 @@ export default async function NewApiKeyPage() {
     }
     await prisma.apiKey.create({
       data: {
+        id: uuidv4(),
         name,
         type: type as 'OPENAI' | 'SUPABASE',
         value,
@@ -42,11 +50,9 @@ export default async function NewApiKeyPage() {
 
   return (
     <div className="space-y-8">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-semibold">New API Key</h1>
-          <p className="text-gray-600">Add a new API key for OpenAI or Supabase</p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-semibold">New API Key</h1>
+        <p className="text-gray-600">Create a new API key for an organization</p>
       </div>
 
       <div className="bg-white rounded-lg border p-6">
@@ -61,7 +67,7 @@ export default async function NewApiKeyPage() {
               id="name"
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              placeholder="e.g. Production OpenAI Key"
+              placeholder="E.g., OpenAI Production Key"
             />
           </div>
 
@@ -91,7 +97,7 @@ export default async function NewApiKeyPage() {
               id="value"
               required
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
-              placeholder="Enter the API key"
+              placeholder="sk-..."
             />
           </div>
 
@@ -106,7 +112,7 @@ export default async function NewApiKeyPage() {
               className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-blue-500 focus:ring-blue-500 sm:text-sm"
             >
               <option value="">Select an organization</option>
-              {organizations.map((org: Organization) => (
+              {organizations.map((org) => (
                 <option key={org.id} value={org.id}>
                   {org.name}
                 </option>

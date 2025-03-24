@@ -9,8 +9,8 @@ interface Organization {
   name: string;
   createdAt: Date;
   updatedAt: Date;
-  state: string;
-  subscriptionId: string | null;
+  state?: string;
+  subscriptionId?: string | null;
 }
 
 interface AdminUser {

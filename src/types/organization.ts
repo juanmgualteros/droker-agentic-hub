@@ -1,18 +1,20 @@
 export interface Organization {
   id: string;
   name: string;
-  state: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'SUSPENDED';
+  state?: 'ACTIVE' | 'INACTIVE' | 'PENDING' | 'SUSPENDED';
   createdAt: Date;
   updatedAt: Date;
-  _count: {
+  _count?: {
     users: number;
     products: number;
+    apiKeys?: number;
+    subscription?: number;
   };
   subscription?: {
     type: 'NONE' | 'FREE' | 'BASIC' | 'PRO' | 'ENTERPRISE';
     status: 'ACTIVE' | 'INACTIVE' | 'CANCELLED' | 'EXPIRED';
   } | null;
-  apiKeys: {
+  apiKeys?: {
     id: string;
     name: string;
     type: 'OPENAI' | 'SUPABASE' | 'OTHER';

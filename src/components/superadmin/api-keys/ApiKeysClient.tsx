@@ -3,21 +3,11 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import DataTable from '@/components/common/DataTable';
+import { ApiKey, ApiKeyType } from '@/types/api-key';
 
 interface Organization {
   id: string;
   name: string;
-}
-
-interface ApiKey {
-  id: string;
-  name: string;
-  type: 'OPENAI' | 'SUPABASE';
-  value: string;
-  organizationId: string;
-  createdAt: Date;
-  updatedAt: Date;
-  organization?: Organization;
 }
 
 interface ApiKeysClientProps {
@@ -53,13 +43,17 @@ export default function ApiKeysClient({ apiKeys: initialApiKeys }: ApiKeysClient
     {
       key: 'type',
       header: 'Type',
-      render: (value: string) => (
-        <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${
-          value === 'OPENAI' ? 'bg-green-100 text-green-800' : 'bg-blue-100 text-blue-800'
-        }`}>
-          {value}
-        </span>
-      ),
+      render: (value: ApiKeyType) => {
+        let bgColor = 'bg-gray-100 text-gray-800';
+        if (value === 'OPENAI') bgColor = 'bg-green-100 text-green-800';
+        else if (value === 'SUPABASE') bgColor = 'bg-blue-100 text-blue-800';
+        
+        return (
+          <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${bgColor}`}>
+            {value}
+          </span>
+        );
+      },
     },
     {
       key: 'value',
@@ -110,6 +104,7 @@ export default function ApiKeysClient({ apiKeys: initialApiKeys }: ApiKeysClient
       options: [
         { value: 'OPENAI', label: 'OpenAI' },
         { value: 'SUPABASE', label: 'Supabase' },
+        { value: 'OTHER', label: 'Other' },
       ],
     },
   ];

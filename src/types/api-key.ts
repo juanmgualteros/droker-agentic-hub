@@ -10,7 +10,7 @@ export interface ApiKey {
     id: string;
     name: string;
   };
-  _count: {
+  _count?: {
     products: number;
   };
   createdAt: Date;

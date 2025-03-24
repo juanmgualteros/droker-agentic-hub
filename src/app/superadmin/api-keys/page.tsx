@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import ApiKeysClient from '@/components/superadmin/api-keys/ApiKeysClient';
+import { ApiKey } from '@/types/api-key';
 
 export const dynamic = 'force-dynamic';
 
@@ -14,7 +15,7 @@ export default async function ApiKeysPage() {
       orderBy: {
         createdAt: 'desc'
       }
-    });
+    }) as unknown as ApiKey[];
 
     return (
       <div className="p-6">

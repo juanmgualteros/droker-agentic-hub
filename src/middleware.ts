@@ -15,7 +15,6 @@ const intlMiddleware = createMiddleware({
 const publicRoutes = [
   "/:locale",
   "/:locale/sign-in",
-  "/:locale/sign-up",
   "/:locale/admin/login",
   "/:locale/chat/:productId/test",
   "/:locale/chat/:productId",
@@ -85,8 +84,8 @@ export default authMiddleware({
       return NextResponse.next();
     }
 
-    // Handle sign-in and sign-up pages
-    if (pathname.includes("/sign-in") || pathname.includes("/sign-up")) {
+    // Handle sign-in pages (removed sign-up reference)
+    if (pathname.includes("/sign-in")) {
       if (userId) {
         // If user is authenticated, redirect to home page
         const locale = pathname.split("/")[1] || "en";

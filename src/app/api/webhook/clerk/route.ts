@@ -2,6 +2,7 @@ import { Webhook } from "svix";
 import { WebhookEvent } from "@clerk/nextjs/server";
 import { headers } from "next/headers";
 import { prisma } from "@/lib/db";
+import { v4 as uuidv4 } from "uuid";
 
 export async function POST(req: Request) {
   // Get the headers
@@ -47,7 +48,12 @@ export async function POST(req: Request) {
     const { id, email_addresses, first_name, last_name } = evt.data;
 
     const email = email_addresses[0]?.email_address;
-    const name = first_name && last_name ? `${first_name} ${last_name}` : null;
+    // Provide a default name using the email or "New User" if first_name and last_name aren't available
+    const name = first_name && last_name 
+      ? `${first_name} ${last_name}` 
+      : first_name 
+        ? first_name 
+        : email?.split('@')[0] || "New User";
 
     if (!email) {
       return new Response("No email address found", {
@@ -56,12 +62,28 @@ export async function POST(req: Request) {
     }
 
     try {
+      // Get the first organization or create a default one if none exists
+      let organization = await prisma.organization.findFirst();
+      
+      if (!organization) {
+        organization = await prisma.organization.create({
+          data: {
+            id: uuidv4(),
+            name: "Default Organization",
+            updatedAt: new Date()
+          }
+        });
+      }
+
       await prisma.user.create({
         data: {
+          id: uuidv4(), // Generate a UUID for the ID
           email,
           name,
           clerkId: id,
           role: "USER", // Default role
+          organizationId: organization.id,
+          updatedAt: new Date()
         },
       });
     } catch (error) {
@@ -76,7 +98,12 @@ export async function POST(req: Request) {
     const { id, email_addresses, first_name, last_name } = evt.data;
 
     const email = email_addresses[0]?.email_address;
-    const name = first_name && last_name ? `${first_name} ${last_name}` : null;
+    // Provide a default name using the email or "Updated User" if first_name and last_name aren't available
+    const name = first_name && last_name 
+      ? `${first_name} ${last_name}` 
+      : first_name 
+        ? first_name 
+        : email?.split('@')[0] || "Updated User";
 
     if (!email) {
       return new Response("No email address found", {
@@ -92,6 +119,7 @@ export async function POST(req: Request) {
         data: {
           email,
           name,
+          updatedAt: new Date()
         },
       });
     } catch (error) {
