@@ -18,7 +18,6 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { UserRole } from "@prisma/client";
 import { CreateUserForm } from "@/components/admin/create-user-form";
 
 export default async function NewUserPage() {
@@ -30,7 +29,6 @@ export default async function NewUserPage() {
 
   const user = await prisma.user.findFirst({
     where: {
-      clerkId: userId,
       role: "ADMIN",
     },
   });
