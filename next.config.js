@@ -26,6 +26,23 @@ const nextConfig = {
       },
     ];
   },
+  webpack: (config, { isServer }) => {
+    // Add resolve fallback for problematic modules
+    if (!isServer) {
+      config.resolve.fallback = {
+        ...config.resolve.fallback,
+        fs: false,
+        net: false,
+        tls: false,
+      };
+    }
+
+    return config;
+  },
+  transpilePackages: ['react-style-singleton', 'use-sidecar'],
+  experimental: {
+    optimizeCss: true,
+  },
 };
 
 module.exports = withNextIntl(nextConfig); 
