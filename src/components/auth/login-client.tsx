@@ -63,7 +63,7 @@ export default function LoginClient() {
   return (
     <div className="min-h-screen bg-white flex flex-col justify-center py-12 sm:px-6 lg:px-8">
       <div className="absolute top-4 right-4">
-        <LanguageSelector />
+        <LanguageSelector locale={locale} />
       </div>
 
       <div className="sm:mx-auto sm:w-full sm:max-w-md">
