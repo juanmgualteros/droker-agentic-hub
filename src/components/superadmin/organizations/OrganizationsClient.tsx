@@ -3,7 +3,6 @@
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { DataTable } from '@/components/common/DataTable';
-import { useAuth } from '@clerk/nextjs';
 import Link from 'next/link';
 
 interface ApiKey {
@@ -48,16 +47,11 @@ interface OrganizationsClientProps {
 export default function OrganizationsClient({ organizations: initialOrganizations }: OrganizationsClientProps) {
   const [organizations, setOrganizations] = useState<Organization[]>(initialOrganizations || []);
   const router = useRouter();
-  const { isSignedIn } = useAuth();
 
   // Get locale from pathname
   const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en';
 
   const handleEditClick = (org: Organization) => {
-    if (!isSignedIn) {
-      router.push(`/${locale}/sign-in`);
-      return;
-    }
     router.push(`/${locale}/superadmin/organizations/${org.id}/edit`);
   };
 

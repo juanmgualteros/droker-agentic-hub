@@ -46,19 +46,27 @@ async function getOrganizations() {
   }
 }
 
-export default async function OrganizationsPage() {
+export default async function OrganizationsPage({
+  params
+}: {
+  params: { locale: string }
+}) {
   // Check if user is authenticated and has superadmin role
   const cookieStore = cookies();
   const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
   const userRole = cookieStore.get('userRole')?.value;
 
   if (!isAuthenticated || userRole !== 'superadmin') {
-    redirect('/login');
+    redirect(`/${params.locale}/login`);
   }
 
-  const organizations = await getOrganizations();
-
-  return <OrganizationsClient organizations={organizations} />;
+  try {
+    const organizations = await getOrganizations();
+    return <OrganizationsClient organizations={organizations} />;
+  } catch (error) {
+    console.error('Error in OrganizationsPage:', error);
+    redirect(`/${params.locale}/error`);
+  }
 }
 
 export const dynamic = 'force-dynamic'; 
