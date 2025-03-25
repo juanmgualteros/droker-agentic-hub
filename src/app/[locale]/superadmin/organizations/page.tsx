@@ -69,4 +69,5 @@ export default async function OrganizationsPage({
   }
 }
 
+// Disable static page generation
 export const dynamic = 'force-dynamic'; 

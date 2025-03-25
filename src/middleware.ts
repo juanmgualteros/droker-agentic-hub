@@ -1,4 +1,3 @@
-import { authMiddleware } from "@clerk/nextjs";
 import createMiddleware from "next-intl/middleware";
 import { locales } from "./i18n/config";
 import { NextResponse } from "next/server";
@@ -39,56 +38,48 @@ const ignoredRoutes = [
   "/static"
 ];
 
-// Combine Clerk auth middleware with internationalization
-export default authMiddleware({
-  beforeAuth: (req) => {
-    // Run the internationalization middleware before auth
-    return intlMiddleware(req);
-  },
-  publicRoutes,
-  ignoredRoutes,
-  debug: true, // Enable debug mode temporarily
-  afterAuth(auth, req) {
-    const { userId } = auth;
-    const { pathname } = req.nextUrl;
+export default async function middleware(req: NextRequest) {
+  const { pathname } = req.nextUrl;
 
-    // Handle public routes
-    if (publicRoutes.some(route => {
-      const pattern = new RegExp(route.replace(/:\w+/g, '[^/]+'));
-      return pattern.test(pathname);
-    })) {
-      return NextResponse.next();
-    }
+  // Run the internationalization middleware
+  const response = await intlMiddleware(req);
 
-    // Handle admin routes
-    if (pathname.includes("/admin")) {
-      const isLocalAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
-      const userRole = req.cookies.get("userRole")?.value;
-      
-      if (isLocalAuthenticated && (userRole === "admin" || userRole === "superadmin")) {
-        return NextResponse.next();
-      }
-      
-      const locale = pathname.split("/")[1] || "en";
-      return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
-    }
-
-    // Handle superadmin routes
-    if (pathname.includes("/superadmin")) {
-      const isLocalAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
-      const userRole = req.cookies.get("userRole")?.value;
-      
-      if (isLocalAuthenticated && userRole === "superadmin") {
-        return NextResponse.next();
-      }
-      
-      const locale = pathname.split("/")[1] || "en";
-      return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
-    }
-
-    return NextResponse.next();
+  // Handle public routes
+  if (publicRoutes.some(route => {
+    const pattern = new RegExp(route.replace(/:\w+/g, '[^/]+'));
+    return pattern.test(pathname);
+  })) {
+    return response;
   }
-});
+
+  // Handle admin routes
+  if (pathname.includes("/admin")) {
+    const isLocalAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
+    const userRole = req.cookies.get("userRole")?.value;
+    
+    if (isLocalAuthenticated && (userRole === "admin" || userRole === "superadmin")) {
+      return response;
+    }
+    
+    const locale = pathname.split("/")[1] || "en";
+    return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
+  }
+
+  // Handle superadmin routes
+  if (pathname.includes("/superadmin")) {
+    const isLocalAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
+    const userRole = req.cookies.get("userRole")?.value;
+    
+    if (isLocalAuthenticated && userRole === "superadmin") {
+      return response;
+    }
+    
+    const locale = pathname.split("/")[1] || "en";
+    return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
+  }
+
+  return response;
+}
 
 // Configure middleware matcher
 export const config = {
