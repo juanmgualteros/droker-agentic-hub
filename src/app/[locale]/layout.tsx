@@ -1,13 +1,11 @@
-import { comfortaa } from '@/lib/fonts';
-import '@/styles/globals.css';
+import { NextIntlClientProvider, useMessages } from 'next-intl';
+import { Inter } from 'next/font/google';
+import './globals.css';
 import type { Metadata } from 'next';
-import { Inter } from "next/font/google";
-import { ClerkProvider } from "@clerk/nextjs";
-import { NextIntlClientProvider, useMessages } from "next-intl";
 import { notFound } from "next/navigation";
 import ErrorBoundary from '@/components/ErrorBoundary';
 
-const inter = Inter({ subsets: ["latin"] });
+const inter = Inter({ subsets: ['latin'] });
 
 const locales = ['en', 'es'] as const;
 
@@ -25,7 +23,10 @@ export const metadata: Metadata = {
   description: 'Access administrator controls and manage your organization',
 };
 
-export default function RootLayout({ children, params: { locale } }: RootLayoutProps) {
+export default function RootLayout({
+  children,
+  params: { locale }
+}: RootLayoutProps) {
   // Validate that the incoming `locale` parameter is valid
   if (!locales.includes(locale as any)) {
     notFound();
@@ -35,14 +36,12 @@ export default function RootLayout({ children, params: { locale } }: RootLayoutP
   const messages = useMessages();
 
   return (
-    <html lang={locale} className={`${comfortaa.variable}`}>
-      <body className={`font-comfortaa font-light antialiased`}>
-        <NextIntlClientProvider locale={locale} messages={messages}>
-          <ClerkProvider>
-            <ErrorBoundary>
-              {children}
-            </ErrorBoundary>
-          </ClerkProvider>
+    <html lang={locale}>
+      <body className={inter.className}>
+        <NextIntlClientProvider messages={messages} locale={locale}>
+          <ErrorBoundary>
+            {children}
+          </ErrorBoundary>
         </NextIntlClientProvider>
       </body>
     </html>

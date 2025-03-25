@@ -1,29 +1,22 @@
-import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/db";
-import UserPortalLayout from "@/components/layout/UserPortalLayout";
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
 export default async function PortalLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const { userId } = auth();
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
 
-  if (!userId) {
-    redirect("/sign-in");
+  if (!isAuthenticated || !['admin', 'superadmin'].includes(userRole || '')) {
+    redirect('/login');
   }
 
-  // Get user
-  const user = await prisma.user.findUnique({
-    where: {
-      clerkId: userId,
-    },
-  });
-
-  if (!user) {
-    redirect("/");
-  }
-
-  return <UserPortalLayout>{children}</UserPortalLayout>;
+  return (
+    <div className="min-h-screen bg-gray-100">
+      {children}
+    </div>
+  );
 } 
