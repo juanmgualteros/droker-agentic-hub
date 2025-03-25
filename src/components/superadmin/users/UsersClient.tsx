@@ -20,7 +20,6 @@ interface AdminUser {
   organizationId: string;
   createdAt: Date;
   updatedAt: Date;
-  clerkId: string | null;
   role: string;
   organization?: Organization;
 }

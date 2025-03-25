@@ -1,6 +1,6 @@
 import { NextIntlClientProvider, useMessages } from 'next-intl';
 import { Inter } from 'next/font/google';
-import './globals.css';
+import '../globals.css';
 import type { Metadata } from 'next';
 import { notFound } from "next/navigation";
 import ErrorBoundary from '@/components/ErrorBoundary';

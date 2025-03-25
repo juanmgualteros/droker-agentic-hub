@@ -1,10 +1,8 @@
 import { NextResponse } from 'next/server';
-import { clerkClient } from '@clerk/nextjs';
 import { prisma } from '@/lib/prisma';
 import { UserRole } from '@prisma/client';
 import { randomUUID } from 'crypto';
 import { cookies } from 'next/headers';
-import { v4 as uuidv4 } from 'uuid';
 
 // This is a mock database. In a real application, you would use a proper database.
 let organizations = [
@@ -27,18 +25,16 @@ let organizations = [
 ];
 
 export async function GET() {
-  const cookieStore = cookies();
-  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
-  const userRole = cookieStore.get('userRole')?.value;
-
-  if (!isAuthenticated || userRole !== 'superadmin') {
-    return new Response('Unauthorized', { status: 401 });
-  }
-
   try {
+    const cookieStore = cookies();
+    const token = cookieStore.get('token');
+
+    if (!token) {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
     const organizations = await prisma.organization.findMany({
       include: {
-        subscription: true,
         users: true,
       },
     });
@@ -46,25 +42,36 @@ export async function GET() {
     return NextResponse.json(organizations);
   } catch (error) {
     console.error('Error fetching organizations:', error);
-    return new Response('Error fetching organizations', { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 }
 
 export async function POST(request: Request) {
-  const cookieStore = cookies();
-  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
-  const userRole = cookieStore.get('userRole')?.value;
-
-  if (!isAuthenticated || userRole !== 'superadmin') {
-    return new Response('Unauthorized', { status: 401 });
-  }
-
   try {
-    const data = await request.json();
+    const cookieStore = cookies();
+    const token = cookieStore.get('token');
+    const userRole = cookieStore.get('userRole');
+
+    if (!token || userRole?.value !== 'SUPERADMIN') {
+      return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
+    }
+
+    const { name } = await request.json();
+
+    if (!name) {
+      return NextResponse.json(
+        { error: 'Name is required' },
+        { status: 400 }
+      );
+    }
+
     const organization = await prisma.organization.create({
       data: {
-        id: uuidv4(),
-        name: data.name,
+        id: randomUUID(),
+        name,
         updatedAt: new Date(),
       },
     });
@@ -72,6 +79,9 @@ export async function POST(request: Request) {
     return NextResponse.json(organization);
   } catch (error) {
     console.error('Error creating organization:', error);
-    return new Response('Error creating organization', { status: 500 });
+    return NextResponse.json(
+      { error: 'Internal Server Error' },
+      { status: 500 }
+    );
   }
 } 

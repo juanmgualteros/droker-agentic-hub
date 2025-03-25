@@ -13,13 +13,9 @@ const intlMiddleware = createMiddleware({
 // Define public routes that don't require authentication
 const publicRoutes = [
   "/:locale",
-  "/:locale/sign-in",
-  "/:locale/admin/login",
   "/:locale/login",
   "/:locale/chat/:productId/test",
   "/:locale/chat/:productId",
-  "/api/webhook",
-  "/api/webhook/clerk",
   "/api/webhook/stripe",
   "/login",
   "/",
@@ -31,8 +27,6 @@ const publicRoutes = [
 const ignoredRoutes = [
   "/_next",
   "/favicon.ico",
-  "/api/webhook",
-  "/api/webhook/clerk",
   "/api/webhook/stripe",
   "/login",
   "/static"
@@ -89,7 +83,6 @@ export const config = {
     "/:locale/admin/:path*",
     "/:locale/superadmin/:path*",
     "/:locale/login",
-    "/:locale/sign-in",
     "/:locale"
   ]
 }; 

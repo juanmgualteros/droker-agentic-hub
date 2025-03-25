@@ -1,4 +1,5 @@
 import { PrismaClient } from '@prisma/client';
+import { randomUUID } from 'crypto';
 
 const prisma = new PrismaClient();
 
@@ -26,6 +27,18 @@ async function main() {
       organizationId: organization.id,
       updatedAt: new Date(),
       // Note: clerkId will be set when the admin signs up through Clerk
+    },
+  });
+
+  // Create the superadmin user
+  await prisma.user.create({
+    data: {
+      id: randomUUID(),
+      name: 'Super Admin',
+      email: 'superadmin@example.com',
+      role: 'SUPERADMIN',
+      organizationId: organization.id,
+      updatedAt: new Date(),
     },
   });
 
