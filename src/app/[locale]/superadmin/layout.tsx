@@ -4,7 +4,6 @@
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { PortalLayout } from '@/components/layout/PortalLayout';
-import { parseCookies } from 'nookies';
 
 export default function SuperAdminLayout({
   children,
@@ -19,15 +18,21 @@ export default function SuperAdminLayout({
   const locale = pathname.split("/")[1];
 
   useEffect(() => {
-    // Check authentication and role using cookies
-    const cookies = parseCookies();
-    const isAuthenticated = cookies.isAuthenticated === "true";
-    const userRole = cookies.userRole;
-    
-    if (!isAuthenticated || userRole !== "superadmin") {
+    try {
+      const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+      const userRole = localStorage.getItem("userRole");
+      
+      if (!isAuthenticated || userRole !== "superadmin") {
+        console.log('Not authenticated or not superadmin, redirecting to login');
+        router.replace(`/${locale}/login`);
+        return;
+      }
+
+      setIsLoading(false);
+    } catch (error) {
+      console.error('Error checking authentication:', error);
       router.replace(`/${locale}/login`);
     }
-    setIsLoading(false);
   }, [router, locale]);
 
   if (isLoading) {

@@ -37,16 +37,11 @@ const nextConfig = {
       };
     }
 
-    // Common config for both client and server
+    // Ensure proper module resolution
     config.resolve = {
       ...config.resolve,
-      alias: {
-        ...config.resolve.alias,
-        'use-sidecar': require.resolve('use-sidecar'),
-        'react-style-singleton': require.resolve('react-style-singleton'),
-      },
+      extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
       mainFields: ['browser', 'module', 'main'],
-      extensions: ['.js', '.jsx', '.ts', '.tsx'],
     };
 
     return config;
@@ -54,6 +49,7 @@ const nextConfig = {
   // Disable experimental features
   experimental: {
     optimizeCss: false,
+    esmExternals: true,
   },
   // Ensure proper transpilation
   transpilePackages: [
@@ -68,6 +64,17 @@ const nextConfig = {
   reactStrictMode: true,
   // Disable powered by header
   poweredByHeader: false,
+  // Add Node.js compatibility
+  serverRuntimeConfig: {
+    NODE_ENV: process.env.NODE_ENV,
+  },
+  // Enable SWC minification and compilation
+  swcMinify: true,
+  compiler: {
+    // Enable all transforms
+    styledComponents: true,
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
 };
 
 module.exports = withNextIntl(nextConfig); 
