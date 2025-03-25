@@ -93,26 +93,37 @@ export default function AdminLayout({ children, title, description }: AdminLayou
               </Link>
             </div>
             <nav className="mt-8 flex-1 px-2 space-y-1">
-              {navigation.map((item) => (
-                <Link
-                  key={item.name}
-                  href={item.href}
-                  className={`${
-                    pathname.startsWith(item.href)
-                      ? 'bg-primary text-primary-foreground'
-                      : 'text-foreground-secondary hover:bg-muted'
-                  } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
-                >
-                  <item.icon
-                    className={`${
-                      pathname.startsWith(item.href)
-                        ? 'text-primary-foreground'
-                        : 'text-foreground-secondary'
-                    } mr-3 h-5 w-5`}
-                  />
-                  {item.name}
-                </Link>
-              ))}
+              {navigation.map((item) => {
+                const isActive = pathname.startsWith(item.href);
+                return (
+                  <Link
+                    key={item.name}
+                    href={item.href}
+                    className={cn(
+                      "group flex items-center px-2 py-2 text-sm font-medium rounded-md",
+                      isActive
+                        ? "bg-muted/50"
+                        : "hover:bg-muted"
+                    )}
+                  >
+                    <item.icon
+                      className={cn(
+                        "mr-3 h-5 w-5",
+                        isActive
+                          ? "text-[#0066FF]"
+                          : "text-muted-foreground"
+                      )}
+                    />
+                    <span className={cn(
+                      isActive
+                        ? "text-foreground"
+                        : "text-muted-foreground"
+                    )}>
+                      {item.name}
+                    </span>
+                  </Link>
+                );
+              })}
             </nav>
           </div>
         </div>

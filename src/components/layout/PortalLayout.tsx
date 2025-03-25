@@ -112,32 +112,37 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
 
           {/* Navigation */}
           <nav className="space-y-1 p-4">
-            {navigation.map((item) => (
-              <Link
-                key={item.name}
-                href={`/${locale}${item.href}`}
-                className={cn(
-                  "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                  pathname.startsWith(`/${locale}${item.href}`)
-                    ? "bg-muted/50"
-                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                )}
-              >
-                <item.icon className={cn(
-                  "mr-3 h-5 w-5",
-                  pathname.startsWith(`/${locale}${item.href}`)
-                    ? "text-primary"
-                    : "text-muted-foreground"
-                )} />
-                <span className={cn(
-                  pathname.startsWith(`/${locale}${item.href}`)
-                    ? "text-foreground"
-                    : "text-muted-foreground"
-                )}>
-                  {isSidebarOpen && item.name}
-                </span>
-              </Link>
-            ))}
+            {navigation.map((item) => {
+              const isActive = pathname.startsWith(`/${locale}${item.href}`);
+              return (
+                <Link
+                  key={item.name}
+                  href={`/${locale}${item.href}`}
+                  className={cn(
+                    "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                    isActive
+                      ? "bg-muted/50"
+                      : "hover:bg-muted"
+                  )}
+                >
+                  <item.icon 
+                    className={cn(
+                      "mr-3 h-5 w-5",
+                      isActive 
+                        ? "text-[#0066FF]" 
+                        : "text-muted-foreground"
+                    )} 
+                  />
+                  <span className={cn(
+                    isActive 
+                      ? "text-foreground" 
+                      : "text-muted-foreground"
+                  )}>
+                    {isSidebarOpen && item.name}
+                  </span>
+                </Link>
+              );
+            })}
           </nav>
         </aside>
 
