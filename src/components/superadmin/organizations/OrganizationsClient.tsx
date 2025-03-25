@@ -46,7 +46,7 @@ interface OrganizationsClientProps {
 }
 
 export default function OrganizationsClient({ organizations: initialOrganizations }: OrganizationsClientProps) {
-  const [organizations, setOrganizations] = useState<Organization[]>(initialOrganizations);
+  const [organizations, setOrganizations] = useState<Organization[]>(initialOrganizations || []);
   const router = useRouter();
   const { isSignedIn } = useAuth();
 
@@ -176,12 +176,24 @@ export default function OrganizationsClient({ organizations: initialOrganization
       </div>
       
       <div className="bg-white rounded-lg shadow-sm border border-gray-100">
-        <DataTable
-          data={organizations}
-          columns={columns}
-          actions={actions}
-          className="min-h-[480px]"
-        />
+        {organizations.length === 0 ? (
+          <div className="flex flex-col items-center justify-center p-8">
+            <p className="text-gray-500 mb-4">No organizations found</p>
+            <Link
+              href={`/${locale}/superadmin/organizations/new`}
+              className="text-white bg-black hover:bg-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+            >
+              Create your first organization
+            </Link>
+          </div>
+        ) : (
+          <DataTable
+            data={organizations}
+            columns={columns}
+            actions={actions}
+            className="min-h-[480px]"
+          />
+        )}
       </div>
     </div>
   );
