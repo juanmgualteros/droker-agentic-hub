@@ -92,66 +92,52 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
         {/* Sidebar */}
         <aside
           className={cn(
-            "relative bg-card transition-all duration-300 ease-in-out border-r border-gray-200 shadow-[2px_0_8px_-2px_rgba(0,0,0,0.1)] rounded-tr-md rounded-br-md",
-            isSidebarOpen ? "w-56" : "w-16"
+            "relative bg-card transition-all duration-300 ease-in-out border-r border-border shadow-sm",
+            isSidebarOpen ? "w-64" : "w-16"
           )}
         >
           {/* Toggle Button */}
           <Button
             variant="ghost"
             size="icon"
-            className="absolute -right-3 top-1/2 -translate-y-1/2 h-6 w-6 rounded-full border border-gray-200 bg-white shadow-sm hover:bg-gray-50"
+            className="absolute -right-3 top-4 h-6 w-6 rounded-full border border-border bg-background shadow-sm hover:bg-muted"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             {isSidebarOpen ? (
-              <PanelLeftClose className="h-4 w-4 text-gray-400" />
+              <PanelLeftClose className="h-4 w-4 text-muted-foreground" />
             ) : (
-              <PanelLeftOpen className="h-4 w-4 text-gray-400" />
+              <PanelLeftOpen className="h-4 w-4 text-muted-foreground" />
             )}
           </Button>
 
-          <div className="p-3">
-            <nav className="space-y-1">
-              {navigation.map((item) => {
-                const isActive = pathname.includes(item.href);
-                return (
-                  <Link
-                    key={item.name}
-                    href={`/${locale}${item.href}`}
-                    className={cn(
-                      "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
-                      isActive
-                        ? "bg-primary text-primary-foreground"
-                        : "text-muted-foreground hover:bg-muted hover:text-foreground"
-                    )}
-                    title={!isSidebarOpen ? item.name : undefined}
-                  >
-                    <item.icon 
-                      className={cn(
-                        "h-5 w-5 flex-shrink-0",
-                        isActive 
-                          ? "text-[hsl(215_100%_50%)]" 
-                          : "text-muted-foreground group-hover:text-foreground"
-                      )} 
-                    />
-                    {isSidebarOpen && (
-                      <span className={cn(
-                        "ml-3 truncate",
-                        isActive 
-                          ? "text-[hsl(215_100%_50%)]" 
-                          : "text-muted-foreground"
-                      )}>{item.name}</span>
-                    )}
-                  </Link>
-                );
-              })}
-            </nav>
-          </div>
+          {/* Navigation */}
+          <nav className="space-y-1 p-4">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={`/${locale}${item.href}`}
+                className={cn(
+                  "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
+                  pathname.startsWith(`/${locale}${item.href}`)
+                    ? "bg-primary text-primary-foreground"
+                    : "text-muted-foreground hover:bg-muted hover:text-foreground"
+                )}
+              >
+                <item.icon className={cn(
+                  "mr-3 h-5 w-5",
+                  pathname.startsWith(`/${locale}${item.href}`)
+                    ? "text-primary-foreground"
+                    : "text-muted-foreground"
+                )} />
+                {isSidebarOpen && item.name}
+              </Link>
+            ))}
+          </nav>
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-auto bg-muted/10">
-          <div className="container mx-auto p-6">
+        <main className="flex-1 overflow-y-auto bg-background p-6">
+          <div className="max-w-7xl mx-auto">
             {children}
           </div>
         </main>

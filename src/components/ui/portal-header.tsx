@@ -26,61 +26,68 @@ interface PortalHeaderProps {
 
 export function PortalHeader({ title, locale, isHome = false, userName, isAdmin, organizationName }: PortalHeaderProps) {
   const router = useRouter();
-  const [userRole, setUserRole] = useState('');
+  const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    if (typeof window !== 'undefined') {
-      setUserRole(localStorage.getItem('userRole') || '');
-    }
+    setMounted(true);
   }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem('isAuthenticated');
-    localStorage.removeItem('userRole');
-    document.cookie = 'isAuthenticated=false; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
-    document.cookie = 'userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    localStorage.removeItem("isAuthenticated");
+    localStorage.removeItem("userRole");
+    document.cookie = "isAuthenticated=false; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    document.cookie = "userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     router.replace(`/${locale}/login`);
   };
 
-  const getPortalHomeUrl = () => {
-    return `/${locale}/${userRole}`;
-  };
-
-  // If it's the home page, show only language selection
-  if (isHome) {
-    return (
-      <header className="h-16 bg-white flex items-center justify-end px-8">
-        <LanguageSelector locale={locale} />
-      </header>
-    );
+  if (!mounted) {
+    return null;
   }
 
   return (
-    <header className="h-16 bg-white flex items-center px-8">
-      <div className="flex-1 flex items-center gap-4">
-        <Link href={getPortalHomeUrl()} className="flex items-center gap-2">
-          <Logo src="/images/droker-logo.svg" size="md" className="text-black" />
-          <span className="text-xl font-light text-black">{title}</span>
-        </Link>
-      </div>
-      <div className="flex items-center gap-4">
-        <DropdownMenu>
-          <DropdownMenuTrigger asChild>
-            <Button variant="ghost" size="icon">
-              <Settings className="h-5 w-5" />
-            </Button>
-          </DropdownMenuTrigger>
-          <DropdownMenuContent align="end">
-            <DropdownMenuItem className="cursor-pointer">
-              <LanguageSelector locale={locale} />
-            </DropdownMenuItem>
-            <DropdownMenuSeparator />
-            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
-              <LogOut className="mr-2 h-4 w-4" />
-              <span>Log out</span>
-            </DropdownMenuItem>
-          </DropdownMenuContent>
-        </DropdownMenu>
+    <header className="sticky top-0 z-50 w-full border-b border-border bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
+      <div className="container flex h-16 items-center justify-between">
+        <div className="flex items-center gap-4">
+          <Link href={`/${locale}`} className="flex items-center space-x-2">
+            <Logo className="h-6 w-6" />
+            <span className="text-lg font-light text-foreground">{title}</span>
+          </Link>
+        </div>
+
+        <div className="flex items-center gap-4">
+          <LanguageSelector locale={locale} />
+          
+          <DropdownMenu>
+            <DropdownMenuTrigger asChild>
+              <Button variant="ghost" size="icon">
+                <Settings className="h-5 w-5 text-muted-foreground" />
+              </Button>
+            </DropdownMenuTrigger>
+            <DropdownMenuContent align="end">
+              {isAdmin && (
+                <>
+                  <DropdownMenuItem className="text-sm">
+                    <span className="font-medium">{userName}</span>
+                  </DropdownMenuItem>
+                  <DropdownMenuItem className="text-sm text-muted-foreground">
+                    {organizationName}
+                  </DropdownMenuItem>
+                  <DropdownMenuSeparator />
+                </>
+              )}
+              <DropdownMenuItem asChild>
+                <Link href={`/${locale}/admin/settings`} className="flex items-center">
+                  <Settings className="mr-2 h-4 w-4" />
+                  <span>Settings</span>
+                </Link>
+              </DropdownMenuItem>
+              <DropdownMenuItem onClick={handleLogout} className="text-destructive">
+                <LogOut className="mr-2 h-4 w-4" />
+                <span>Logout</span>
+              </DropdownMenuItem>
+            </DropdownMenuContent>
+          </DropdownMenu>
+        </div>
       </div>
     </header>
   );

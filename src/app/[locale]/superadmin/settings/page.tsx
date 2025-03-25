@@ -10,79 +10,44 @@ export default function SettingsPage() {
 
   return (
     <div className="space-y-6">
-      <div className="flex justify-between items-center">
-        <div>
-          <h1 className="text-2xl font-light text-gray-900">Settings</h1>
-          <p className="mt-1 text-sm text-gray-500">
-            Configure system-wide settings and preferences
-          </p>
-        </div>
+      <div>
+        <h1 className="text-2xl font-light text-foreground">Settings</h1>
+        <p className="text-sm text-muted-foreground">
+          Configure system-wide settings and preferences
+        </p>
       </div>
 
-      <div className="mt-8">
-        <div className="bg-white shadow-sm rounded-lg">
-          <div className="px-4 py-5 sm:p-6">
-            <div className="space-y-4">
-              <div>
-                <h3 className="text-lg font-light text-gray-900">System Configuration</h3>
-                <p className="mt-1 text-sm text-gray-500">
-                  Basic system settings and configurations
-                </p>
-              </div>
-              
-              <div className="grid grid-cols-1 gap-6 mt-6">
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-900">Branding Settings</h4>
-                    <p className="text-sm text-gray-500">
-                      Customize your company logo and branding
-                    </p>
-                  </div>
-                  <Link href={`/${locale}/superadmin/settings/branding`}>
-                    <Button className="text-white bg-black hover:bg-gray-800">
-                      Configure
-                    </Button>
-                  </Link>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-900">Maintenance Mode</h4>
-                    <p className="text-sm text-gray-500">
-                      Enable maintenance mode to prevent user access during updates
-                    </p>
-                  </div>
-                  <Button className="text-white bg-black hover:bg-gray-800">
-                    Enable
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-900">System Notifications</h4>
-                    <p className="text-sm text-gray-500">
-                      Configure system-wide notification preferences
-                    </p>
-                  </div>
-                  <Button className="text-white bg-black hover:bg-gray-800">
-                    Configure
-                  </Button>
-                </div>
-
-                <div className="flex items-center justify-between">
-                  <div>
-                    <h4 className="text-sm font-medium text-gray-900">Backup Settings</h4>
-                    <p className="text-sm text-gray-500">
-                      Configure automatic backup schedule and retention
-                    </p>
-                  </div>
-                  <Button className="text-white bg-black hover:bg-gray-800">
-                    Configure
-                  </Button>
-                </div>
-              </div>
-            </div>
+      <div className="grid grid-cols-1 gap-6">
+        <div className="flex items-center justify-between p-6 bg-card rounded-lg border border-border">
+          <div>
+            <h4 className="text-sm font-medium text-foreground">Branding Settings</h4>
+            <p className="text-sm text-muted-foreground">
+              Customize your company logo and branding
+            </p>
           </div>
+          <Link href={`/${locale}/superadmin/settings/branding`}>
+            <Button>Configure</Button>
+          </Link>
+        </div>
+
+        <div className="flex items-center justify-between p-6 bg-card rounded-lg border border-border">
+          <div>
+            <h4 className="text-sm font-medium text-foreground">Maintenance Mode</h4>
+            <p className="text-sm text-muted-foreground">
+              Enable maintenance mode to prevent user access during updates
+            </p>
+          </div>
+          <Button>Enable</Button>
+        </div>
+
+        <div className="flex items-center justify-between p-6 bg-card rounded-lg border border-border">
+          <div>
+            <h4 className="text-sm font-medium text-foreground">System Notifications</h4>
+            <p className="text-sm text-muted-foreground">
+              Configure system-wide notification preferences
+            </p>
+          </div>
+          <Button>Configure</Button>
         </div>
       </div>
     </div>
