@@ -32,11 +32,23 @@ const ignoredRoutes = [
   "/static"
 ];
 
+// Add security headers to the response
+function addSecurityHeaders(response: NextResponse) {
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('Permissions-Policy', 'camera=(), microphone=(), geolocation=()');
+  return response;
+}
+
 export default async function middleware(req: NextRequest) {
   const { pathname } = req.nextUrl;
 
   // Run the internationalization middleware
   const response = await intlMiddleware(req);
+
+  // Add security headers
+  addSecurityHeaders(response);
 
   // Handle public routes
   if (publicRoutes.some(route => {
