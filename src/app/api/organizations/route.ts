@@ -3,6 +3,8 @@ import { clerkClient } from '@clerk/nextjs';
 import { prisma } from '@/lib/prisma';
 import { UserRole } from '@prisma/client';
 import { randomUUID } from 'crypto';
+import { cookies } from 'next/headers';
+import { v4 as uuidv4 } from 'uuid';
 
 // This is a mock database. In a real application, you would use a proper database.
 let organizations = [
@@ -25,72 +27,51 @@ let organizations = [
 ];
 
 export async function GET() {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
+
+  if (!isAuthenticated || userRole !== 'superadmin') {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   try {
     const organizations = await prisma.organization.findMany({
       include: {
-        products: true,
-        apiKeys: true,
+        subscription: true,
+        users: true,
       },
     });
+
     return NextResponse.json(organizations);
   } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to fetch organizations' },
-      { status: 500 }
-    );
+    console.error('Error fetching organizations:', error);
+    return new Response('Error fetching organizations', { status: 500 });
   }
 }
 
 export async function POST(request: Request) {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
+
+  if (!isAuthenticated || userRole !== 'superadmin') {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   try {
-    const body = await request.json();
-    
-    // Create organization in database
+    const data = await request.json();
     const organization = await prisma.organization.create({
       data: {
-        id: randomUUID(),
-        name: body.name,
+        id: uuidv4(),
+        name: data.name,
         updatedAt: new Date(),
-        products: {
-          create: body.products || [],
-        },
-        apiKeys: {
-          create: body.apiKeys || [],
-        },
-      },
-      include: {
-        products: true,
-        apiKeys: true,
       },
     });
 
-    // Create admin user in Clerk
-    const clerkUser = await clerkClient.users.createUser({
-      emailAddress: [body.adminUser.email],
-      password: body.adminUser.password,
-      firstName: body.adminUser.name.split(' ')[0],
-      lastName: body.adminUser.name.split(' ').slice(1).join(' ') || '',
-    });
-
-    // Create user record in database
-    await prisma.user.create({
-      data: {
-        id: randomUUID(),
-        name: body.adminUser.name,
-        email: body.adminUser.email,
-        role: UserRole.ADMIN,
-        organizationId: organization.id,
-        updatedAt: new Date(),
-        clerkId: clerkUser.id,
-      },
-    });
-
-    return NextResponse.json(organization, { status: 201 });
+    return NextResponse.json(organization);
   } catch (error) {
     console.error('Error creating organization:', error);
-    return NextResponse.json(
-      { error: 'Failed to create organization' },
-      { status: 500 }
-    );
+    return new Response('Error creating organization', { status: 500 });
   }
 } 

@@ -1,78 +1,57 @@
-import { NextResponse } from "next/server";
-import { auth } from "@clerk/nextjs";
-import { prisma } from "@/lib/db";
-import { z } from "zod";
+import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
 
-const createUserSchema = z.object({
-  name: z.string().min(2),
-  email: z.string().email(),
-  organizationId: z.string().min(1),
-  role: z.enum(["ADMIN"]),
-});
+export async function GET() {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
 
-export async function POST(req: Request) {
+  if (!isAuthenticated || userRole !== 'superadmin') {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   try {
-    const { userId } = auth();
-
-    if (!userId) {
-      return new NextResponse("Unauthorized", { status: 401 });
-    }
-
-    // Check if the user is a super admin
-    const superAdmin = await prisma.user.findFirst({
-      where: {
-        clerkId: userId,
-        role: "SUPERADMIN",
+    const users = await prisma.user.findMany({
+      include: {
+        organization: true,
       },
     });
 
-    if (!superAdmin) {
-      return new NextResponse("Forbidden", { status: 403 });
-    }
+    return NextResponse.json(users);
+  } catch (error) {
+    console.error('Error fetching users:', error);
+    return new Response('Error fetching users', { status: 500 });
+  }
+}
 
-    const body = await req.json();
-    const validatedData = createUserSchema.parse(body);
+export async function POST(request: Request) {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
 
-    // Check if organization exists
-    const organization = await prisma.organization.findUnique({
-      where: {
-        id: validatedData.organizationId,
-      },
-    });
+  if (!isAuthenticated || userRole !== 'superadmin') {
+    return new Response('Unauthorized', { status: 401 });
+  }
 
-    if (!organization) {
-      return new NextResponse("Organization not found", { status: 404 });
-    }
+  try {
+    const data = await request.json();
 
-    // Check if email is already in use
-    const existingUser = await prisma.user.findUnique({
-      where: {
-        email: validatedData.email,
-      },
-    });
-
-    if (existingUser) {
-      return new NextResponse("Email already in use", { status: 400 });
-    }
-
-    // Create the admin user
-    const newUser = await prisma.user.create({
+    const user = await prisma.user.create({
       data: {
-        id: `admin-${Date.now()}`, // Generate a unique ID
-        name: validatedData.name,
-        email: validatedData.email,
-        role: validatedData.role,
-        organizationId: validatedData.organizationId,
+        id: uuidv4(),
+        email: data.email,
+        name: data.name,
+        role: data.role,
+        organizationId: data.organizationId,
         updatedAt: new Date(),
       },
     });
 
-    return NextResponse.json(newUser);
+    return NextResponse.json(user);
   } catch (error) {
-    console.error("[SUPERADMIN_CREATE_USER]", error);
-    if (error instanceof z.ZodError) {
-      return new NextResponse("Invalid request data", { status: 400 });
-    }
-    return new NextResponse("Internal error", { status: 500 });
+    console.error('Error creating user:', error);
+    return new Response('Error creating user', { status: 500 });
   }
 } 
