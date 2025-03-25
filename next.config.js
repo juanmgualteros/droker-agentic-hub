@@ -41,7 +41,7 @@ const nextConfig = {
   },
   transpilePackages: ['react-style-singleton', 'use-sidecar'],
   experimental: {
-    optimizeCss: true,
+    optimizeCss: false,
   },
 };
 
