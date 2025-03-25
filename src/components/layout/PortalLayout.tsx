@@ -113,7 +113,8 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
           {/* Navigation */}
           <nav className="space-y-1 p-4">
             {navigation.map((item) => {
-              const isActive = pathname.startsWith(`/${locale}${item.href}`);
+              const isActive = pathname === `/${locale}${item.href}` || 
+                (item.href === '/admin' && pathname === `/${locale}/admin`);
               return (
                 <Link
                   key={item.name}
