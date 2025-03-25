@@ -13,8 +13,7 @@ import {
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
 import Link from 'next/link';
-import { useUser } from "@clerk/nextjs";
-import { useEffect, useState } from 'react';
+import { useState, useEffect } from 'react';
 
 interface PortalHeaderProps {
   title: string;
@@ -27,17 +26,23 @@ interface PortalHeaderProps {
 
 export function PortalHeader({ title, locale, isHome = false, userName, isAdmin, organizationName }: PortalHeaderProps) {
   const router = useRouter();
+  const [userRole, setUserRole] = useState('');
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      setUserRole(localStorage.getItem('userRole') || '');
+    }
+  }, []);
 
   const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated");
-    localStorage.removeItem("userRole");
-    document.cookie = "isAuthenticated=false; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = "userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userRole');
+    document.cookie = 'isAuthenticated=false; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
     router.replace(`/${locale}/login`);
   };
 
   const getPortalHomeUrl = () => {
-    const userRole = localStorage.getItem("userRole");
     return `/${locale}/${userRole}`;
   };
 

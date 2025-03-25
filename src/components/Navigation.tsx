@@ -1,58 +1,68 @@
-import { usePathname } from "next/navigation";
-import { UserButton, SignInButton, useUser } from "@clerk/nextjs";
-import Link from "next/link";
-import { cn } from "../lib/utils";
-import { 
-  HomeIcon, 
-  BuildingOfficeIcon, 
-  UserGroupIcon,
-  Cog6ToothIcon
-} from "@heroicons/react/24/outline";
+'use client';
 
-interface NavigationItem {
-  name: string;
-  href: string;
-  icon: React.ComponentType<{ className?: string }>;
+import { useState } from 'react';
+import Link from 'next/link';
+import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
+
+interface NavigationProps {
+  className?: string;
 }
 
-export function Navigation() {
-  const { isSignedIn, user } = useUser();
-  const pathname = usePathname();
+export function Navigation({ className }: NavigationProps) {
+  const router = useRouter();
+  const [userRole, setUserRole] = useState(() => {
+    if (typeof window !== 'undefined') {
+      return localStorage.getItem('userRole') || '';
+    }
+    return '';
+  });
 
-  const navigation: NavigationItem[] = [
-    { name: "Home", href: "/", icon: HomeIcon },
-    ...(user?.publicMetadata?.role === "SUPERADMIN" 
-      ? [{ name: "Organizations", href: "/superadmin/organizations", icon: BuildingOfficeIcon }] 
-      : []),
-    ...(["ADMIN", "SUPERADMIN"].includes(user?.publicMetadata?.role as string) 
-      ? [{ name: "Admin", href: "/admin", icon: Cog6ToothIcon }] 
-      : []),
-    { name: "Portal", href: "/portal", icon: UserGroupIcon },
+  // Get locale from pathname
+  const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en';
+
+  const handleLogout = () => {
+    localStorage.removeItem('isAuthenticated');
+    localStorage.removeItem('userRole');
+    document.cookie = 'isAuthenticated=false; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    document.cookie = 'userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT';
+    router.push(`/${locale}/login`);
+  };
+
+  const navigation = userRole === 'superadmin' ? [
+    { name: 'Organizations', href: `/${locale}/superadmin/organizations` },
+    { name: 'Settings', href: `/${locale}/superadmin/settings` },
+  ] : [
+    { name: 'Dashboard', href: `/${locale}/admin` },
+    { name: 'Products', href: `/${locale}/admin/products` },
+    { name: 'Organization', href: `/${locale}/admin/organization` },
+    { name: 'Settings', href: `/${locale}/admin/settings` },
   ];
 
-  if (!isSignedIn) return null;
-
   return (
-    <nav className="w-64 bg-white min-h-full py-6 px-4">
-      <div className="space-y-4">
-        {navigation.map((item) => {
-          const isActive = pathname === item.href;
-          return (
-            <Link
-              key={item.name}
-              href={item.href}
-              className={cn(
-                "flex items-center px-4 py-2 text-sm rounded-lg transition-colors",
-                isActive
-                  ? "bg-black text-white"
-                  : "text-gray-600 hover:bg-gray-50"
-              )}
-            >
-              <item.icon className="mr-3 h-5 w-5 text-gray-400" />
-              {item.name}
-            </Link>
-          );
-        })}
+    <nav className={cn("flex flex-col w-64 bg-white border-r border-gray-200", className)}>
+      <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
+        <div className="flex-grow mt-5">
+          <div className="space-y-1">
+            {navigation.map((item) => (
+              <Link
+                key={item.name}
+                href={item.href}
+                className="flex items-center px-4 py-2 text-sm font-light text-gray-600 hover:bg-gray-50"
+              >
+                {item.name}
+              </Link>
+            ))}
+          </div>
+        </div>
+        <div className="px-4">
+          <button
+            onClick={handleLogout}
+            className="w-full flex items-center px-4 py-2 text-sm font-light text-gray-600 hover:bg-gray-50 rounded-md"
+          >
+            Sign out
+          </button>
+        </div>
       </div>
     </nav>
   );
