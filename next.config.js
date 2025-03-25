@@ -47,10 +47,7 @@ const nextConfig = {
     return config;
   },
   // Disable experimental features
-  experimental: {
-    optimizeCss: false,
-    esmExternals: true,
-  },
+  experimental: false,
   // Ensure proper transpilation
   transpilePackages: [
     'use-sidecar',
@@ -68,8 +65,8 @@ const nextConfig = {
   serverRuntimeConfig: {
     NODE_ENV: process.env.NODE_ENV,
   },
-  // Enable SWC minification and compilation
-  swcMinify: true,
+  // Disable SWC minification for better compatibility
+  swcMinify: false,
   compiler: {
     // Enable all transforms
     styledComponents: true,
