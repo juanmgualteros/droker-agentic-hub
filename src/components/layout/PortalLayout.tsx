@@ -92,7 +92,7 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
         {/* Sidebar */}
         <aside
           className={cn(
-            "relative bg-card transition-all duration-300 ease-in-out border-r border-border",
+            "relative bg-card transition-all duration-300 ease-in-out rounded-r-xl shadow-[4px_0_12px_-2px_rgba(0,0,0,0.05)]",
             isSidebarOpen ? "w-64" : "w-16"
           )}
         >
@@ -100,7 +100,7 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
           <Button
             variant="ghost"
             size="icon"
-            className="absolute -right-4 top-3 h-8 w-8 rounded-full border border-border bg-background shadow-sm hover:bg-muted"
+            className="absolute -right-4 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border border-border bg-background shadow-sm hover:bg-muted"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             {isSidebarOpen ? (
@@ -120,7 +120,7 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
                   key={item.name}
                   href={`/${locale}${item.href}`}
                   className={cn(
-                    "flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors",
+                    "flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors relative",
                     isActive
                       ? "bg-muted/50"
                       : "hover:bg-muted"
@@ -128,19 +128,23 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
                 >
                   <item.icon 
                     className={cn(
-                      "mr-3 h-5 w-5",
+                      "flex-shrink-0 h-5 w-5",
+                      !isSidebarOpen && "mx-auto",
                       isActive 
                         ? "text-[#0066FF]" 
                         : "text-muted-foreground"
                     )} 
                   />
-                  <span className={cn(
-                    isActive 
-                      ? "text-foreground" 
-                      : "text-muted-foreground"
-                  )}>
-                    {isSidebarOpen && item.name}
-                  </span>
+                  {isSidebarOpen && (
+                    <span className={cn(
+                      "ml-3",
+                      isActive 
+                        ? "text-foreground" 
+                        : "text-muted-foreground"
+                    )}>
+                      {item.name}
+                    </span>
+                  )}
                 </Link>
               );
             })}
