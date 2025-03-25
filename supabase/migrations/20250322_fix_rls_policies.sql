@@ -21,7 +21,7 @@ CREATE POLICY "Enable full access for superadmin" ON "organizations"
     USING (
         EXISTS (
             SELECT 1 FROM users 
-            WHERE users.clerk_id = auth.uid() 
+            WHERE users.id = auth.uid() 
             AND users.role = 'SUPERADMIN'
         )
     );
@@ -32,7 +32,7 @@ CREATE POLICY "Enable full access for superadmin" ON "api_keys"
     USING (
         EXISTS (
             SELECT 1 FROM users 
-            WHERE users.clerk_id = auth.uid() 
+            WHERE users.id = auth.uid() 
             AND users.role = 'SUPERADMIN'
         )
     );
@@ -43,7 +43,7 @@ CREATE POLICY "Enable full access for superadmin" ON "products"
     USING (
         EXISTS (
             SELECT 1 FROM users 
-            WHERE users.clerk_id = auth.uid() 
+            WHERE users.id = auth.uid() 
             AND users.role = 'SUPERADMIN'
         )
     );
@@ -54,7 +54,7 @@ CREATE POLICY "Enable full access for superadmin" ON "subscriptions"
     USING (
         EXISTS (
             SELECT 1 FROM users 
-            WHERE users.clerk_id = auth.uid() 
+            WHERE users.id = auth.uid() 
             AND users.role = 'SUPERADMIN'
         )
     );
@@ -65,7 +65,7 @@ CREATE POLICY "Enable full access for superadmin" ON "users"
     USING (
         EXISTS (
             SELECT 1 FROM users 
-            WHERE users.clerk_id = auth.uid() 
+            WHERE users.id = auth.uid() 
             AND users.role = 'SUPERADMIN'
         )
     );
@@ -76,7 +76,7 @@ CREATE POLICY "Enable full access for superadmin" ON "api_key_to_product"
     USING (
         EXISTS (
             SELECT 1 FROM users 
-            WHERE users.clerk_id = auth.uid() 
+            WHERE users.id = auth.uid() 
             AND users.role = 'SUPERADMIN'
         )
     );
