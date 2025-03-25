@@ -2,6 +2,7 @@
 
 import { PortalHeader } from "@/components/ui/portal-header";
 import { Navigation } from "@/components/Navigation";
+import { useParams } from 'next/navigation';
 
 interface PageLayoutProps {
   title?: string;
@@ -16,9 +17,12 @@ export function PageLayout({
   children,
   className,
 }: PageLayoutProps) {
+  const params = useParams();
+  const locale = typeof params.locale === 'string' ? params.locale : 'en';
+
   return (
     <div className="min-h-screen bg-white">
-      <PortalHeader />
+      <PortalHeader title={title || 'Droker'} locale={locale} />
       <div className="flex min-h-[calc(100vh-4rem)]">
         <Navigation />
         <main className="flex-1 px-8 py-6">
