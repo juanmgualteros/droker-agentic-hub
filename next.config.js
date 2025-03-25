@@ -44,10 +44,23 @@ const nextConfig = {
       mainFields: ['browser', 'module', 'main'],
     };
 
+    // Configure optimization
+    config.optimization = {
+      ...config.optimization,
+      minimize: true,
+      minimizer: [
+        ...config.optimization.minimizer || [],
+      ],
+    };
+
     return config;
   },
-  // Disable experimental features
-  experimental: false,
+  // Configure experimental features properly
+  experimental: {
+    optimizeCss: false,
+    esmExternals: false,
+    serverActions: true,
+  },
   // Ensure proper transpilation
   transpilePackages: [
     'use-sidecar',
@@ -65,12 +78,10 @@ const nextConfig = {
   serverRuntimeConfig: {
     NODE_ENV: process.env.NODE_ENV,
   },
-  // Disable SWC minification for better compatibility
-  swcMinify: false,
-  compiler: {
-    // Enable all transforms
-    styledComponents: true,
-    removeConsole: process.env.NODE_ENV === 'production',
+  // Enable SWC minification
+  swcMinify: true,
+  env: {
+    _next_intl_trailing_slash: 'true',
   },
 };
 
