@@ -1,65 +1,80 @@
-import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
-import { CreateUserForm } from "@/components/admin/create-user-form";
+import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-export default async function NewUserPage() {
-  const { userId } = auth();
+export default async function NewUserPage({
+  params
+}: {
+  params: { locale: string }
+}) {
+  // Check if user is authenticated and has admin role
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
 
-  if (!userId) {
-    redirect("/admin/login");
-  }
-
-  const user = await prisma.user.findFirst({
-    where: {
-      role: "ADMIN",
-    },
-  });
-
-  if (!user?.organizationId) {
-    return (
-      <div className="text-center py-12">
-        <h1 className="text-2xl font-semibold text-gray-900">No Organization Found</h1>
-        <p className="mt-2 text-gray-500">Please contact support to set up your organization.</p>
-      </div>
-    );
+  if (!isAuthenticated || !['admin', 'superadmin'].includes(userRole || '')) {
+    redirect(`/${params.locale}/login`);
   }
 
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-semibold text-black">Add New User</h1>
-        <p className="text-gray-600">Create a new user in your organization</p>
+        <h1 className="text-2xl font-light text-gray-900">New User</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          Create a new user for your organization
+        </p>
       </div>
-
-      <Card>
-        <CardHeader>
-          <CardTitle>User Details</CardTitle>
-          <CardDescription>
-            Fill in the details for the new user. They will receive an email to set up their account.
-          </CardDescription>
-        </CardHeader>
-        <CardContent>
-          <CreateUserForm organizationId={user.organizationId} />
-        </CardContent>
-      </Card>
+      
+      <div className="bg-white shadow-sm rounded-lg p-6">
+        <form className="space-y-4">
+          <div>
+            <label htmlFor="email" className="block text-sm font-medium text-gray-700">
+              Email
+            </label>
+            <input
+              type="email"
+              name="email"
+              id="email"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+              Name
+            </label>
+            <input
+              type="text"
+              name="name"
+              id="name"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            />
+          </div>
+          
+          <div>
+            <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+              Role
+            </label>
+            <select
+              name="role"
+              id="role"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+            >
+              <option value="USER">User</option>
+              <option value="ADMIN">Admin</option>
+            </select>
+          </div>
+          
+          <div className="flex justify-end space-x-3">
+            <button
+              type="submit"
+              className="inline-flex justify-center py-2 px-4 border border-transparent shadow-sm text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+            >
+              Create User
+            </button>
+          </div>
+        </form>
+      </div>
     </div>
   );
 } 

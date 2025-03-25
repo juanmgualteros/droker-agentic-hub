@@ -1,105 +1,54 @@
-import { auth } from "@clerk/nextjs";
-import { redirect } from "next/navigation";
-import { prisma } from "@/lib/prisma";
-import { PageLayout } from "@/components/shared/page-layout";
-import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import Link from "next/link";
+import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers';
+import { redirect } from 'next/navigation';
 
-export default async function OrganizationPage() {
-  const { userId } = auth();
+export default async function OrganizationPage({
+  params
+}: {
+  params: { locale: string }
+}) {
+  // Check if user is authenticated and has admin role
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
 
-  if (!userId) {
-    redirect("/admin/login");
+  if (!isAuthenticated || !['admin', 'superadmin'].includes(userRole || '')) {
+    redirect(`/${params.locale}/login`);
   }
 
-  const user = await prisma.user.findFirst({
-    where: {
-      role: "ADMIN",
-    },
+  const organization = await prisma.organization.findFirst({
     include: {
-      organization: {
-        include: {
-          subscription: true,
-        },
-      },
+      users: true,
+      apiKeys: true,
+      subscription: true,
     },
   });
 
-  if (!user?.organization) {
+  if (!organization) {
     return (
-      <PageLayout
-        title="No Organization Found"
-        description="Please contact support to get your organization set up"
-      >
-        <div className="text-center">
-          <p className="text-gray-600">
-            You don't have an organization assigned to your account.
+      <div className="space-y-6">
+        <div>
+          <h1 className="text-2xl font-light text-gray-900">Organization</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            No organization found
           </p>
         </div>
-      </PageLayout>
+      </div>
     );
   }
 
   return (
-    <PageLayout
-      title="Organization Settings"
-      description="Manage your organization details and subscription"
-      className="space-y-8"
-    >
-      <div className="grid gap-6 md:grid-cols-2">
-        <Card>
-          <CardHeader>
-            <CardTitle>Organization Details</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-medium">Name</h3>
-              <p className="text-gray-600">{user.organization.name}</p>
-            </div>
-            <div>
-              <h3 className="font-medium">Created</h3>
-              <p className="text-gray-600">
-                {new Date(user.organization.createdAt).toLocaleDateString("en-US", {
-                  year: "numeric",
-                  month: "long",
-                  day: "numeric",
-                })}
-              </p>
-            </div>
-            <div className="pt-4">
-              <Link href="/admin/organization/edit">
-                <Button>Edit Organization</Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
-
-        <Card>
-          <CardHeader>
-            <CardTitle>Subscription</CardTitle>
-          </CardHeader>
-          <CardContent className="space-y-4">
-            <div>
-              <h3 className="font-medium">Current Plan</h3>
-              <p className="text-gray-600">
-                {user.organization.subscription?.type || "FREE"}
-              </p>
-            </div>
-            <div>
-              <h3 className="font-medium">Status</h3>
-              <p className="text-gray-600">
-                {user.organization.subscription?.status || "INACTIVE"}
-              </p>
-            </div>
-            <div className="pt-4">
-              <Link href="/admin/organization/subscription">
-                <Button variant="outline">Manage Subscription</Button>
-              </Link>
-            </div>
-          </CardContent>
-        </Card>
+    <div className="space-y-6">
+      <div>
+        <h1 className="text-2xl font-light text-gray-900">Organization</h1>
+        <p className="mt-1 text-sm text-gray-500">
+          View and manage your organization details
+        </p>
       </div>
-    </PageLayout>
+      
+      <div className="bg-white shadow-sm rounded-lg p-6">
+        <pre>{JSON.stringify(organization, null, 2)}</pre>
+      </div>
+    </div>
   );
 } 
