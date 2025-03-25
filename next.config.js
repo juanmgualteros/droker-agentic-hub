@@ -27,8 +27,8 @@ const nextConfig = {
     ];
   },
   webpack: (config, { isServer }) => {
-    // Add resolve fallback for problematic modules
     if (!isServer) {
+      // Client-side specific config
       config.resolve.fallback = {
         ...config.resolve.fallback,
         fs: false,
@@ -37,19 +37,37 @@ const nextConfig = {
       };
     }
 
-    // Add resolve aliases for problematic modules
-    config.resolve.alias = {
-      ...config.resolve.alias,
-      'use-sidecar': require.resolve('use-sidecar'),
-      'react-style-singleton': require.resolve('react-style-singleton'),
+    // Common config for both client and server
+    config.resolve = {
+      ...config.resolve,
+      alias: {
+        ...config.resolve.alias,
+        'use-sidecar': require.resolve('use-sidecar'),
+        'react-style-singleton': require.resolve('react-style-singleton'),
+      },
+      mainFields: ['browser', 'module', 'main'],
+      extensions: ['.js', '.jsx', '.ts', '.tsx'],
     };
 
     return config;
   },
-  transpilePackages: ['use-sidecar', 'react-style-singleton'],
+  // Disable experimental features
   experimental: {
     optimizeCss: false,
   },
+  // Ensure proper transpilation
+  transpilePackages: [
+    'use-sidecar',
+    'react-style-singleton',
+    '@radix-ui/react-dialog',
+    '@radix-ui/react-dropdown-menu',
+  ],
+  // Disable source maps in production
+  productionBrowserSourceMaps: false,
+  // Enable strict mode
+  reactStrictMode: true,
+  // Disable powered by header
+  poweredByHeader: false,
 };
 
 module.exports = withNextIntl(nextConfig); 
