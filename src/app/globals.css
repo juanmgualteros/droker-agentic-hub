@@ -12,7 +12,7 @@ html {
 
 /* Keep focus outline for keyboard navigation */
 :focus-visible {
-  outline: 2px solid rgba(0, 0, 0, 0.1);
+  outline: 2px solid hsl(var(--ring));
   outline-offset: 2px;
 }
 
@@ -23,24 +23,24 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: #ffffff;
+  background: hsl(var(--background));
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgba(0, 0, 0, 0.1);
+  background: hsl(var(--muted));
   border-radius: 3px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgba(0, 0, 0, 0.2);
+  background: hsl(var(--muted-foreground));
 }
 
 :root {
-  --foreground-rgb: 0, 0, 0;
-  --background-rgb: 255, 255, 255;
+  --foreground-rgb: var(--foreground);
+  --background-rgb: var(--background);
 }
 
 body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
+  color: hsl(var(--foreground));
+  background: hsl(var(--background));
 }

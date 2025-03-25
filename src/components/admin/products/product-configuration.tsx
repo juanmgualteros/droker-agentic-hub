@@ -804,18 +804,17 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
                       </TooltipProvider>
                     </div>
                     
-                    <div className="border rounded-xl p-4 bg-gray-50">
+                    <div className="border rounded-xl p-4 bg-muted/50">
                       <div className="flex flex-col gap-3">
                         <div className="flex gap-3">
-                          <div className="h-8 w-8 rounded-full bg-gray-200 flex-shrink-0"></div>
-                          <div className="bg-white p-3 rounded-lg border" style={{ maxWidth: '80%' }}>
-                            <p className="text-sm font-comfortaa">Hello! How can I help you today?</p>
+                          <div className="h-8 w-8 rounded-full bg-muted flex-shrink-0"></div>
+                          <div className="bg-card p-3 rounded-lg border border-border" style={{ maxWidth: '80%' }}>
+                            <p className="text-sm font-comfortaa text-foreground">Hello! How can I help you today?</p>
                           </div>
                         </div>
                         
                         <div className="flex gap-3 justify-end">
-                          <div className="p-3 rounded-lg text-white" 
-                               style={{ backgroundColor: primaryColor, maxWidth: '80%' }}>
+                          <div className="p-3 rounded-lg text-primary-foreground bg-primary" style={{ maxWidth: '80%' }}>
                             <p className="text-sm font-comfortaa">Can you tell me more about your services?</p>
                           </div>
                         </div>

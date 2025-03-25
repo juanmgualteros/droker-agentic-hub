@@ -13,17 +13,17 @@ interface StatCardProps {
 
 export function StatCard({ title, value, description, icon }: StatCardProps) {
   return (
-    <div className="bg-white p-6 rounded-lg">
+    <div className="bg-card p-6 rounded-lg">
       <div className="flex items-center justify-between">
         <div>
-          <p className="text-sm text-gray-600">{title}</p>
-          <p className="mt-2 text-3xl font-light text-black">{value}</p>
+          <p className="text-sm text-muted-foreground">{title}</p>
+          <p className="mt-2 text-3xl font-light text-foreground">{value}</p>
           {description && (
-            <p className="mt-1 text-sm text-gray-600">{description}</p>
+            <p className="mt-1 text-sm text-muted-foreground">{description}</p>
           )}
         </div>
         {icon && (
-          <div className="text-gray-400">{icon}</div>
+          <div className="text-muted-foreground">{icon}</div>
         )}
       </div>
     </div>
