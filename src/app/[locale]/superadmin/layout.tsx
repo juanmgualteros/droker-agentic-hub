@@ -1,5 +1,6 @@
 'use client';
 
+// Force clean deployment - v1
 import { useState, useEffect } from 'react';
 import { usePathname, useRouter } from 'next/navigation';
 import { PortalLayout } from '@/components/layout/PortalLayout';
