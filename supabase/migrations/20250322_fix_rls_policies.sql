@@ -82,61 +82,71 @@ CREATE POLICY "Enable full access for superadmin" ON "api_key_to_product"
     );
 
 -- Create new policies
-CREATE POLICY "Users can view their own data" ON "public"."users"
+CREATE POLICY "Users can view their own data"
+ON public.users
 FOR SELECT
+TO authenticated
 USING (
-  auth.role() = 'authenticated' AND
-  id = auth.uid()
+  auth.uid() = id
 );
 
-CREATE POLICY "Users can update their own data" ON "public"."users"
+CREATE POLICY "Users can update their own data"
+ON public.users
 FOR UPDATE
+TO authenticated
 USING (
-  auth.role() = 'authenticated' AND
-  id = auth.uid()
+  auth.uid() = id
 );
 
-CREATE POLICY "Users can view their organization's data" ON "public"."organizations"
+CREATE POLICY "Users can view their organization's data"
+ON public.organizations
 FOR SELECT
+TO authenticated
 USING (
-  auth.role() = 'authenticated' AND
-  id IN (
-    SELECT organization_id
+  EXISTS (
+    SELECT 1
     FROM users
-    WHERE id = auth.uid()
+    WHERE users.id = auth.uid()
+    AND users.organization_id = organizations.id
   )
 );
 
-CREATE POLICY "Users can update their organization's data" ON "public"."organizations"
+CREATE POLICY "Users can update their organization's data"
+ON public.organizations
 FOR UPDATE
+TO authenticated
 USING (
-  auth.role() = 'authenticated' AND
-  id IN (
-    SELECT organization_id
+  EXISTS (
+    SELECT 1
     FROM users
-    WHERE id = auth.uid()
+    WHERE users.id = auth.uid()
+    AND users.organization_id = organizations.id
   )
 );
 
-CREATE POLICY "Users can view their organization's products" ON "public"."products"
+CREATE POLICY "Users can view their organization's products"
+ON public.products
 FOR SELECT
+TO authenticated
 USING (
-  auth.role() = 'authenticated' AND
-  organization_id IN (
-    SELECT organization_id
+  EXISTS (
+    SELECT 1
     FROM users
-    WHERE id = auth.uid()
+    WHERE users.id = auth.uid()
+    AND users.organization_id = products.organization_id
   )
 );
 
-CREATE POLICY "Users can update their organization's products" ON "public"."products"
+CREATE POLICY "Users can update their organization's products"
+ON public.products
 FOR UPDATE
+TO authenticated
 USING (
-  auth.role() = 'authenticated' AND
-  organization_id IN (
-    SELECT organization_id
+  EXISTS (
+    SELECT 1
     FROM users
-    WHERE id = auth.uid()
+    WHERE users.id = auth.uid()
+    AND users.organization_id = products.organization_id
   )
 );
 

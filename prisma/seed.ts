@@ -15,18 +15,15 @@ async function main() {
     },
   });
 
-  // Create admin user
-  const adminUser = await prisma.user.upsert({
-    where: { email: 'admin@example.com' },
-    update: {},
-    create: {
+  // Create the first admin user for the organization
+  const adminUser = await prisma.user.create({
+    data: {
       id: 'default-admin',
-      email: 'admin@example.com',
-      name: 'Admin User',
-      role: 'ADMIN',
+      email: "admin@example.com",
+      name: "Admin User",
+      role: "ADMIN",
       organizationId: organization.id,
       updatedAt: new Date(),
-      // Note: clerkId will be set when the admin signs up through Clerk
     },
   });
 
