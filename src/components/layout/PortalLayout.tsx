@@ -119,17 +119,23 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
                 className={cn(
                   "flex items-center px-3 py-2 text-sm font-medium rounded-md transition-colors",
                   pathname.startsWith(`/${locale}${item.href}`)
-                    ? "bg-primary text-primary-foreground"
+                    ? "bg-muted/50"
                     : "text-muted-foreground hover:bg-muted hover:text-foreground"
                 )}
               >
                 <item.icon className={cn(
                   "mr-3 h-5 w-5",
                   pathname.startsWith(`/${locale}${item.href}`)
-                    ? "text-primary-foreground"
+                    ? "text-primary"
                     : "text-muted-foreground"
                 )} />
-                {isSidebarOpen && item.name}
+                <span className={cn(
+                  pathname.startsWith(`/${locale}${item.href}`)
+                    ? "text-foreground"
+                    : "text-muted-foreground"
+                )}>
+                  {isSidebarOpen && item.name}
+                </span>
               </Link>
             ))}
           </nav>
