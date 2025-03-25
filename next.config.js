@@ -37,9 +37,16 @@ const nextConfig = {
       };
     }
 
+    // Add resolve aliases for problematic modules
+    config.resolve.alias = {
+      ...config.resolve.alias,
+      'use-sidecar': require.resolve('use-sidecar'),
+      'react-style-singleton': require.resolve('react-style-singleton'),
+    };
+
     return config;
   },
-  transpilePackages: ['react-style-singleton', 'use-sidecar'],
+  transpilePackages: ['use-sidecar', 'react-style-singleton'],
   experimental: {
     optimizeCss: false,
   },
