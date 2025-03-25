@@ -26,8 +26,8 @@ export default function LoginClient() {
       // For now, we'll use a simple mock authentication
       if (email === 'admin@example.com' && password === 'password') {
         // Set cookies that work in production (secure, SameSite, etc.)
-        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
-        document.cookie = "userRole=admin; path=/; max-age=86400; SameSite=Lax";
+        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax; Secure";
+        document.cookie = "userRole=admin; path=/; max-age=86400; SameSite=Lax; Secure";
         
         // Also set localStorage for client-side checks
         localStorage.setItem('isAuthenticated', 'true');
@@ -37,8 +37,8 @@ export default function LoginClient() {
         router.push(`/${locale}/admin`);
       } else if (email === 'superadmin@example.com' && password === 'password') {
         // Set cookies that work in production (secure, SameSite, etc.)
-        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
-        document.cookie = "userRole=superadmin; path=/; max-age=86400; SameSite=Lax";
+        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax; Secure";
+        document.cookie = "userRole=superadmin; path=/; max-age=86400; SameSite=Lax; Secure";
         
         // Also set localStorage for client-side checks
         localStorage.setItem('isAuthenticated', 'true');
