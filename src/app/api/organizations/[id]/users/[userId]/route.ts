@@ -1,44 +1,64 @@
-import { NextResponse } from 'next/server';
-import { auth, clerkClient } from '@clerk/nextjs';
 import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
 
-export async function DELETE(
-  req: Request,
+export async function GET(
+  request: Request,
   { params }: { params: { id: string; userId: string } }
 ) {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
+
+  if (!isAuthenticated || !['admin', 'superadmin'].includes(userRole || '')) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   try {
-    const { userId: currentUserId } = auth();
-    if (!currentUserId) {
-      return new NextResponse('Unauthorized', { status: 401 });
+    const user = await prisma.user.findUnique({
+      where: {
+        id: params.userId,
+        organizationId: params.id,
+      },
+      include: {
+        organization: true,
+      },
+    });
+
+    if (!user) {
+      return new Response('User not found', { status: 404 });
     }
 
-    // Check if the user exists and belongs to the organization
-    const user = await prisma.user.findFirst({
+    return NextResponse.json(user);
+  } catch (error) {
+    console.error('Error fetching user:', error);
+    return new Response('Error fetching user', { status: 500 });
+  }
+}
+
+export async function DELETE(
+  request: Request,
+  { params }: { params: { id: string; userId: string } }
+) {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
+
+  if (!isAuthenticated || !['admin', 'superadmin'].includes(userRole || '')) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
+  try {
+    await prisma.user.delete({
       where: {
         id: params.userId,
         organizationId: params.id,
       },
     });
 
-    if (!user) {
-      return new NextResponse('User not found', { status: 404 });
-    }
-
-    // Delete user from Clerk if they have a clerkId
-    if (user.clerkId) {
-      await clerkClient.users.deleteUser(user.clerkId);
-    }
-
-    // Delete user from our database
-    await prisma.user.delete({
-      where: {
-        id: params.userId,
-      },
-    });
-
-    return new NextResponse(null, { status: 204 });
+    return new Response(null, { status: 204 });
   } catch (error) {
-    console.error('[ORGANIZATIONS_USER_DELETE]', error);
-    return new NextResponse('Internal error', { status: 500 });
+    console.error('Error deleting user:', error);
+    return new Response('Error deleting user', { status: 500 });
   }
 } 

@@ -1,51 +1,66 @@
-import { NextResponse } from 'next/server';
-import { auth, clerkClient } from '@clerk/nextjs';
 import { prisma } from '@/lib/prisma';
+import { cookies } from 'next/headers';
+import { NextResponse } from 'next/server';
+import { v4 as uuidv4 } from 'uuid';
 
-export async function POST(
-  req: Request,
+export async function GET(
+  request: Request,
   { params }: { params: { id: string } }
 ) {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
+
+  if (!isAuthenticated || !['admin', 'superadmin'].includes(userRole || '')) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
   try {
-    const { userId } = auth();
-    if (!userId) {
-      return new NextResponse('Unauthorized', { status: 401 });
-    }
-
-    const { name, email, password } = await req.json();
-
-    // Validate organization exists
-    const organization = await prisma.organization.findUnique({
-      where: { id: params.id },
+    const admins = await prisma.user.findMany({
+      where: {
+        organizationId: params.id,
+        role: 'ADMIN',
+      },
+      include: {
+        organization: true,
+      },
     });
 
-    if (!organization) {
-      return new NextResponse('Organization not found', { status: 404 });
-    }
+    return NextResponse.json(admins);
+  } catch (error) {
+    console.error('Error fetching admins:', error);
+    return new Response('Error fetching admins', { status: 500 });
+  }
+}
 
-    // Create user in Clerk
-    const clerkUser = await clerkClient.users.createUser({
-      emailAddress: [email],
-      password,
-      firstName: name,
-    });
+export async function POST(
+  request: Request,
+  { params }: { params: { id: string } }
+) {
+  const cookieStore = cookies();
+  const isAuthenticated = cookieStore.get('isAuthenticated')?.value === 'true';
+  const userRole = cookieStore.get('userRole')?.value;
 
-    // Create user in our database with admin role
+  if (!isAuthenticated || !['admin', 'superadmin'].includes(userRole || '')) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
+  try {
+    const data = await request.json();
     const user = await prisma.user.create({
       data: {
-        id: clerkUser.id,
-        name,
-        email,
+        id: uuidv4(),
+        email: data.email,
+        name: data.name,
         role: 'ADMIN',
         organizationId: params.id,
-        clerkId: clerkUser.id,
         updatedAt: new Date(),
       },
     });
 
     return NextResponse.json(user);
   } catch (error) {
-    console.error('[ORGANIZATIONS_ADMIN_POST]', error);
-    return new NextResponse('Internal error', { status: 500 });
+    console.error('Error creating admin:', error);
+    return new Response('Error creating admin', { status: 500 });
   }
 } 

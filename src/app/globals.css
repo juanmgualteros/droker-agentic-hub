@@ -95,3 +95,13 @@ html {
     @apply block text-sm font-light text-black mb-1;
   }
 }
+
+:root {
+  --foreground-rgb: 0, 0, 0;
+  --background-rgb: 255, 255, 255;
+}
+
+body {
+  color: rgb(var(--foreground-rgb));
+  background: rgb(var(--background-rgb));
+}
