@@ -43,4 +43,6 @@ export default async function OrganizationsPage() {
   const organizations = await getOrganizations();
 
   return <OrganizationsClient organizations={organizations} />;
-} 
+}
+
+export const dynamic = 'force-dynamic'; 
