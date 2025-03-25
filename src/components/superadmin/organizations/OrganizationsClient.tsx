@@ -2,8 +2,9 @@
 
 import { useState } from 'react';
 import { useRouter } from 'next/navigation';
-import DataTable from '@/components/common/DataTable';
-import { Users } from 'lucide-react';
+import { DataTable } from '@/components/common/DataTable';
+import { useAuth } from '@clerk/nextjs';
+import Link from 'next/link';
 
 interface ApiKey {
   id: string;
@@ -31,6 +32,15 @@ interface Organization {
   users: User[];
 }
 
+interface Column {
+  key: string;
+  header: string;
+  render?: (value: any) => React.ReactNode;
+  sortable?: boolean;
+  filterType?: 'text' | 'select';
+  filterOptions?: { label: string; value: string }[];
+}
+
 interface OrganizationsClientProps {
   organizations: Organization[];
 }
@@ -38,94 +48,82 @@ interface OrganizationsClientProps {
 export default function OrganizationsClient({ organizations: initialOrganizations }: OrganizationsClientProps) {
   const [organizations, setOrganizations] = useState<Organization[]>(initialOrganizations);
   const router = useRouter();
+  const { isSignedIn } = useAuth();
 
-  const columns = [
+  // Get locale from pathname
+  const locale = typeof window !== 'undefined' ? window.location.pathname.split('/')[1] : 'en';
+
+  const handleEditClick = (org: Organization) => {
+    if (!isSignedIn) {
+      router.push(`/${locale}/sign-in`);
+      return;
+    }
+    router.push(`/${locale}/superadmin/organizations/${org.id}/edit`);
+  };
+
+  const columns: Column[] = [
     {
       key: 'name',
       header: 'Name',
+      sortable: true,
+      filterType: 'text' as const,
       render: (value: string) => (
-        <span className="font-comfortaa font-light text-gray-900">{value}</span>
+        <span className="font-medium text-gray-900">{value}</span>
       ),
     },
     {
       key: 'state',
       header: 'State',
-      render: (value: string) => (
-        <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-comfortaa font-light ${
-          value === 'ACTIVE'
-            ? 'bg-green-100 text-green-800'
-            : value === 'PENDING'
-            ? 'bg-yellow-100 text-yellow-800'
-            : 'bg-red-100 text-red-800'
-        }`}>
-          {value}
-        </span>
-      ),
+      sortable: true,
+      filterType: 'select' as const,
+      filterOptions: [
+        { value: 'ACTIVE', label: 'Active' },
+        { value: 'PENDING', label: 'Pending' },
+        { value: 'SUSPENDED', label: 'Suspended' },
+      ],
+      render: (value: string) => {
+        const stateStyles = {
+          ACTIVE: 'bg-green-50 text-green-700 border-green-100',
+          PENDING: 'bg-yellow-50 text-yellow-700 border-yellow-100',
+          SUSPENDED: 'bg-red-50 text-red-700 border-red-100',
+        };
+        return (
+          <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${stateStyles[value as keyof typeof stateStyles]}`}>
+            {value.charAt(0).toUpperCase() + value.slice(1).toLowerCase()}
+          </span>
+        );
+      },
     },
     {
       key: 'users',
       header: 'Users',
+      sortable: true,
+      filterType: 'text' as const,
       render: (value: User[]) => (
-        <div className="flex items-center font-comfortaa font-light text-gray-500">
-          <Users className="h-4 w-4 mr-1.5" />
-          {value?.length || 0} users
-        </div>
+        <span className="text-sm text-gray-500">
+          {value?.length || 0}
+        </span>
       ),
     },
     {
       key: 'apiKeys',
       header: 'API Keys',
+      sortable: true,
+      filterType: 'text' as const,
       render: (value: ApiKey[]) => (
-        <div className="font-comfortaa font-light text-gray-500">
-          {value.filter(key => key.type === 'OPENAI').length} OpenAI,{' '}
-          {value.filter(key => key.type === 'SUPABASE').length} Supabase
-        </div>
-      ),
-    },
-    {
-      key: 'created_at',
-      header: 'Created At',
-      render: (value: string) => (
-        <span className="font-comfortaa font-light text-gray-500">
-          {new Date(value).toLocaleDateString()}
+        <span className="text-sm text-gray-500">
+          {value.filter(key => key.type === 'OPENAI').length + value.filter(key => key.type === 'SUPABASE').length}
         </span>
       ),
-    },
+    }
   ];
 
   const actions = [
     {
-      label: 'Edit',
-      onClick: (org: Organization) => router.push(`/organizations/${org.id}/edit`),
+      label: 'Configure',
+      onClick: handleEditClick,
       type: 'edit' as const,
-    },
-    {
-      label: 'Manage Users',
-      onClick: (org: Organization) => router.push(`/organizations/${org.id}/users`),
-      type: 'edit' as const,
-    },
-    {
-      label: (org: Organization) => org.state === 'ACTIVE' ? 'Deactivate' : 'Activate',
-      onClick: toggleOrganizationState,
-      type: 'activate' as const,
-    },
-    {
-      label: 'Delete',
-      onClick: (org: Organization) => deleteOrganization(org.id),
-      type: 'delete' as const,
-    },
-  ];
-
-  const filters = [
-    {
-      key: 'state',
-      label: 'State',
-      options: [
-        { value: 'ACTIVE', label: 'Active' },
-        { value: 'PENDING', label: 'Pending' },
-        { value: 'SUSPENDED', label: 'Suspended' },
-      ],
-    },
+    }
   ];
 
   async function deleteOrganization(id: string) {
@@ -161,17 +159,30 @@ export default function OrganizationsClient({ organizations: initialOrganization
   }
 
   return (
-    <div className="bg-white rounded-lg shadow">
-      <DataTable
-        data={organizations}
-        columns={columns}
-        actions={actions}
-        filters={filters}
-        title="Organizations"
-        description="Manage your customer organizations and their configurations"
-        newItemPath="/organizations/new"
-        newItemLabel="New Organization"
-      />
+    <div className="space-y-6">
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-2xl font-light text-gray-900">Organizations</h1>
+          <p className="mt-1 text-sm text-gray-500">
+            Configure and manage your customer organizations
+          </p>
+        </div>
+        <Link
+          href={`/${locale}/superadmin/organizations/new`}
+          className="text-white bg-black hover:bg-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+        >
+          New Organization
+        </Link>
+      </div>
+      
+      <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+        <DataTable
+          data={organizations}
+          columns={columns}
+          actions={actions}
+          className="min-h-[480px]"
+        />
+      </div>
     </div>
   );
 } 

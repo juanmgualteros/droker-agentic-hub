@@ -23,6 +23,9 @@ const publicRoutes = [
   "/api/webhook/clerk",
   "/api/webhook/stripe",
   "/login",
+  "/",
+  "/en",
+  "/es"
 ];
 
 // Define routes that should be ignored by the middleware
@@ -33,6 +36,7 @@ const ignoredRoutes = [
   "/api/webhook/clerk",
   "/api/webhook/stripe",
   "/login",
+  "/static"
 ];
 
 // Combine Clerk auth middleware with internationalization
@@ -43,83 +47,58 @@ export default authMiddleware({
   },
   publicRoutes,
   ignoredRoutes,
-  debug: process.env.NODE_ENV === "development",
+  debug: true, // Enable debug mode temporarily
   afterAuth(auth, req) {
-    const { userId, sessionId } = auth;
+    const { userId } = auth;
     const { pathname } = req.nextUrl;
 
-    // Allow all requests in development mode
-    if (process.env.NODE_ENV === "development") {
-      return NextResponse.next();
-    }
-
-    // Handle login page - completely bypass authentication
-    if (pathname === "/login" || pathname.includes("/login")) {
+    // Handle public routes
+    if (publicRoutes.some(route => {
+      const pattern = new RegExp(route.replace(/:\w+/g, '[^/]+'));
+      return pattern.test(pathname);
+    })) {
       return NextResponse.next();
     }
 
     // Handle admin routes
     if (pathname.includes("/admin")) {
-      // Check for either Clerk authentication OR local cookie authentication
-      const isClerkAuthenticated = !!userId;
       const isLocalAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
       const userRole = req.cookies.get("userRole")?.value;
       
-      // If either authentication method is valid, allow access
-      if (isClerkAuthenticated || (isLocalAuthenticated && userRole === "admin")) {
+      if (isLocalAuthenticated && (userRole === "admin" || userRole === "superadmin")) {
         return NextResponse.next();
       }
       
-      // If not authenticated, redirect to login
       const locale = pathname.split("/")[1] || "en";
       return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
     }
 
     // Handle superadmin routes
     if (pathname.includes("/superadmin")) {
-      // Check for either Clerk authentication OR local cookie authentication
-      const isClerkAuthenticated = !!userId;
       const isLocalAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
       const userRole = req.cookies.get("userRole")?.value;
       
-      // If either authentication method is valid, allow access
-      if (isClerkAuthenticated || (isLocalAuthenticated && userRole === "superadmin")) {
+      if (isLocalAuthenticated && userRole === "superadmin") {
         return NextResponse.next();
       }
       
-      // If not authenticated, redirect to login
       const locale = pathname.split("/")[1] || "en";
       return NextResponse.redirect(new URL(`/${locale}/login`, req.url));
     }
 
-    // Handle sign-in pages
-    if (pathname.includes("/sign-in")) {
-      if (userId) {
-        // If user is authenticated, redirect to home page
-        const locale = pathname.split("/")[1] || "en";
-        return NextResponse.redirect(new URL(`/${locale}`, req.url));
-      }
-      // If not authenticated, allow access
-      return NextResponse.next();
-    }
-
-    // For all other routes, allow access
     return NextResponse.next();
-  },
+  }
 });
 
-// Configure middleware to run on specified routes only, avoiding static and internal routes
+// Configure middleware matcher
 export const config = {
   matcher: [
-    // Match all paths except those that start with:
-    // - _next (Next.js internals)
-    // - static files with extensions (.jpg, .png, etc.)
-    // Include specific paths we DO want to run middleware on
     "/((?!_next|.*\\..*$).*)",
-    "/", 
-    "/:locale/admin/(.*)$",
-    "/:locale/superadmin/(.*)$",
-    "/:locale/login$",
-    "/:locale/sign-in$"
-  ],
+    "/",
+    "/:locale/admin/:path*",
+    "/:locale/superadmin/:path*",
+    "/:locale/login",
+    "/:locale/sign-in",
+    "/:locale"
+  ]
 }; 

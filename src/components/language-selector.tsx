@@ -1,59 +1,47 @@
 "use client";
 
-import { usePathname, useRouter } from "next/navigation";
-import { useLocale } from "next-intl";
-import { Globe } from "lucide-react";
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu";
-import { Button } from "@/components/ui/button";
+import { useRouter } from "next/navigation";
+import { usePathname } from "next/navigation";
+import { GlobeAltIcon } from "@heroicons/react/24/outline";
 
-const languages = [
-  { code: "en", name: "English" },
-  { code: "es", name: "Español" },
-  { code: "fr", name: "Français" },
-] as const;
+interface LanguageSelectorProps {
+  locale: string;
+}
 
-export function LanguageSelector() {
-  const locale = useLocale();
+export function LanguageSelector({ locale }: LanguageSelectorProps) {
   const router = useRouter();
   const pathname = usePathname();
 
+  const languages = [
+    { code: "en", name: "English" },
+    { code: "es", name: "Español" },
+  ];
+
   const handleLanguageChange = (newLocale: string) => {
-    // Remove the current locale from the pathname
-    const segments = pathname.split("/");
-    segments[1] = newLocale;
-    
-    // Join the segments back together
-    const newPath = segments.join("/");
-    
-    // Navigate to the new path
-    router.push(newPath);
-    router.refresh();
+    const currentPath = pathname.replace(`/${locale}`, "");
+    router.push(`/${newLocale}${currentPath}`);
   };
 
+  const currentLanguage = languages.find(lang => lang.code === locale)?.name;
+
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="sm" className="flex items-center gap-2">
-          <Globe className="h-4 w-4" />
-          <span className="uppercase">{locale}</span>
-        </Button>
-      </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
+    <div className="flex items-center gap-2 text-sm text-muted-foreground">
+      <GlobeAltIcon className="h-4 w-4" />
+      <div className="flex items-center gap-2">
         {languages.map((lang) => (
-          <DropdownMenuItem
+          <button
             key={lang.code}
             onClick={() => handleLanguageChange(lang.code)}
-            className="capitalize"
+            className={`px-2 py-1 rounded-md transition-colors ${
+              locale === lang.code 
+                ? "text-white bg-black" 
+                : "text-gray-600 hover:text-black"
+            }`}
           >
-            {lang.name}
-          </DropdownMenuItem>
+            {lang.code.toUpperCase()}
+          </button>
         ))}
-      </DropdownMenuContent>
-    </DropdownMenu>
+      </div>
+    </div>
   );
 } 

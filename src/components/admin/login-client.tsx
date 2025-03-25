@@ -15,6 +15,7 @@ export function LoginClient() {
   const searchParams = useSearchParams();
   const params = useParams();
   const locale = params.locale || 'en';
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     // Check if already authenticated
@@ -34,6 +35,7 @@ export function LoginClient() {
     try {
       // Clear any previous errors
       setError("");
+      setIsLoading(true);
       
       // Check for super admin credentials
       if (email === "juan@droker.co" && password === "password") {
@@ -74,6 +76,8 @@ export function LoginClient() {
     } catch (error) {
       console.error("Login error:", error);
       setError("An unexpected error occurred. Please try again.");
+    } finally {
+      setIsLoading(false);
     }
   };
 
@@ -84,20 +88,22 @@ export function LoginClient() {
   };
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gray-50">
-      <div className="max-w-md w-full space-y-8 p-8 bg-white rounded-lg shadow-lg">
+    <div className="min-h-screen flex items-center justify-center bg-background">
+      <div className="max-w-md w-full space-y-8 p-8 bg-card rounded-lg shadow-lg">
         <div className="text-center">
-          <h2 className="mt-6 text-3xl font-extrabold text-gray-900">
-            Admin Portal Login
+          <h2 className="mt-6 text-3xl font-light text-foreground">
+            Sign in to your account
           </h2>
-          <p className="mt-2 text-sm text-gray-600">
-            Sign in to access your organization's admin portal
+          <p className="mt-2 text-sm text-foreground-secondary">
+            Enter your credentials below
           </p>
         </div>
+
+        {error && (
+          <div className="text-destructive text-sm text-center">{error}</div>
+        )}
+
         <form className="mt-8 space-y-6" onSubmit={handleSubmit}>
-          {error && (
-            <div className="text-red-500 text-sm text-center">{error}</div>
-          )}
           <div className="rounded-md shadow-sm -space-y-px">
             <div>
               <label htmlFor="email" className="sr-only">
@@ -107,11 +113,12 @@ export function LoginClient() {
                 id="email"
                 name="email"
                 type="email"
+                autoComplete="email"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-t-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Email address"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
+                className="input rounded-t-lg rounded-b-none"
+                placeholder="Email address"
               />
             </div>
             <div>
@@ -122,11 +129,12 @@ export function LoginClient() {
                 id="password"
                 name="password"
                 type="password"
+                autoComplete="current-password"
                 required
-                className="appearance-none rounded-none relative block w-full px-3 py-2 border border-gray-300 placeholder-gray-500 text-gray-900 rounded-b-md focus:outline-none focus:ring-indigo-500 focus:border-indigo-500 focus:z-10 sm:text-sm"
-                placeholder="Password"
                 value={password}
                 onChange={(e) => setPassword(e.target.value)}
+                className="input rounded-b-lg rounded-t-none"
+                placeholder="Password"
               />
             </div>
           </div>
@@ -134,92 +142,48 @@ export function LoginClient() {
           <div>
             <button
               type="submit"
-              className="group relative w-full flex justify-center py-2 px-4 border border-transparent text-sm font-medium rounded-md text-white bg-indigo-600 hover:bg-indigo-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-indigo-500"
+              className="button-primary w-full"
+              disabled={isLoading}
             >
-              Sign in
+              {isLoading ? 'Signing in...' : 'Sign in'}
             </button>
           </div>
-        </form>
 
-        <div className="mt-6">
           <div className="relative">
             <div className="absolute inset-0 flex items-center">
-              <div className="w-full border-t border-gray-300" />
+              <div className="w-full border-t border-border" />
             </div>
             <div className="relative flex justify-center text-sm">
-              <span className="px-2 bg-white text-gray-500">
-                Demo credentials
+              <span className="px-2 bg-card text-foreground-secondary">
+                Demo Credentials
               </span>
             </div>
           </div>
 
-          <div className="mt-6 grid gap-3">
-            <div className="text-sm text-center">
-              <p className="text-gray-700">Super Admin:</p>
-              <div className="flex items-center justify-center gap-2">
-                <p className="text-gray-500">juan@droker.co</p>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => copyToClipboard('juan@droker.co', setCopiedEmail)}
-                >
-                  {copiedEmail ? (
-                    <Check className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <Copy className="h-3 w-3" />
-                  )}
-                </Button>
-                <span className="text-gray-500">/</span>
-                <p className="text-gray-500">password</p>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => copyToClipboard('password', setCopiedPassword)}
-                >
-                  {copiedPassword ? (
-                    <Check className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <Copy className="h-3 w-3" />
-                  )}
-                </Button>
-              </div>
+          <div className="text-sm text-center">
+            <p className="text-foreground">Super Admin:</p>
+            <div className="flex items-center justify-center space-x-2">
+              <p className="text-foreground-secondary">juan@droker.co</p>
+              <Check className="h-3 w-3 text-success" />
             </div>
-            <div className="text-sm text-center">
-              <p className="text-gray-700">Admin:</p>
-              <div className="flex items-center justify-center gap-2">
-                <p className="text-gray-500">tatiana@calderon.com</p>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => copyToClipboard('tatiana@calderon.com', setCopiedEmail)}
-                >
-                  {copiedEmail ? (
-                    <Check className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <Copy className="h-3 w-3" />
-                  )}
-                </Button>
-                <span className="text-gray-500">/</span>
-                <p className="text-gray-500">password</p>
-                <Button
-                  variant="ghost"
-                  size="icon"
-                  className="h-6 w-6"
-                  onClick={() => copyToClipboard('password', setCopiedPassword)}
-                >
-                  {copiedPassword ? (
-                    <Check className="h-3 w-3 text-green-500" />
-                  ) : (
-                    <Copy className="h-3 w-3" />
-                  )}
-                </Button>
-              </div>
+            <div className="flex items-center justify-center space-x-2">
+              <p className="text-foreground-secondary">password</p>
+              <Check className="h-3 w-3 text-success" />
             </div>
           </div>
-        </div>
+
+          <div className="text-sm text-center">
+            <p className="text-foreground">Admin:</p>
+            <div className="flex items-center justify-center space-x-2">
+              <p className="text-foreground-secondary">tatiana@calderon.com</p>
+              <Check className="h-3 w-3 text-success" />
+            </div>
+            <div className="flex items-center justify-center space-x-2">
+              <p className="text-foreground-secondary">password</p>
+              <Check className="h-3 w-3 text-success" />
+            </div>
+          </div>
+        </form>
       </div>
     </div>
   );

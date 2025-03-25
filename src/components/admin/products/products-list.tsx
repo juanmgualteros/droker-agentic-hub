@@ -60,9 +60,8 @@ export function ProductsList() {
                 <p className="text-sm text-gray-500">{product.description}</p>
               </div>
               <Link href={`/admin/products/${product.id}/configure`}>
-                <Button variant="outline" className="ml-4">
+                <Button className="text-white bg-black hover:bg-gray-800">
                   Configure
-                  <ChevronRight className="ml-2 h-4 w-4" />
                 </Button>
               </Link>
             </div>

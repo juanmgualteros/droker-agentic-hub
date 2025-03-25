@@ -1,20 +1,49 @@
-import { headers } from "next/headers";
-import { SuperAdminLayoutClient } from "@/components/superadmin/layout-client";
+'use client';
 
-export default async function SuperAdminLayout({
+import { useState, useEffect } from 'react';
+import { usePathname, useRouter } from 'next/navigation';
+import { PortalLayout } from '@/components/layout/PortalLayout';
+import { parseCookies } from 'nookies';
+
+export default function SuperAdminLayout({
   children,
 }: {
   children: React.ReactNode;
 }) {
-  const headersList = headers();
-  const pathname = headersList.get("x-pathname") || "";
-  const isLoginPage = pathname === "/superadmin/login";
+  const pathname = usePathname();
+  const router = useRouter();
+  const [isLoading, setIsLoading] = useState(true);
 
-  // If on login page, don't render anything
-  if (isLoginPage) {
-    return null;
+  // Extract locale from pathname
+  const locale = pathname.split("/")[1];
+
+  useEffect(() => {
+    // Check authentication and role using cookies
+    const cookies = parseCookies();
+    const isAuthenticated = cookies.isAuthenticated === "true";
+    const userRole = cookies.userRole;
+    
+    if (!isAuthenticated || userRole !== "superadmin") {
+      router.replace(`/${locale}/login`);
+    }
+    setIsLoading(false);
+  }, [router, locale]);
+
+  if (isLoading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
+      </div>
+    );
   }
 
-  // For all other superadmin pages, use the superadmin layout
-  return <SuperAdminLayoutClient title="Super Admin Portal">{children}</SuperAdminLayoutClient>;
+  return (
+    <PortalLayout 
+      title="Super Admin Portal"
+      locale={locale}
+      portalType="superadmin"
+    >
+      {children}
+    </PortalLayout>
+  );
 } 

@@ -1,6 +1,13 @@
+'use client';
+
 import { Button } from '@/components/ui/button';
+import Link from 'next/link';
+import { usePathname } from 'next/navigation';
 
 export default function SettingsPage() {
+  const pathname = usePathname();
+  const locale = pathname.split('/')[1];
+
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
@@ -26,12 +33,28 @@ export default function SettingsPage() {
               <div className="grid grid-cols-1 gap-6 mt-6">
                 <div className="flex items-center justify-between">
                   <div>
+                    <h4 className="text-sm font-medium text-gray-900">Branding Settings</h4>
+                    <p className="text-sm text-gray-500">
+                      Customize your company logo and branding
+                    </p>
+                  </div>
+                  <Link href={`/${locale}/superadmin/settings/branding`}>
+                    <Button className="text-white bg-black hover:bg-gray-800">
+                      Configure
+                    </Button>
+                  </Link>
+                </div>
+
+                <div className="flex items-center justify-between">
+                  <div>
                     <h4 className="text-sm font-medium text-gray-900">Maintenance Mode</h4>
                     <p className="text-sm text-gray-500">
                       Enable maintenance mode to prevent user access during updates
                     </p>
                   </div>
-                  <Button variant="outline">Enable</Button>
+                  <Button className="text-white bg-black hover:bg-gray-800">
+                    Enable
+                  </Button>
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -41,7 +64,9 @@ export default function SettingsPage() {
                       Configure system-wide notification preferences
                     </p>
                   </div>
-                  <Button variant="outline">Configure</Button>
+                  <Button className="text-white bg-black hover:bg-gray-800">
+                    Configure
+                  </Button>
                 </div>
 
                 <div className="flex items-center justify-between">
@@ -51,7 +76,9 @@ export default function SettingsPage() {
                       Configure automatic backup schedule and retention
                     </p>
                   </div>
-                  <Button variant="outline">Configure</Button>
+                  <Button className="text-white bg-black hover:bg-gray-800">
+                    Configure
+                  </Button>
                 </div>
               </div>
             </div>

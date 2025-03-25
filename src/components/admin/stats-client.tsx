@@ -10,19 +10,19 @@ export function StatsClient() {
       title: "Total Users",
       value: "0",
       description: "Users in your organization",
-      icon: Users,
+      icon: <Users className="h-6 w-6" />,
     },
     {
       title: "Total Products",
       value: "0",
       description: "Products in your catalog",
-      icon: Package,
+      icon: <Package className="h-6 w-6" />,
     },
     {
       title: "Subscription",
       value: "Free",
       description: "Your current plan",
-      icon: CreditCard,
+      icon: <CreditCard className="h-6 w-6" />,
     },
   ];
 

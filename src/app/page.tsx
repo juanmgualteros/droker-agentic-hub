@@ -1,6 +1,12 @@
+'use client';
+
 import Link from 'next/link'
+import { usePathname } from 'next/navigation';
 
 export default function Home() {
+  const pathname = usePathname();
+  const locale = pathname.split('/')[1] || 'en';
+
   return (
     <div className="min-h-screen bg-white">
       {/* Header */}
@@ -39,7 +45,7 @@ export default function Home() {
             <h3 className="text-xl font-semibold text-black text-center mb-2">Super Admin Portal</h3>
             <p className="text-gray-600 text-center text-sm mb-6">Access super administrator controls and manage customers</p>
             <Link 
-              href="/superadmin/organizations"
+              href={`/${locale}/superadmin/organizations`}
               className="block w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 text-black text-center rounded-md"
             >
               Access Super Admin Portal
@@ -51,7 +57,7 @@ export default function Home() {
             <h3 className="text-xl font-semibold text-black text-center mb-2">Admin Portal</h3>
             <p className="text-gray-600 text-center text-sm mb-6">Manage users and products for your organization</p>
             <Link 
-              href="/admin"
+              href={`/${locale}/admin`}
               className="block w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 text-black text-center rounded-md"
             >
               Access Admin Portal
@@ -63,7 +69,7 @@ export default function Home() {
             <h3 className="text-xl font-semibold text-black text-center mb-2">User Portal</h3>
             <p className="text-gray-600 text-center text-sm mb-6">Access AI assistants and platform features</p>
             <Link 
-              href="/portal"
+              href={`/${locale}/portal`}
               className="block w-full py-2 px-4 bg-gray-100 hover:bg-gray-200 text-black text-center rounded-md"
             >
               Access User Portal

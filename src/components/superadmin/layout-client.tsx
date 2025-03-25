@@ -7,7 +7,6 @@ import { cn } from "@/lib/utils";
 import {
   Settings,
   Building2,
-  Menu,
 } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { PortalHeader } from "@/components/ui/portal-header";
@@ -23,7 +22,6 @@ export function SuperAdminLayoutClient({ children, title, description }: SuperAd
   const router = useRouter();
   const [isLoading, setIsLoading] = useState(true);
   const { translate } = useTranslations("navigation");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
 
   // Extract locale from pathname
   const locale = pathname.split("/")[1];
@@ -53,78 +51,67 @@ export function SuperAdminLayoutClient({ children, title, description }: SuperAd
 
   if (isLoading) {
     return (
-      <div className="min-h-screen flex items-center justify-center">
-        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-gray-900"></div>
+      <div className="flex items-center justify-center min-h-screen">
+        <div className="animate-spin rounded-full h-8 w-8 border-b-2 border-primary"></div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-100">
+    <div className="min-h-screen bg-background">
       <PortalHeader title="Super Admin Portal" locale={locale} />
-      <div className="flex h-full">
+      <div className="flex">
         {/* Sidebar */}
-        <div className="hidden lg:flex lg:flex-shrink-0">
-          <div className="flex flex-col w-64">
-            <div className="flex flex-col flex-grow bg-white border-r border-gray-200 pt-5 pb-4 overflow-y-auto">
-              <nav className="flex-1 px-2 space-y-1">
-                {navigation.map((item) => {
-                  const isActive = pathname === item.href;
-                  return (
-                    <Link
-                      key={item.name}
-                      href={item.href}
-                      className={cn(
-                        isActive
-                          ? 'bg-gray-100 text-gray-900'
-                          : 'text-gray-600 hover:bg-gray-50 hover:text-gray-900',
-                        'group flex items-center px-2 py-2 text-base font-comfortaa font-light rounded-md'
-                      )}
-                    >
-                      <item.icon
-                        className={cn(
-                          isActive ? 'text-gray-900' : 'text-gray-400 group-hover:text-gray-900',
-                          'mr-3 flex-shrink-0 h-6 w-6'
-                        )}
-                        aria-hidden="true"
-                      />
-                      {item.name}
-                    </Link>
-                  );
-                })}
-              </nav>
+        <div className="hidden lg:flex lg:flex-col lg:w-64">
+          <div className="flex flex-col flex-grow bg-card border-r border-border pt-5 pb-4 overflow-y-auto">
+            <div className="flex items-center flex-shrink-0 px-4">
+              <Link href={`/${locale}/superadmin/organizations`} className="text-2xl font-light text-foreground">
+                Super Admin
+              </Link>
             </div>
+            <nav className="mt-8 flex-1 px-2 space-y-1">
+              {navigation.map((item) => (
+                <Link
+                  key={item.name}
+                  href={item.href}
+                  className={`${
+                    pathname.startsWith(item.href)
+                      ? 'bg-primary text-primary-foreground'
+                      : 'text-foreground-secondary hover:bg-muted'
+                  } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
+                >
+                  <item.icon
+                    className={`${
+                      pathname.startsWith(item.href)
+                        ? 'text-primary-foreground'
+                        : 'text-foreground-secondary'
+                    } mr-3 h-5 w-5`}
+                  />
+                  {item.name}
+                </Link>
+              ))}
+            </nav>
           </div>
         </div>
 
         {/* Main content */}
-        <div className="flex flex-col min-w-0 flex-1 overflow-hidden">
-          {/* Mobile menu button */}
-          <div className="lg:hidden">
-            <div className="flex items-center justify-between bg-white border-b border-gray-200 py-2 px-4 sm:px-6 lg:px-8">
-              <button
-                type="button"
-                className="h-12 w-12 inline-flex items-center justify-center rounded-md text-gray-500 hover:text-gray-900"
-                onClick={() => setSidebarOpen(true)}
-              >
-                <span className="sr-only">Open sidebar</span>
-                <Menu className="h-6 w-6" aria-hidden="true" />
-              </button>
+        <main className="flex-1 overflow-y-auto bg-background">
+          <div className="py-6">
+            <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
+              {title && (
+                <h1 className="text-2xl font-light text-foreground mb-2">
+                  {title}
+                </h1>
+              )}
+              {description && (
+                <p className="text-sm text-muted-foreground mb-4">
+                  {description}
+                </p>
+              )}
+              {children}
             </div>
           </div>
-
-          <main className="flex-1 relative z-0 overflow-y-auto focus:outline-none">
-            <div className="py-6">
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8">
-                <h1 className="text-2xl font-comfortaa font-light text-gray-900">{title}</h1>
-                {description && (
-                  <p className="mt-1 text-base font-comfortaa font-light text-gray-500">{description}</p>
-                )}
-              </div>
-              <div className="max-w-7xl mx-auto px-4 sm:px-6 md:px-8 mt-8">{children}</div>
-            </div>
-          </main>
-        </div>
+        </main>
       </div>
     </div>
   );

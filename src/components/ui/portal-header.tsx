@@ -1,23 +1,31 @@
 "use client";
 
-import { Settings, LogOut } from "lucide-react";
-import { useRouter } from "next/navigation";
-import { LanguageSelector } from "@/components/language-selector";
+import { Logo } from './logo';
+import { Settings, LogOut } from 'lucide-react';
+import { useRouter } from 'next/navigation';
+import { LanguageSelector } from '@/components/language-selector';
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
+  DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
 import { Button } from "@/components/ui/button";
+import Link from 'next/link';
+import { useUser } from "@clerk/nextjs";
+import { useEffect, useState } from 'react';
 
 interface PortalHeaderProps {
   title: string;
   locale: string;
-  showLogout?: boolean;
+  isHome?: boolean;
+  userName?: string;
+  isAdmin?: boolean;
+  organizationName?: string;
 }
 
-export function PortalHeader({ title, locale, showLogout = true }: PortalHeaderProps) {
+export function PortalHeader({ title, locale, isHome = false, userName, isAdmin, organizationName }: PortalHeaderProps) {
   const router = useRouter();
 
   const handleLogout = () => {
@@ -28,28 +36,46 @@ export function PortalHeader({ title, locale, showLogout = true }: PortalHeaderP
     router.replace(`/${locale}/login`);
   };
 
+  const getPortalHomeUrl = () => {
+    const userRole = localStorage.getItem("userRole");
+    return `/${locale}/${userRole}`;
+  };
+
+  // If it's the home page, show only language selection
+  if (isHome) {
+    return (
+      <header className="h-16 bg-white flex items-center justify-end px-8">
+        <LanguageSelector locale={locale} />
+      </header>
+    );
+  }
+
   return (
-    <header className="border-b bg-white">
-      <div className="flex h-16 items-center justify-between px-6">
-        <h1 className="text-xl font-comfortaa font-light text-gray-900">{title}</h1>
-        <div className="flex items-center space-x-4">
-          <LanguageSelector />
-          {showLogout && (
-            <DropdownMenu>
-              <DropdownMenuTrigger asChild>
-                <Button variant="ghost" size="icon" className="h-8 w-8">
-                  <Settings className="h-4 w-4" />
-                </Button>
-              </DropdownMenuTrigger>
-              <DropdownMenuContent align="end">
-                <DropdownMenuItem onClick={handleLogout}>
-                  <LogOut className="h-4 w-4 mr-2" />
-                  Logout
-                </DropdownMenuItem>
-              </DropdownMenuContent>
-            </DropdownMenu>
-          )}
-        </div>
+    <header className="h-16 bg-white flex items-center px-8">
+      <div className="flex-1 flex items-center gap-4">
+        <Link href={getPortalHomeUrl()} className="flex items-center gap-2">
+          <Logo src="/images/droker-logo.svg" size="md" className="text-black" />
+          <span className="text-xl font-light text-black">{title}</span>
+        </Link>
+      </div>
+      <div className="flex items-center gap-4">
+        <DropdownMenu>
+          <DropdownMenuTrigger asChild>
+            <Button variant="ghost" size="icon">
+              <Settings className="h-5 w-5" />
+            </Button>
+          </DropdownMenuTrigger>
+          <DropdownMenuContent align="end">
+            <DropdownMenuItem className="cursor-pointer">
+              <LanguageSelector locale={locale} />
+            </DropdownMenuItem>
+            <DropdownMenuSeparator />
+            <DropdownMenuItem onClick={handleLogout} className="cursor-pointer">
+              <LogOut className="mr-2 h-4 w-4" />
+              <span>Log out</span>
+            </DropdownMenuItem>
+          </DropdownMenuContent>
+        </DropdownMenu>
       </div>
     </header>
   );
