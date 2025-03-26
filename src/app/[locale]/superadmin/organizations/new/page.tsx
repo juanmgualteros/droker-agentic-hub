@@ -33,7 +33,7 @@ interface AdminUser {
   password: string;
 }
 
-type Tab = 'details' | 'products' | 'apiKeys' | 'users' | 'settings';
+type Tab = 'details' | 'products' | 'apiKeys' | 'users';
 
 export default function NewOrganizationPage() {
   const router = useRouter();
@@ -87,7 +87,6 @@ export default function NewOrganizationPage() {
     { id: 'products' as const, label: 'Products', icon: Package },
     { id: 'apiKeys' as const, label: 'API Keys', icon: Key },
     { id: 'users' as const, label: 'Users', icon: Users },
-    { id: 'settings' as const, label: 'Settings', icon: Settings },
   ];
 
   const renderContent = () => {
@@ -266,17 +265,6 @@ export default function NewOrganizationPage() {
                   />
                 </div>
               </div>
-            </div>
-          </div>
-        );
-
-      case 'settings':
-        return (
-          <div className="space-y-6">
-            <div>
-              <h2 className="text-lg font-medium mb-2">Organization Settings</h2>
-              <p className="text-sm text-gray-500 mb-4">Additional configuration options</p>
-              {/* Add organization settings here */}
             </div>
           </div>
         );
