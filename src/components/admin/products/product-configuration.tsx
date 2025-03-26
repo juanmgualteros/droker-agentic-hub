@@ -143,24 +143,39 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
   return (
     <div className="space-y-6">
       <Tabs value={activeTab} onValueChange={setActiveTab} className="space-y-6">
-        <TabsList className="grid w-full grid-cols-5 bg-white rounded-xl">
-          <TabsTrigger value="rag" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+        <TabsList className="flex h-14 items-center gap-6 px-6 border-b w-full bg-transparent">
+          <TabsTrigger 
+            value="rag" 
+            className="inline-flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors hover:border-gray-300 data-[state=active]:border-blue-500 data-[state=active]:text-blue-500 border-transparent text-gray-600"
+          >
             <Database className="mr-2 h-4 w-4" />
             Sources
           </TabsTrigger>
-          <TabsTrigger value="chat" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+          <TabsTrigger 
+            value="chat" 
+            className="inline-flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors hover:border-gray-300 data-[state=active]:border-blue-500 data-[state=active]:text-blue-500 border-transparent text-gray-600"
+          >
             <Bot className="mr-2 h-4 w-4" />
             Prompt
           </TabsTrigger>
-          <TabsTrigger value="appearance" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+          <TabsTrigger 
+            value="appearance" 
+            className="inline-flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors hover:border-gray-300 data-[state=active]:border-blue-500 data-[state=active]:text-blue-500 border-transparent text-gray-600"
+          >
             <Palette className="mr-2 h-4 w-4" />
             Appearance
           </TabsTrigger>
-          <TabsTrigger value="analytics" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+          <TabsTrigger 
+            value="analytics" 
+            className="inline-flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors hover:border-gray-300 data-[state=active]:border-blue-500 data-[state=active]:text-blue-500 border-transparent text-gray-600"
+          >
             <BarChart className="mr-2 h-4 w-4" />
             Analytics
           </TabsTrigger>
-          <TabsTrigger value="users" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+          <TabsTrigger 
+            value="users" 
+            className="inline-flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors hover:border-gray-300 data-[state=active]:border-blue-500 data-[state=active]:text-blue-500 border-transparent text-gray-600"
+          >
             <Users className="mr-2 h-4 w-4" />
             Users
           </TabsTrigger>
@@ -199,102 +214,34 @@ export function ProductConfiguration({ productId }: ProductConfigurationProps) {
                 </div>
 
                 <Tabs defaultValue="files" className="w-full">
-                  <TabsList className="grid w-full grid-cols-4 bg-white rounded-xl">
-                    <TabsTrigger value="files" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+                  <TabsList className="flex h-14 items-center gap-6 px-6 border-b w-full bg-transparent">
+                    <TabsTrigger 
+                      value="files" 
+                      className="inline-flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors hover:border-gray-300 data-[state=active]:border-blue-500 data-[state=active]:text-blue-500 border-transparent text-gray-600"
+                    >
                       <FileText className="mr-2 h-4 w-4" />
-                      <span className="flex items-center gap-1">
-                        Files
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
-                              >
-                                <HelpCircle className="h-3 w-3 text-gray-400" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent 
-                              side="top" 
-                              className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
-                            >
-                              {tooltips.files}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </span>
+                      Files
                     </TabsTrigger>
-                    <TabsTrigger value="websites" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+                    <TabsTrigger 
+                      value="websites" 
+                      className="inline-flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors hover:border-gray-300 data-[state=active]:border-blue-500 data-[state=active]:text-blue-500 border-transparent text-gray-600"
+                    >
                       <Globe className="mr-2 h-4 w-4" />
-                      <span className="flex items-center gap-1">
-                        Websites
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
-                              >
-                                <HelpCircle className="h-3 w-3 text-gray-400" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent 
-                              side="top" 
-                              className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
-                            >
-                              {tooltips.websites}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </span>
+                      Websites
                     </TabsTrigger>
-                    <TabsTrigger value="qa" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+                    <TabsTrigger 
+                      value="qa" 
+                      className="inline-flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors hover:border-gray-300 data-[state=active]:border-blue-500 data-[state=active]:text-blue-500 border-transparent text-gray-600"
+                    >
                       <MessageSquare className="mr-2 h-4 w-4" />
-                      <span className="flex items-center gap-1">
-                        Q&A Pairs
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
-                              >
-                                <HelpCircle className="h-3 w-3 text-gray-400" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent 
-                              side="top" 
-                              className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
-                            >
-                              {tooltips.qa}
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </span>
+                      Q&A Pairs
                     </TabsTrigger>
-                    <TabsTrigger value="interview" className="flex items-center font-comfortaa font-light data-[state=active]:bg-gray-100 rounded-xl">
+                    <TabsTrigger 
+                      value="interview" 
+                      className="inline-flex h-full items-center border-b-2 px-1 text-sm font-medium transition-colors hover:border-gray-300 data-[state=active]:border-blue-500 data-[state=active]:text-blue-500 border-transparent text-gray-600"
+                    >
                       <Mic className="mr-2 h-4 w-4" />
-                      <span className="flex items-center gap-1">
-                        Interview Me
-                        <TooltipProvider delayDuration={200}>
-                          <Tooltip>
-                            <TooltipTrigger asChild>
-                              <Button 
-                                variant="ghost" 
-                                className="h-4 w-4 p-0 hover:bg-transparent hover:opacity-70 transition-opacity"
-                              >
-                                <HelpCircle className="h-3 w-3 text-gray-400" />
-                              </Button>
-                            </TooltipTrigger>
-                            <TooltipContent 
-                              side="top" 
-                              className="max-w-[280px] p-4 text-sm font-comfortaa font-light leading-6 rounded-xl bg-white border border-gray-200 shadow-md whitespace-normal"
-                            >
-                              AI will interview you to better understand your company and adjust its responses accordingly.
-                            </TooltipContent>
-                          </Tooltip>
-                        </TooltipProvider>
-                      </span>
+                      Interview Me
                     </TabsTrigger>
                   </TabsList>
 

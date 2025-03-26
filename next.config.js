@@ -5,6 +5,9 @@ const nextConfig = {
   images: {
     domains: ['qvasgxzdjmldhbinbrgw.supabase.co'],
   },
+  env: {
+    _next_intl_trailing_slash: "true"
+  },
   async headers() {
     return [
       {
@@ -26,22 +29,12 @@ const nextConfig = {
       },
     ];
   },
-  webpack: (config, { isServer }) => {
-    if (!isServer) {
-      // Client-side specific config
-      config.resolve.fallback = {
-        ...config.resolve.fallback,
-        fs: false,
-        net: false,
-        tls: false,
-      };
-    }
-
-    // Ensure proper module resolution
-    config.resolve = {
-      ...config.resolve,
-      extensions: ['.js', '.jsx', '.ts', '.tsx', '.json'],
-      mainFields: ['browser', 'module', 'main'],
+  webpack: (config) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      net: false,
+      tls: false,
     };
 
     // Configure optimization
@@ -55,34 +48,28 @@ const nextConfig = {
 
     return config;
   },
-  // Configure experimental features properly
   experimental: {
+    serverActions: true,
     optimizeCss: false,
     esmExternals: false,
-    serverActions: true,
   },
-  // Ensure proper transpilation
   transpilePackages: [
     'use-sidecar',
     'react-style-singleton',
     '@radix-ui/react-dialog',
     '@radix-ui/react-dropdown-menu',
   ],
-  // Disable source maps in production
   productionBrowserSourceMaps: false,
-  // Enable strict mode
   reactStrictMode: true,
-  // Disable powered by header
   poweredByHeader: false,
-  // Add Node.js compatibility
+  swcMinify: true,
+  compiler: {
+    styledComponents: true,
+    removeConsole: process.env.NODE_ENV === 'production',
+  },
   serverRuntimeConfig: {
     NODE_ENV: process.env.NODE_ENV,
   },
-  // Enable SWC minification
-  swcMinify: true,
-  env: {
-    _next_intl_trailing_slash: 'true',
-  },
 };
 
-module.exports = withNextIntl(nextConfig); 
+module.exports = withNextIntl(nextConfig);
