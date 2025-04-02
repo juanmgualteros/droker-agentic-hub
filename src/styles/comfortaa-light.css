@@ -1,0 +1,30 @@
+/* Import Comfortaa Light directly from Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap');
+
+/* Apply Comfortaa Light to all elements */
+html, body, * {
+  font-family: 'Comfortaa', sans-serif !important;
+  font-weight: 300 !important;
+}
+
+/* Override any potential font weight changes */
+h1, h2, h3, h4, h5, h6, strong, b, .font-medium, .font-semibold, .font-bold {
+  font-weight: 300 !important;
+}
+
+/* Add a utility class for debugging */
+.comfortaa-light-debug {
+  border: 2px solid red;
+  position: relative;
+}
+
+.comfortaa-light-debug::after {
+  content: 'Comfortaa Light';
+  position: absolute;
+  top: 0;
+  right: 0;
+  background: red;
+  color: white;
+  padding: 2px 5px;
+  font-size: 10px;
+}

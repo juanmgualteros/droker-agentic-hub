@@ -23,6 +23,13 @@ module.exports = {
       fontFamily: {
         comfortaa: ['var(--font-comfortaa)', 'sans-serif'],
       },
+      fontWeight: {
+        light: '300',
+        normal: '300', // Override normal to be light
+        medium: '300', // Override medium to be light
+        semibold: '300', // Override semibold to be light
+        bold: '300', // Override bold to be light
+      },
       spacing: {
         '4.5': '1.125rem',
         '5.5': '1.375rem',

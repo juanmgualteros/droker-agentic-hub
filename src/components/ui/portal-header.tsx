@@ -1,10 +1,8 @@
 "use client";
 
 import { Logo } from './logo';
-import { LogOut, User, MoreVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
-import { LanguageSelector } from '@/components/language-selector';
-import { ThemeToggle } from '@/components/theme-toggle';
+import { SettingsMenu } from '@/components/settings-menu';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -56,35 +54,8 @@ export function PortalHeader({ title, locale, isHome = false, userName, isAdmin,
         </div>
 
         <div className="flex items-center gap-4">
-          <LanguageSelector locale={locale} />
-          
-          <ThemeToggle />
-          
-          <DropdownMenu>
-            <DropdownMenuTrigger asChild>
-              <Button variant="ghost" size="icon">
-                <MoreVertical className="h-5 w-5 text-muted-foreground" />
-              </Button>
-            </DropdownMenuTrigger>
-            <DropdownMenuContent align="end">
-              {isAdmin && (
-                <>
-                  <DropdownMenuItem className="text-sm">
-                    <span className="font-medium">{userName}</span>
-                  </DropdownMenuItem>
-                  <DropdownMenuItem className="text-sm text-muted-foreground">
-                    {organizationName}
-                  </DropdownMenuItem>
-                  <DropdownMenuSeparator />
-                </>
-              )}
-
-              <DropdownMenuItem onClick={handleLogout} className="text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                <span>Logout</span>
-              </DropdownMenuItem>
-            </DropdownMenuContent>
-          </DropdownMenu>
+          {/* Unified settings menu with language and theme options */}
+          <SettingsMenu locale={locale} />
         </div>
       </div>
     </header>

@@ -1,5 +1,5 @@
-import { comfortaa } from '@/lib/fonts';
 import '@/styles/globals.css';
+import '@/styles/comfortaa-light.css'; // Direct import of Comfortaa Light
 import type { Metadata } from 'next';
 import { ThemeProvider } from '@/components/theme-provider';
 
@@ -14,8 +14,8 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${comfortaa.variable}`} suppressHydrationWarning>
-      <body className={`font-comfortaa font-light antialiased`}>
+    <html lang="en" className="font-light" suppressHydrationWarning>
+      <body className="antialiased" style={{ fontWeight: 300, fontFamily: "'Comfortaa', sans-serif" }}>
         <ThemeProvider defaultTheme="light" storageKey="agentic-hub-theme">
           {children}
         </ThemeProvider>

@@ -1,0 +1,26 @@
+/* Font enforcement for Comfortaa Light */
+:root {
+  --font-comfortaa: 'Comfortaa', sans-serif;
+  font-family: var(--font-comfortaa);
+  font-weight: 300; /* Light weight */
+}
+
+html, body {
+  font-family: var(--font-comfortaa) !important;
+  font-weight: 300 !important; /* Enforce light weight */
+}
+
+/* Override any potential font weight changes */
+* {
+  font-family: inherit;
+}
+
+/* Only allow specific elements to have different weights when needed */
+strong, b, h1, h2, h3, h4, h5, h6, .font-medium, .font-semibold, .font-bold {
+  font-weight: 300; /* Keep light weight even for elements that are typically bold */
+}
+
+/* Special class for when we absolutely need a different weight */
+.font-weight-override {
+  font-weight: inherit !important;
+}

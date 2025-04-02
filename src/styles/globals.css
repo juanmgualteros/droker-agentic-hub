@@ -2,14 +2,20 @@
 @tailwind components;
 @tailwind utilities;
 
+/* Import font enforcement styles */
+@import './fonts.css';
+
 :root {
   --foreground-rgb: 0, 0, 0;
   --background-rgb: 255, 255, 255;
+  /* Enforce Comfortaa Light */
+  --font-weight-base: 300;
 }
 
 body {
   color: rgb(var(--foreground-rgb));
   background: rgb(var(--background-rgb));
+  font-weight: var(--font-weight-base);
 }
 
 /* Smooth scrolling for the entire page */
