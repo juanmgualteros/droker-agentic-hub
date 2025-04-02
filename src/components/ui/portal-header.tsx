@@ -1,9 +1,10 @@
 "use client";
 
 import { Logo } from './logo';
-import { Settings, LogOut } from 'lucide-react';
+import { LogOut, User, MoreVertical } from 'lucide-react';
 import { useRouter } from 'next/navigation';
 import { LanguageSelector } from '@/components/language-selector';
+import { ThemeToggle } from '@/components/theme-toggle';
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -57,10 +58,12 @@ export function PortalHeader({ title, locale, isHome = false, userName, isAdmin,
         <div className="flex items-center gap-4">
           <LanguageSelector locale={locale} />
           
+          <ThemeToggle />
+          
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" size="icon">
-                <Settings className="h-5 w-5 text-muted-foreground" />
+                <MoreVertical className="h-5 w-5 text-muted-foreground" />
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -75,12 +78,7 @@ export function PortalHeader({ title, locale, isHome = false, userName, isAdmin,
                   <DropdownMenuSeparator />
                 </>
               )}
-              <DropdownMenuItem asChild>
-                <Link href={`/${locale}/admin/settings`} className="flex items-center">
-                  <Settings className="mr-2 h-4 w-4" />
-                  <span>Settings</span>
-                </Link>
-              </DropdownMenuItem>
+
               <DropdownMenuItem onClick={handleLogout} className="text-destructive">
                 <LogOut className="mr-2 h-4 w-4" />
                 <span>Logout</span>

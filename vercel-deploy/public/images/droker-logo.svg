@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<svg width="256" height="256" viewBox="0 0 256 256" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style type="text/css">
+      @import url('https://fonts.googleapis.com/css2?family=Comfortaa:wght@300&display=swap');
+    </style>
+  </defs>
+  <circle cx="128" cy="128" r="126" stroke="#9CA3AF" stroke-width="2" fill="transparent"/>
+  <text x="50%" y="58%" text-anchor="middle" dominant-baseline="middle" font-family="Comfortaa" font-weight="300" font-size="160" fill="black">d</text>
+</svg> 

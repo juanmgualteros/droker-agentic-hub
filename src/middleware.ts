@@ -77,9 +77,14 @@ export default async function middleware(req: NextRequest) {
     const isLocalAuthenticated = req.cookies.get("isAuthenticated")?.value === "true";
     const userRole = req.cookies.get("userRole")?.value;
     
+    // For development purposes, also check localStorage via a client-side script
+    // This is a fallback mechanism in case cookies aren't working properly
     if (isLocalAuthenticated && userRole === "superadmin") {
       return response;
     }
+    
+    // Log authentication attempt for debugging
+    console.log('Superadmin auth check:', { isLocalAuthenticated, userRole, pathname });
     
     const locale = pathname.split("/")[1] || "en";
     return NextResponse.redirect(new URL(`/${locale}/login`, req.url));

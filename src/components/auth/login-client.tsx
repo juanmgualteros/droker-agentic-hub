@@ -25,9 +25,9 @@ export default function LoginClient() {
       // Here you would typically make an API call to authenticate
       // For now, we'll use a simple mock authentication
       if (email === 'admin@example.com' && password === 'password') {
-        // Set cookies that work in production (secure, SameSite, etc.)
-        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax; Secure";
-        document.cookie = "userRole=admin; path=/; max-age=86400; SameSite=Lax; Secure";
+        // Set cookies that work in development (no Secure flag)
+        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
+        document.cookie = "userRole=admin; path=/; max-age=86400; SameSite=Lax";
         
         // Also set localStorage for client-side checks
         localStorage.setItem('isAuthenticated', 'true');
@@ -36,13 +36,15 @@ export default function LoginClient() {
         // Navigate to admin dashboard with locale
         router.push(`/${locale}/admin`);
       } else if (email === 'superadmin@example.com' && password === 'password') {
-        // Set cookies that work in production (secure, SameSite, etc.)
-        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax; Secure";
-        document.cookie = "userRole=superadmin; path=/; max-age=86400; SameSite=Lax; Secure";
+        // Set cookies that work in development (no Secure flag)
+        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
+        document.cookie = "userRole=superadmin; path=/; max-age=86400; SameSite=Lax";
         
         // Also set localStorage for client-side checks
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userRole', 'superadmin');
+        
+        console.log('Setting superadmin cookies and redirecting...');
         
         // Navigate to superadmin dashboard with locale
         router.push(`/${locale}/superadmin`);

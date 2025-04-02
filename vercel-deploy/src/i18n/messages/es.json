@@ -1,0 +1,89 @@
+{
+  "common": {
+    "save": "Guardar Cambios",
+    "cancel": "Cancelar",
+    "add": "Agregar",
+    "remove": "Eliminar",
+    "edit": "Editar",
+    "loading": "Cargando...",
+    "error": "Ocurrió un error",
+    "success": "Éxito"
+  },
+  "navigation": {
+    "dashboard": "Panel",
+    "products": "Productos",
+    "settings": "Configuración",
+    "adminPortal": "Portal de Administración"
+  },
+  "products": {
+    "title": "Productos",
+    "description": "Gestiona y configura los productos de tu organización",
+    "configuration": {
+      "rag": {
+        "title": "Configuración RAG",
+        "systemPrompt": "Prompt del Sistema",
+        "systemPromptDescription": "Define el comportamiento y la personalidad de la IA al responder preguntas basadas en el contexto proporcionado.",
+        "sources": {
+          "title": "Fuentes",
+          "description": "Configura los diferentes tipos de fuentes",
+          "files": {
+            "title": "Archivos",
+            "description": "Sube documentos PDF, archivos Word o archivos de texto que la IA usará como material de referencia.",
+            "upload": "Subir Archivos"
+          },
+          "websites": {
+            "title": "Sitios Web",
+            "description": "Agrega URLs de sitios web que la IA analizará y usará como material de referencia.",
+            "addUrl": "Agregar URL",
+            "placeholder": "Ingresa la URL del sitio web"
+          },
+          "qa": {
+            "title": "Pares de Preguntas y Respuestas",
+            "description": "Crea pares predefinidos de preguntas y respuestas que la IA puede usar como material de referencia.",
+            "add": "Agregar Par P&R",
+            "question": "Pregunta",
+            "answer": "Respuesta"
+          }
+        }
+      },
+      "agent": {
+        "title": "Agente",
+        "description": "Configura el comportamiento y la apariencia del agente",
+        "systemPrompt": "Prompt del Sistema",
+        "parameters": {
+          "temperature": "Temperatura",
+          "maxTokens": "Tokens Máximos"
+        },
+        "appearance": {
+          "title": "Apariencia del Chat",
+          "description": "Personaliza el aspecto y la sensación de tu interfaz de chat",
+          "primaryColor": "Color Primario",
+          "secondaryColor": "Color Secundario",
+          "fontFamily": "Familia de Fuente"
+        },
+        "privacy": {
+          "title": "Privacidad del Chat",
+          "description": "Controla si el chat es accesible públicamente o requiere autenticación",
+          "private": "Los usuarios deben estar autenticados para acceder al chat",
+          "public": "El chat es accesible públicamente"
+        },
+        "testing": {
+          "title": "Chat de Prueba",
+          "description": "Prueba tu configuración de chat en un entorno de prueba",
+          "openTest": "Abrir Chat de Prueba"
+        },
+        "live": {
+          "title": "Chat en Vivo",
+          "description": "Obtén enlaces compartibles y código para insertar tu chat en vivo",
+          "embedCode": "Código para Insertar"
+        }
+      },
+      "users": {
+        "title": "Usuarios del Producto",
+        "description": "Gestiona los usuarios que tienen acceso a este producto",
+        "import": "Importar Usuarios",
+        "add": "Agregar Usuario"
+      }
+    }
+  }
+} 

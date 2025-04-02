@@ -5,8 +5,8 @@ import { usePathname, useRouter } from "next/navigation";
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 import {
-  Settings,
   Building2,
+  LayoutGrid
 } from "lucide-react";
 import { useTranslations } from "@/hooks/use-translations";
 import { PortalHeader } from "@/components/ui/portal-header";
@@ -28,18 +28,28 @@ export function SuperAdminLayoutClient({ children, title, description }: SuperAd
 
   const navigation = [
     { name: "Organizations", href: `/${locale}/superadmin/organizations`, icon: Building2 },
-    { name: "Settings", href: `/${locale}/superadmin/settings`, icon: Settings },
+    { name: "Portfolio", href: `/${locale}/superadmin/portfolio`, icon: LayoutGrid },
   ];
 
+  const [isMounted, setIsMounted] = useState(false);
+
+  // Handle client-side mounting
   useEffect(() => {
-    // Check authentication and role
-    const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
-    const userRole = localStorage.getItem("userRole");
-    if (!isAuthenticated || userRole !== "superadmin") {
-      router.replace(`/${locale}/login`);
+    setIsMounted(true);
+  }, []);
+
+  // Check authentication after component is mounted
+  useEffect(() => {
+    if (isMounted) {
+      // Only access localStorage after component is mounted on client
+      const isAuthenticated = localStorage.getItem("isAuthenticated") === "true";
+      const userRole = localStorage.getItem("userRole");
+      if (!isAuthenticated || userRole !== "superadmin") {
+        router.replace(`/${locale}/login`);
+      }
+      setIsLoading(false);
     }
-    setIsLoading(false);
-  }, [router, locale]);
+  }, [isMounted, router, locale]);
 
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
@@ -48,6 +58,11 @@ export function SuperAdminLayoutClient({ children, title, description }: SuperAd
     document.cookie = "userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
     router.replace(`/${locale}/login`);
   };
+
+  // Return null during SSR to prevent hydration errors
+  if (!isMounted) {
+    return null;
+  }
 
   if (isLoading) {
     return (
@@ -65,7 +80,7 @@ export function SuperAdminLayoutClient({ children, title, description }: SuperAd
         <div className="hidden lg:flex lg:flex-col lg:w-64">
           <div className="flex flex-col flex-grow bg-card border-r border-border pt-5 pb-4 overflow-y-auto">
             <div className="flex items-center flex-shrink-0 px-4">
-              <Link href={`/${locale}/superadmin/organizations`} className="text-2xl font-light text-foreground">
+              <Link href={`/${locale}/superadmin/organizations`} className="text-2xl font-light">
                 Super Admin
               </Link>
             </div>
@@ -77,14 +92,14 @@ export function SuperAdminLayoutClient({ children, title, description }: SuperAd
                   className={`${
                     pathname.startsWith(item.href)
                       ? 'bg-primary text-primary-foreground'
-                      : 'text-foreground-secondary hover:bg-muted'
-                  } group flex items-center px-2 py-2 text-sm font-medium rounded-md`}
+                      : 'text-muted-foreground hover:bg-muted'
+                  } group flex items-center px-2 py-2 text-sm font-light rounded`}
                 >
                   <item.icon
                     className={`${
                       pathname.startsWith(item.href)
                         ? 'text-primary-foreground'
-                        : 'text-foreground-secondary'
+                        : 'text-muted-foreground'
                     } mr-3 h-5 w-5`}
                   />
                   {item.name}

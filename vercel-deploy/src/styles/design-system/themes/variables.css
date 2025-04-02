@@ -1,0 +1,88 @@
+:root {
+  /* Base colors */
+  --background: 0 0% 100%;
+  --foreground: 0 0% 0%;
+  
+  /* UI Colors */
+  --card: 0 0% 100%;
+  --card-foreground: 0 0% 0%;
+  --popover: 0 0% 100%;
+  --popover-foreground: 0 0% 0%;
+  
+  /* Interactive Elements */
+  --primary: 0 0% 0%;
+  --primary-foreground: 0 0% 100%;
+  --secondary: 0 0% 96%;
+  --secondary-foreground: 0 0% 0%;
+  
+  /* Borders and Separators */
+  --border: 0 0% 94%;
+  --input: 0 0% 94%;
+  --ring: 0 0% 94%;
+  
+  /* Muted Elements */
+  --muted: 0 0% 96%;
+  --muted-foreground: 0 0% 45%;
+  
+  /* Destructive Actions */
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+  
+  /* Success Actions */
+  --success: 142 76% 36%;
+  --success-foreground: 0 0% 100%;
+  
+  /* Radius */
+  --radius: 0.5rem;
+}
+
+.dark {
+  /* Base colors */
+  --background: 0 0% 0%;
+  --foreground: 0 0% 100%;
+  
+  /* UI Colors */
+  --card: 0 0% 4%;
+  --secondary: 210 40% 96%;
+  --secondary-light: 210 40% 98%;
+  --secondary-dark: 210 40% 94%;
+  --secondary-foreground: 215 25% 27%;
+
+  /* Semantic colors */
+  --background: 0 0% 100%;
+  --background-secondary: 210 40% 98%;
+  --foreground: 215 25% 27%;
+  --foreground-secondary: 215 25% 47%;
+
+  /* UI colors */
+  --border: 215 25% 27% / 0.1;
+  --border-light: 215 25% 27% / 0.05;
+  --border-dark: 215 25% 27% / 0.2;
+  --ring: 215 100% 50%;
+  --ring-focus: 215 100% 50% / 0.3;
+
+  /* Component colors */
+  --card: 0 0% 100%;
+  --card-foreground: 215 25% 27%;
+  
+  --popover: 0 0% 100%;
+  --popover-foreground: 215 25% 27%;
+  
+  --muted: 210 40% 96%;
+  --muted-foreground: 215 25% 47%;
+  
+  --accent: 210 40% 96%;
+  --accent-foreground: 215 25% 27%;
+  
+  --destructive: 0 84% 60%;
+  --destructive-foreground: 0 0% 100%;
+
+  /* Border radius */
+  --radius-sm: 0.375rem;
+  --radius: 0.5rem;
+  --radius-md: 0.75rem;
+  --radius-lg: 1rem;
+  --radius-xl: 1.5rem;
+  --radius-2xl: 2rem;
+  --radius-3xl: 3rem;
+} 

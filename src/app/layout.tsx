@@ -1,6 +1,7 @@
 import { comfortaa } from '@/lib/fonts';
 import '@/styles/globals.css';
 import type { Metadata } from 'next';
+import { ThemeProvider } from '@/components/theme-provider';
 
 export const metadata: Metadata = {
   title: 'Agentic Hub',
@@ -13,9 +14,11 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className={`${comfortaa.variable}`}>
+    <html lang="en" className={`${comfortaa.variable}`} suppressHydrationWarning>
       <body className={`font-comfortaa font-light antialiased`}>
-        {children}
+        <ThemeProvider defaultTheme="light" storageKey="agentic-hub-theme">
+          {children}
+        </ThemeProvider>
       </body>
     </html>
   );
