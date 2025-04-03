@@ -52,8 +52,8 @@ export default function UsersClient({ users: initialUsers }: UsersClientProps) {
       header: 'Name/Email',
       render: (value: string | null, user: AdminUser) => (
         <div>
-          <div className="text-sm font-medium text-gray-900">{value || 'No Name'}</div>
-          <div className="text-sm text-gray-500">{user.email}</div>
+          <div className="text-sm font-medium text-foreground dark:text-white">{value || 'No Name'}</div>
+          <div className="text-sm text-muted-foreground dark:text-white/70">{user.email}</div>
         </div>
       ),
     },
@@ -61,7 +61,7 @@ export default function UsersClient({ users: initialUsers }: UsersClientProps) {
       key: 'organization',
       header: 'Organization',
       render: (value: Organization | undefined) => (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground dark:text-white/70">
           {value?.name || 'No Organization'}
         </div>
       ),
@@ -70,7 +70,7 @@ export default function UsersClient({ users: initialUsers }: UsersClientProps) {
       key: 'createdAt',
       header: 'Created At',
       render: (value: Date) => (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground dark:text-white/70">
           {new Date(value).toLocaleDateString()}
         </div>
       ),

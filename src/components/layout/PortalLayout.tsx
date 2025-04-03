@@ -29,6 +29,11 @@ interface PortalLayoutProps {
 const navigationConfig = {
   superadmin: [
     {
+      name: "Dashboard",
+      href: "/superadmin/dashboard",
+      icon: BarChart,
+    },
+    {
       name: "Organizations",
       href: "/superadmin/organizations",
       icon: Building2,
@@ -81,7 +86,7 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
   const navigation = navigationConfig[portalType];
 
   return (
-    <div className="min-h-screen bg-background">
+    <div className="min-h-screen bg-background text-foreground font-light">
       {/* Header */}
       <PortalHeader 
         title={title}
@@ -92,7 +97,7 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
         {/* Sidebar */}
         <aside
           className={cn(
-            "relative bg-card transition-all duration-300 ease-in-out rounded-r-xl shadow-[4px_0_12px_-2px_rgba(0,0,0,0.05)]",
+            "relative bg-background dark:bg-card border-r border-border transition-all duration-300 ease-in-out rounded-r-xl shadow-sm",
             isSidebarOpen ? "w-64" : "w-16"
           )}
         >
@@ -100,7 +105,7 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
           <Button
             variant="ghost"
             size="icon"
-            className="absolute -right-4 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border border-border bg-background shadow-sm hover:bg-muted"
+            className="absolute -right-4 top-1/2 -translate-y-1/2 h-8 w-8 rounded-full border border-border bg-background shadow-sm hover:bg-muted hover:text-foreground"
             onClick={() => setIsSidebarOpen(!isSidebarOpen)}
           >
             {isSidebarOpen ? (
@@ -111,7 +116,7 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
           </Button>
 
           {/* Navigation */}
-          <nav className="space-y-2 p-4">
+          <nav className="space-y-2 p-4 font-light">
             {navigation.map((item) => {
               const isActive = pathname === `/${locale}${item.href}` || 
                 (item.href === '/admin' && pathname === `/${locale}/admin`);
@@ -120,10 +125,10 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
                   key={item.name}
                   href={`/${locale}${item.href}`}
                   className={cn(
-                    "flex items-center px-3 py-2.5 text-sm font-medium rounded-lg transition-colors relative",
+                    "ds-nav-item rounded-lg transition-colors relative",
                     isActive
-                      ? "bg-muted/50"
-                      : "hover:bg-muted"
+                      ? "ds-nav-item-active"
+                      : "hover:bg-muted dark:hover:bg-muted"
                   )}
                 >
                   <item.icon 
@@ -131,7 +136,7 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
                       "flex-shrink-0 h-5 w-5",
                       !isSidebarOpen && "mx-auto",
                       isActive 
-                        ? "text-[#0066FF]" 
+                        ? "text-primary" 
                         : "text-muted-foreground"
                     )} 
                   />
@@ -152,7 +157,7 @@ export function PortalLayout({ children, title, locale, portalType }: PortalLayo
         </aside>
 
         {/* Main Content */}
-        <main className="flex-1 overflow-y-auto bg-background p-6">
+        <main className="flex-1 overflow-y-auto bg-background p-6 font-light">
           <div className="max-w-7xl mx-auto">
             {children}
           </div>

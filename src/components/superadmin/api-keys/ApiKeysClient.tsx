@@ -37,16 +37,16 @@ export default function ApiKeysClient({ apiKeys: initialApiKeys }: ApiKeysClient
       key: 'name',
       header: 'Name',
       render: (value: string) => (
-        <div className="text-sm font-medium text-gray-900">{value}</div>
+        <div className="text-sm font-medium text-foreground dark:text-white">{value}</div>
       ),
     },
     {
       key: 'type',
       header: 'Type',
       render: (value: ApiKeyType) => {
-        let bgColor = 'bg-gray-100 text-gray-800';
-        if (value === 'OPENAI') bgColor = 'bg-green-100 text-green-800';
-        else if (value === 'SUPABASE') bgColor = 'bg-blue-100 text-blue-800';
+        let bgColor = 'bg-muted text-foreground dark:bg-muted/50 dark:text-white';
+        if (value === 'OPENAI') bgColor = 'bg-green-100 text-green-800 dark:bg-green-900 dark:text-green-300';
+        else if (value === 'SUPABASE') bgColor = 'bg-blue-100 text-blue-800 dark:bg-blue-900 dark:text-blue-300';
         
         return (
           <span className={`px-2 inline-flex text-xs leading-5 font-semibold rounded-full ${bgColor}`}>
@@ -59,7 +59,7 @@ export default function ApiKeysClient({ apiKeys: initialApiKeys }: ApiKeysClient
       key: 'value',
       header: 'Value',
       render: (value: string) => (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground dark:text-white/70">
           {value.slice(0, 8)}...{value.slice(-8)}
         </div>
       ),
@@ -68,7 +68,7 @@ export default function ApiKeysClient({ apiKeys: initialApiKeys }: ApiKeysClient
       key: 'organization',
       header: 'Organization',
       render: (value: Organization | undefined) => (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground dark:text-white/70">
           {value?.name || 'No Organization'}
         </div>
       ),
@@ -77,7 +77,7 @@ export default function ApiKeysClient({ apiKeys: initialApiKeys }: ApiKeysClient
       key: 'createdAt',
       header: 'Created At',
       render: (value: Date) => (
-        <div className="text-sm text-gray-500">
+        <div className="text-sm text-muted-foreground dark:text-white/70">
           {new Date(value).toLocaleDateString()}
         </div>
       ),

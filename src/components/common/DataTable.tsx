@@ -154,15 +154,15 @@ export function DataTable({
         <div className="flex items-center justify-between">
           {(title || description) && (
             <div>
-              {title && <h1 className="text-2xl font-light text-gray-900">{title}</h1>}
-              {description && <p className="mt-1 text-sm text-gray-500">{description}</p>}
+              {title && <h1 className="text-2xl font-light text-foreground dark:text-white">{title}</h1>}
+              {description && <p className="mt-1 text-sm text-muted-foreground dark:text-white/70">{description}</p>}
             </div>
           )}
           <div className="flex items-center space-x-4">
             {filters.length > 0 && (
               <button
                 onClick={() => setShowFilters(!showFilters)}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-black border border-transparent rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary border border-transparent rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
                 Filters
               </button>
@@ -170,7 +170,7 @@ export function DataTable({
             {newItemPath && (
               <Link
                 href={newItemPath}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-black border border-transparent rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary border border-transparent rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
                 {newItemLabel}
               </Link>
@@ -180,18 +180,18 @@ export function DataTable({
       )}
 
       {showFilters && filters.length > 0 && (
-        <div className="bg-white p-4 rounded-lg border border-gray-100 shadow-sm space-y-4">
+        <div className="bg-background dark:bg-card p-4 rounded-lg border border-border shadow-sm space-y-4">
           <div className="flex items-center justify-between">
             <div className="relative flex-1 max-w-sm">
               <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <MagnifyingGlassIcon className="h-5 w-5 text-gray-400" />
+                <MagnifyingGlassIcon className="h-5 w-5 text-muted-foreground" />
               </div>
               <input
                 type="text"
                 placeholder="Search..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="block w-full pl-10 pr-3 py-2 border border-gray-200 rounded-md text-sm placeholder-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                className="block w-full pl-10 pr-3 py-2 border border-border rounded-md text-sm text-foreground dark:text-white placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
               />
             </div>
             <div className="flex gap-4">
@@ -200,7 +200,7 @@ export function DataTable({
                   key={filter.key}
                   value={filterValues[filter.key] || 'all'}
                   onChange={(e) => setFilterValues({ ...filterValues, [filter.key]: e.target.value })}
-                  className="block w-40 pl-3 pr-10 py-2 text-sm border border-gray-200 rounded-md focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
+                  className="block w-40 pl-3 pr-10 py-2 text-sm border border-border rounded-md text-foreground dark:text-white focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-indigo-500"
                 >
                   <option value="all">{filter.label}: All</option>
                   {filter.options.map((option) => (
@@ -215,15 +215,15 @@ export function DataTable({
         </div>
       )}
 
-      <div className="bg-white rounded-lg border border-gray-100 shadow-sm overflow-hidden">
+      <div className="bg-background dark:bg-card rounded-lg border border-border shadow-sm overflow-hidden">
         <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
+          <table className="min-w-full divide-y divide-border">
             <thead>
-              <tr className="bg-gray-50">
+              <tr className="bg-muted/50 dark:bg-muted/20">
                 {columns.map((column) => (
                   <th
                     key={column.key}
-                    className="px-6 py-3 text-center text-xs font-medium text-gray-500 uppercase tracking-wider"
+                    className="px-6 py-3 text-center text-xs font-medium text-muted-foreground dark:text-white/70 uppercase tracking-wider"
                   >
                     <div className="space-y-2">
                       <div className="flex items-center justify-center space-x-2">
@@ -235,8 +235,8 @@ export function DataTable({
                               className={cn(
                                 "transition-colors",
                                 sortConfig?.key === column.key
-                                  ? "text-[hsl(215_100%_50%)]"
-                                  : "text-gray-400 hover:text-gray-600"
+                                  ? "text-primary"
+                                  : "text-muted-foreground hover:text-foreground dark:text-white/50 dark:hover:text-white/90"
                               )}
                             >
                               {sortConfig?.key === column.key ? (
@@ -259,8 +259,8 @@ export function DataTable({
                                 className={cn(
                                   "transition-colors",
                                   columnFilters[column.key]?.length
-                                    ? "text-[hsl(215_100%_50%)]"
-                                    : "text-gray-400 hover:text-gray-600"
+                                    ? "text-primary dark:text-primary"
+                                    : "text-muted-foreground hover:text-foreground dark:text-white/50 dark:hover:text-white/90"
                                 )}
                               >
                                 <Filter className="h-4 w-4" />
@@ -306,9 +306,9 @@ export function DataTable({
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-200">
+            <tbody className="divide-y divide-border">
               {filteredAndSortedData.map((item, index) => (
-                <tr key={item.id || index} className="hover:bg-gray-50/50">
+                <tr key={item.id || index} className="hover:bg-muted/50 dark:hover:bg-muted/20">
                   {columns.map((column) => (
                     <td key={column.key} className="px-6 py-4 whitespace-nowrap text-center">
                       {column.render ? column.render(item[column.key], item) : item[column.key]}
@@ -324,8 +324,8 @@ export function DataTable({
                             className={cn(
                               "px-4 py-2 rounded-md text-sm font-medium transition-colors",
                               action.type === 'delete' 
-                                ? 'text-white bg-red-600 hover:bg-red-700'
-                                : 'text-white bg-black hover:bg-gray-800'
+                                ? 'text-white bg-red-600 hover:bg-red-700 dark:bg-red-700 dark:hover:bg-red-800'
+                                : 'text-primary-foreground bg-primary hover:bg-primary/90'
                             )}
                           >
                             {typeof action.label === 'string' ? action.label : action.label(item)}
@@ -340,7 +340,7 @@ export function DataTable({
                 <tr>
                   <td
                     colSpan={columns.length + (actions ? 1 : 0)}
-                    className="px-6 py-4 text-center text-sm text-gray-500"
+                    className="px-6 py-4 text-center text-sm text-muted-foreground dark:text-white/70"
                   >
                     No data available
                   </td>
@@ -357,7 +357,7 @@ export function DataTable({
             {onExport && (
               <button
                 onClick={onExport}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-black border border-transparent rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary border border-transparent rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
                 Export
               </button>
@@ -365,7 +365,7 @@ export function DataTable({
             {onImport && (
               <button
                 onClick={onImport}
-                className="inline-flex items-center px-4 py-2 text-sm font-medium text-white bg-black border border-transparent rounded-md hover:bg-gray-800 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-900"
+                className="inline-flex items-center px-4 py-2 text-sm font-medium text-primary-foreground bg-primary border border-transparent rounded-md hover:bg-primary/90 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-primary"
               >
                 Import
               </button>

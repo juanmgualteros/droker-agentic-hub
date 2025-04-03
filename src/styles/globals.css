@@ -5,17 +5,122 @@
 /* Import font enforcement styles */
 @import './fonts.css';
 
-:root {
-  --foreground-rgb: 0, 0, 0;
-  --background-rgb: 255, 255, 255;
-  /* Enforce Comfortaa Light */
-  --font-weight-base: 300;
+/**
+ * Design System - CSS Variables
+ * These variables define the color palette for light and dark themes.
+ * They are referenced by Tailwind classes through the tailwind.config.js file.
+ */
+
+@layer base {
+  :root {
+    /* Base colors for light theme */
+    --background: 0 0% 100%;
+    --foreground: 220 15% 20%;
+    --card: 0 0% 100%;
+    --card-foreground: 220 15% 20%;
+    --popover: 0 0% 100%;
+    --popover-foreground: 220 15% 20%;
+    
+    /* UI colors */
+    --muted: 220 15% 95%;
+    --muted-foreground: 220 10% 50%;
+    --accent: 220 15% 92%;
+    --accent-foreground: 220 15% 20%;
+    
+    /* Brand colors */
+    --primary: 215 100% 50%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 92%;
+    --secondary-foreground: 220 15% 20%;
+    
+    /* Form elements */
+    --border: 220 15% 90%;
+    --input: 220 15% 90%;
+    --ring: 215 100% 50%;
+    
+    /* Status colors */
+    --destructive: 0 85% 60%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 145 65% 42%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 50%;
+    --warning-foreground: 0 0% 100%;
+    --info: 215 100% 50%;
+    --info-foreground: 0 0% 100%;
+    
+    /* System */
+    --radius: 0.5rem;
+    --font-weight-base: 300;
+  }
+
+  .dark {
+    /* Base colors for dark theme */
+    --background: 220 15% 16%;
+    --foreground: 0 0% 100%;
+    --card: 220 15% 20%;
+    --card-foreground: 0 0% 100%;
+    --popover: 220 15% 20%;
+    --popover-foreground: 0 0% 100%;
+    
+    /* UI colors */
+    --muted: 220 15% 25%;
+    --muted-foreground: 0 0% 100%;
+    --accent: 220 15% 25%;
+    --accent-foreground: 0 0% 100%;
+    
+    /* Brand colors */
+    --primary: 215 100% 60%;
+    --primary-foreground: 0 0% 100%;
+    --secondary: 220 15% 25%;
+    --secondary-foreground: 0 0% 100%;
+    
+    /* Form elements */
+    --border: 220 15% 30%;
+    --input: 220 15% 30%;
+    --ring: 215 100% 60%;
+    
+    /* Status colors */
+    --destructive: 0 85% 65%;
+    --destructive-foreground: 0 0% 100%;
+    --success: 145 65% 52%;
+    --success-foreground: 0 0% 100%;
+    --warning: 38 92% 60%;
+    --warning-foreground: 0 0% 100%;
+    --info: 215 100% 60%;
+    --info-foreground: 0 0% 100%;
+  }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: rgb(var(--background-rgb));
-  font-weight: var(--font-weight-base);
+@layer base {
+  body {
+    font-weight: var(--font-weight-base);
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    font-family: 'Comfortaa', system-ui, sans-serif;
+  }
+
+  /* Typography scale */
+  h1 {
+    @apply text-4xl font-light;
+  }
+  h2 {
+    @apply text-3xl font-light;
+  }
+  h3 {
+    @apply text-2xl font-light;
+  }
+  h4 {
+    @apply text-xl font-light;
+  }
+  h5 {
+    @apply text-lg font-light;
+  }
+  h6 {
+    @apply text-base font-light;
+  }
+  p {
+    @apply text-base font-light;
+  }
 }
 
 /* Smooth scrolling for the entire page */
@@ -34,6 +139,85 @@ html {
   outline-offset: 2px;
 }
 
+/**
+ * Dark Mode Text Utilities
+ * These utility classes ensure text is white in dark mode
+ */
+@layer utilities {
+  .dark-mode-text {
+    @apply text-foreground dark:text-[#ffffff];
+  }
+  
+  .dark-mode-text-muted {
+    @apply text-muted-foreground dark:text-[#ffffff]/80;
+  }
+}
+
+/**
+ * Component Classes
+ * These classes define reusable component styles that can be applied with @apply directives
+ */
+@layer components {
+  /* Card styles */
+  .ds-card {
+    @apply bg-background dark:bg-card border border-border rounded-lg shadow-sm;
+  }
+  .ds-card-header {
+    @apply p-6 border-b border-border;
+  }
+  .ds-card-body {
+    @apply p-6;
+  }
+  .ds-card-footer {
+    @apply p-6 border-t border-border;
+  }
+  .ds-card-title {
+    @apply text-xl font-light text-foreground;
+  }
+  .ds-card-description {
+    @apply text-sm text-muted-foreground font-light;
+  }
+
+  /* Button styles */
+  .ds-button {
+    @apply inline-flex items-center justify-center rounded-md text-sm font-medium transition-colors focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none;
+  }
+  .ds-button-primary {
+    @apply bg-primary text-primary-foreground hover:bg-primary/90;
+  }
+  .ds-button-secondary {
+    @apply bg-secondary text-secondary-foreground hover:bg-secondary/80;
+  }
+  .ds-button-outline {
+    @apply border border-border bg-transparent hover:bg-accent hover:text-accent-foreground;
+  }
+  
+  /* Navigation styles */
+  .ds-nav-item {
+    @apply flex items-center px-4 py-2 text-sm font-light text-foreground hover:bg-muted;
+  }
+  .ds-nav-item-active {
+    @apply bg-muted text-foreground;
+  }
+
+  /* Table styles */
+  .ds-table {
+    @apply w-full text-sm;
+  }
+  .ds-table-header {
+    @apply border-b border-border bg-muted/50;
+  }
+  .ds-table-header-cell {
+    @apply px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground;
+  }
+  .ds-table-row {
+    @apply border-b border-border bg-background transition-colors hover:bg-muted/50;
+  }
+  .ds-table-cell {
+    @apply px-4 py-3 text-foreground;
+  }
+}
+
 /* Custom scrollbar styles */
 ::-webkit-scrollbar {
   width: 8px;
@@ -41,15 +225,15 @@ html {
 }
 
 ::-webkit-scrollbar-track {
-  background: rgb(243, 244, 246);
+  background: hsl(var(--muted));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb {
-  background: rgb(209, 213, 219);
+  background: hsl(var(--muted-foreground));
   border-radius: 4px;
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: rgb(156, 163, 175);
+  background: hsl(var(--muted-foreground) / 0.7);
 } 

@@ -115,23 +115,23 @@ export default function OpenAIKeysList() {
   return (
     <div className="space-y-6">
       <div className="flex justify-between items-center">
-        <h2 className="text-2xl font-bold">OpenAI API Keys</h2>
+        <h2 className="text-2xl font-bold text-foreground dark:text-white">OpenAI API Keys</h2>
         <button
           onClick={() => {
             setEditingKey(null);
             setFormData({ name: '', value: '' });
             setShowForm(true);
           }}
-          className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800"
+          className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90"
         >
           Add New Key
         </button>
       </div>
 
       {showForm && (
-        <form onSubmit={handleSubmit} className="space-y-4 bg-white p-6 rounded-lg shadow">
+        <form onSubmit={handleSubmit} className="space-y-4 bg-background dark:bg-card p-6 rounded-lg shadow border border-border">
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="name" className="block text-sm font-medium text-foreground dark:text-white">
               Name
             </label>
             <input
@@ -139,12 +139,12 @@ export default function OpenAIKeysList() {
               id="name"
               value={formData.name}
               onChange={(e) => setFormData({ ...formData, name: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
+              className="mt-1 block w-full rounded-md border-border shadow-sm focus:border-primary focus:ring-primary sm:text-sm bg-background dark:bg-card text-foreground dark:text-white"
               required
             />
           </div>
           <div>
-            <label htmlFor="value" className="block text-sm font-medium text-gray-700">
+            <label htmlFor="value" className="block text-sm font-medium text-foreground dark:text-white">
               API Key
             </label>
             <input
@@ -152,7 +152,7 @@ export default function OpenAIKeysList() {
               id="value"
               value={formData.value}
               onChange={(e) => setFormData({ ...formData, value: e.target.value })}
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-black focus:ring-black sm:text-sm"
+              className="mt-1 block w-full rounded-md border-border shadow-sm focus:border-primary focus:ring-primary sm:text-sm bg-background dark:bg-card text-foreground dark:text-white"
               required
             />
           </div>
@@ -164,14 +164,14 @@ export default function OpenAIKeysList() {
                 setEditingKey(null);
                 setFormData({ name: '', value: '' });
               }}
-              className="px-4 py-2 border border-gray-300 rounded-md text-gray-700 hover:bg-gray-50"
+              className="px-4 py-2 border border-border rounded-md text-foreground dark:text-white hover:bg-muted bg-background dark:bg-card"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={isLoading}
-              className="px-4 py-2 bg-black text-white rounded-md hover:bg-gray-800 disabled:opacity-50"
+              className="px-4 py-2 bg-primary text-primary-foreground rounded-md hover:bg-primary/90 disabled:opacity-50"
             >
               {isLoading ? 'Saving...' : editingKey ? 'Update Key' : 'Add Key'}
             </button>
@@ -179,14 +179,14 @@ export default function OpenAIKeysList() {
         </form>
       )}
 
-      <div className="bg-white shadow rounded-lg overflow-hidden">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className="bg-gray-50">
+      <div className="bg-background dark:bg-card shadow rounded-lg overflow-hidden border border-border">
+        <table className="min-w-full divide-y divide-border">
+          <thead className="bg-muted dark:bg-muted/50">
             <tr>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground dark:text-white/70 uppercase tracking-wider">
                 Name
               </th>
-              <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+              <th className="px-6 py-3 text-left text-xs font-medium text-muted-foreground dark:text-white/70 uppercase tracking-wider">
                 Status
               </th>
               <th className="px-6 py-3 text-right text-xs font-medium text-gray-500 uppercase tracking-wider">
@@ -194,13 +194,13 @@ export default function OpenAIKeysList() {
               </th>
             </tr>
           </thead>
-          <tbody className="bg-white divide-y divide-gray-200">
+          <tbody className="bg-background dark:bg-card divide-y divide-border">
             {keys.map((key) => (
               <tr key={key.id}>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-gray-900">
+                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium text-foreground dark:text-white">
                   {key.name}
                 </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                <td className="px-6 py-4 whitespace-nowrap text-sm text-muted-foreground dark:text-white/70">
                   <span
                     className={`inline-flex px-2 py-1 rounded-full text-xs font-semibold ${
                       key.status === 'ACTIVE'
@@ -214,19 +214,19 @@ export default function OpenAIKeysList() {
                 <td className="px-6 py-4 whitespace-nowrap text-right text-sm font-medium space-x-3">
                   <button
                     onClick={() => handleEdit(key)}
-                    className="text-blue-600 hover:text-blue-900"
+                    className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                   >
                     Edit
                   </button>
                   <button
                     onClick={() => handleStatusChange(key.id, key.status === 'ACTIVE' ? 'INACTIVE' : 'ACTIVE')}
-                    className="text-blue-600 hover:text-blue-900"
+                    className="text-blue-600 hover:text-blue-900 dark:text-blue-400 dark:hover:text-blue-300"
                   >
                     {key.status === 'ACTIVE' ? 'Deactivate' : 'Activate'}
                   </button>
                   <button
                     onClick={() => handleDelete(key.id)}
-                    className="text-red-600 hover:text-red-900"
+                    className="text-red-600 hover:text-red-900 dark:text-red-400 dark:hover:text-red-300"
                   >
                     Delete
                   </button>

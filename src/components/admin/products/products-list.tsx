@@ -5,6 +5,7 @@ import Link from "next/link";
 import { cn } from "@/lib/utils";
 import { Button } from "@/components/ui/button";
 import { FileText, MessageSquare, Upload, ChevronRight } from "lucide-react";
+import { ThemeContainer } from "@/components/ui/theme-container";
 
 // Temporary mock data - this would come from your API/database
 const products = [
@@ -43,7 +44,7 @@ export function ProductsList() {
           <div
             key={product.id}
             className={cn(
-              "border rounded-lg p-4 bg-white",
+              "border border-border rounded-lg p-4 bg-background",
               !product.isEnabled && "opacity-60"
             )}
           >
@@ -52,40 +53,40 @@ export function ProductsList() {
                 <h3 
                   className={cn(
                     "text-lg font-medium",
-                    product.isEnabled ? "text-gray-900" : "text-gray-500"
+                    product.isEnabled ? "text-foreground dark:text-white" : "text-muted-foreground dark:text-white/70"
                   )}
                 >
                   {product.name}
                 </h3>
-                <p className="text-sm text-gray-500">{product.description}</p>
+                <p className="text-sm text-muted-foreground dark:text-white/70">{product.description}</p>
               </div>
               <Link href={`/admin/products/${product.id}/configure`}>
-                <Button className="text-white bg-black hover:bg-gray-800">
+                <Button className="font-comfortaa font-light">
                   Configure
                 </Button>
               </Link>
             </div>
             <div className="mt-4 flex gap-4">
               <div className="flex items-center text-sm">
-                <FileText className="mr-2 h-4 w-4 text-gray-500" />
+                <FileText className="mr-2 h-4 w-4 text-muted-foreground dark:text-white/70" />
                 <span className={cn(
-                  product.features.files ? "text-gray-900" : "text-gray-400"
+                  product.features.files ? "text-foreground dark:text-white" : "text-muted-foreground/50 dark:text-white/40"
                 )}>
                   Files
                 </span>
               </div>
               <div className="flex items-center text-sm">
-                <MessageSquare className="mr-2 h-4 w-4 text-gray-500" />
+                <MessageSquare className="mr-2 h-4 w-4 text-muted-foreground dark:text-white/70" />
                 <span className={cn(
-                  product.features.chat ? "text-gray-900" : "text-gray-400"
+                  product.features.chat ? "text-foreground dark:text-white" : "text-muted-foreground/50 dark:text-white/40"
                 )}>
                   Chat
                 </span>
               </div>
               <div className="flex items-center text-sm">
-                <Upload className="mr-2 h-4 w-4 text-gray-500" />
+                <Upload className="mr-2 h-4 w-4 text-muted-foreground dark:text-white/70" />
                 <span className={cn(
-                  product.features.qa ? "text-gray-900" : "text-gray-400"
+                  product.features.qa ? "text-foreground dark:text-white" : "text-muted-foreground/50 dark:text-white/40"
                 )}>
                   Q&A
                 </span>

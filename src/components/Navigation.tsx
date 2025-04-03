@@ -40,7 +40,7 @@ export function Navigation({ className }: NavigationProps) {
   ];
 
   return (
-    <nav className={cn("flex flex-col w-64 bg-white border-r border-gray-200", className)}>
+    <nav className={cn("flex flex-col w-64 bg-background border-r border-border", className)}>
       <div className="flex flex-col flex-grow pt-5 pb-4 overflow-y-auto">
         <div className="flex-grow mt-5">
           <div className="space-y-1">
@@ -48,7 +48,7 @@ export function Navigation({ className }: NavigationProps) {
               <Link
                 key={item.name}
                 href={item.href}
-                className="flex items-center px-4 py-2 text-sm font-light text-gray-600 hover:bg-gray-50"
+                className="flex items-center px-4 py-2 text-sm font-light text-foreground hover:bg-muted"
               >
                 {item.name}
               </Link>
@@ -58,7 +58,7 @@ export function Navigation({ className }: NavigationProps) {
         <div className="px-4">
           <button
             onClick={handleLogout}
-            className="w-full flex items-center px-4 py-2 text-sm font-light text-gray-600 hover:bg-gray-50 rounded-md"
+            className="w-full flex items-center px-4 py-2 text-sm font-light text-foreground dark:text-white hover:bg-muted rounded-md"
           >
             Sign out
           </button>

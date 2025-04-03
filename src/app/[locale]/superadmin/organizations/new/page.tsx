@@ -96,8 +96,8 @@ export default function NewOrganizationPage() {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-medium mb-2">Organization Details</h2>
-              <p className="text-sm text-gray-500 mb-4">Basic information about the organization</p>
+              <h2 className="text-lg font-medium mb-2 text-foreground font-comfortaa">Organization Details</h2>
+              <p className="text-sm text-muted-foreground mb-4 font-comfortaa">Basic information about the organization</p>
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="name">Organization Name</Label>
@@ -121,8 +121,8 @@ export default function NewOrganizationPage() {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-medium mb-2">Products Configuration</h2>
-              <p className="text-sm text-gray-500 mb-4">Manage organization products</p>
+              <h2 className="text-lg font-medium mb-2 text-foreground font-comfortaa">Products Configuration</h2>
+              <p className="text-sm text-muted-foreground mb-4 font-comfortaa">Manage organization products</p>
               <DataTable
                 data={products}
                 columns={[
@@ -173,8 +173,8 @@ export default function NewOrganizationPage() {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-medium mb-2">API Keys</h2>
-              <p className="text-sm text-gray-500 mb-4">Manage API keys for external services</p>
+              <h2 className="text-lg font-medium mb-2 text-foreground font-comfortaa">API Keys</h2>
+              <p className="text-sm text-muted-foreground mb-4 font-comfortaa">Manage API keys for external services</p>
               <DataTable
                 data={apiKeys}
                 columns={[
@@ -221,8 +221,8 @@ export default function NewOrganizationPage() {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-medium mb-2">Admin User</h2>
-              <p className="text-sm text-gray-500 mb-4">Configure the organization's admin user</p>
+              <h2 className="text-lg font-medium mb-2 text-foreground font-comfortaa">Admin User</h2>
+              <p className="text-sm text-muted-foreground mb-4 font-comfortaa">Configure the organization's admin user</p>
               <div className="space-y-4">
                 <div>
                   <Label htmlFor="adminName">Admin Name</Label>
@@ -274,8 +274,8 @@ export default function NewOrganizationPage() {
         return (
           <div className="space-y-6">
             <div>
-              <h2 className="text-lg font-medium mb-2">Organization Settings</h2>
-              <p className="text-sm text-gray-500 mb-4">Additional configuration options</p>
+              <h2 className="text-lg font-medium mb-2 text-foreground font-comfortaa">Organization Settings</h2>
+              <p className="text-sm text-muted-foreground mb-4 font-comfortaa">Additional configuration options</p>
               {/* Add organization settings here */}
             </div>
           </div>
@@ -286,13 +286,13 @@ export default function NewOrganizationPage() {
   return (
     <div className="space-y-6">
       <div>
-        <h1 className="text-2xl font-light text-gray-900">Configure Organization</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-light text-foreground font-comfortaa">Configure Organization</h1>
+        <p className="mt-1 text-sm text-muted-foreground font-comfortaa">
           Set up your organization's configuration and resources
         </p>
       </div>
 
-      <div className="border-b border-gray-200">
+      <div className="border-b border-border">
         <nav className="-mb-px flex space-x-8" aria-label="Tabs">
           {tabs.map((tab) => {
             const Icon = tab.icon;
@@ -303,8 +303,8 @@ export default function NewOrganizationPage() {
                 className={cn(
                   "flex items-center space-x-2 border-b-2 px-1 pb-4 pt-2 text-sm font-medium",
                   activeTab === tab.id
-                    ? "border-blue-500 text-blue-600"
-                    : "border-transparent text-gray-500 hover:border-gray-300 hover:text-gray-700"
+                    ? "border-primary text-primary"
+                    : "border-transparent text-muted-foreground hover:border-border hover:text-foreground"
                 )}
               >
                 <Icon className="h-5 w-5" />
@@ -315,7 +315,7 @@ export default function NewOrganizationPage() {
         </nav>
       </div>
 
-      <div className="bg-white shadow-sm rounded-lg p-6">
+      <div className="bg-background shadow-sm rounded-lg p-6 border border-border">
         {renderContent()}
       </div>
 

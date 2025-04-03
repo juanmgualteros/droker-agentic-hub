@@ -22,7 +22,7 @@ export function UserAvatar({ name, size = 'md', className = '' }: UserAvatarProp
 
   return (
     <div 
-      className={`${sizeMap[size]} flex items-center justify-center rounded-full bg-gray-200 text-gray-600 font-semibold ${className}`}
+      className={`${sizeMap[size]} flex items-center justify-center rounded-full bg-muted dark:bg-muted/50 text-foreground dark:text-white font-semibold ${className}`}
     >
       {initials}
     </div>

@@ -62,7 +62,7 @@ export default function OrganizationsClient({ organizations: initialOrganization
       sortable: true,
       filterType: 'text' as const,
       render: (value: string) => (
-        <span className="font-medium text-gray-900">{value}</span>
+        <span className="font-medium text-foreground dark:text-white">{value}</span>
       ),
     },
     {
@@ -77,9 +77,9 @@ export default function OrganizationsClient({ organizations: initialOrganization
       ],
       render: (value: string) => {
         const stateStyles = {
-          ACTIVE: 'bg-green-50 text-green-700 border-green-100',
-          PENDING: 'bg-yellow-50 text-yellow-700 border-yellow-100',
-          SUSPENDED: 'bg-red-50 text-red-700 border-red-100',
+          ACTIVE: 'bg-green-50 text-green-700 border-green-100 dark:bg-green-950 dark:text-green-400 dark:border-green-900',
+          PENDING: 'bg-yellow-50 text-yellow-700 border-yellow-100 dark:bg-yellow-950 dark:text-yellow-400 dark:border-yellow-900',
+          SUSPENDED: 'bg-red-50 text-red-700 border-red-100 dark:bg-red-950 dark:text-red-400 dark:border-red-900',
         };
         return (
           <span className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${stateStyles[value as keyof typeof stateStyles]}`}>
@@ -94,7 +94,7 @@ export default function OrganizationsClient({ organizations: initialOrganization
       sortable: true,
       filterType: 'text' as const,
       render: (value: User[]) => (
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-muted-foreground dark:text-white/70">
           {value?.length || 0}
         </span>
       ),
@@ -105,7 +105,7 @@ export default function OrganizationsClient({ organizations: initialOrganization
       sortable: true,
       filterType: 'text' as const,
       render: (value: ApiKey[]) => (
-        <span className="text-sm text-gray-500">
+        <span className="text-sm text-muted-foreground dark:text-white/70">
           {value.filter(key => key.type === 'OPENAI').length + value.filter(key => key.type === 'SUPABASE').length}
         </span>
       ),
@@ -156,26 +156,26 @@ export default function OrganizationsClient({ organizations: initialOrganization
     <div className="space-y-6">
       <div className="flex items-center justify-between">
         <div>
-          <h1 className="text-2xl font-light text-gray-900">Organizations</h1>
-          <p className="mt-1 text-sm text-gray-500">
+          <h1 className="text-2xl font-light text-foreground dark:text-white">Organizations</h1>
+          <p className="mt-1 text-sm text-muted-foreground dark:text-white/70">
             Configure and manage your customer organizations
           </p>
         </div>
         <Link
           href={`/${locale}/superadmin/organizations/new`}
-          className="text-white bg-black hover:bg-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+          className="text-primary-foreground bg-primary hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium"
         >
           New Organization
         </Link>
       </div>
       
-      <div className="bg-white rounded-lg shadow-sm border border-gray-100">
+      <div className="bg-background dark:bg-card rounded-lg shadow-sm border border-border">
         {organizations.length === 0 ? (
           <div className="flex flex-col items-center justify-center p-8">
-            <p className="text-gray-500 mb-4">No organizations found</p>
+            <p className="text-muted-foreground dark:text-white/70 mb-4">No organizations found</p>
             <Link
               href={`/${locale}/superadmin/organizations/new`}
-              className="text-white bg-black hover:bg-gray-800 px-4 py-2 rounded-md text-sm font-medium"
+              className="text-primary-foreground bg-primary hover:bg-primary/90 px-4 py-2 rounded-md text-sm font-medium"
             >
               Create your first organization
             </Link>

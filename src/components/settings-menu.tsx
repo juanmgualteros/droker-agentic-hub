@@ -13,6 +13,7 @@ import {
 import { Settings, Moon, Sun, Globe, LogOut } from "lucide-react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
+import { cn } from "@/lib/utils";
 
 interface SettingsMenuProps {
   locale: string;
@@ -50,45 +51,58 @@ export function SettingsMenu({ locale }: SettingsMenuProps) {
   return (
     <DropdownMenu>
       <DropdownMenuTrigger asChild>
-        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full hover:bg-transparent">
-          <Settings className="h-4 w-4 text-muted-foreground hover:text-foreground transition-colors" />
+        <Button variant="ghost" size="icon" className="h-9 w-9 rounded-full hover:bg-accent hover:text-accent-foreground">
+          <Settings className="h-4 w-4 text-foreground transition-colors" />
           <span className="sr-only">Settings menu</span>
         </Button>
       </DropdownMenuTrigger>
-      <DropdownMenuContent align="end">
-        <DropdownMenuLabel className="font-light">Appearance</DropdownMenuLabel>
+      <DropdownMenuContent align="end" className="bg-background border-border">
+        <DropdownMenuLabel className="font-light text-foreground">Appearance</DropdownMenuLabel>
         <DropdownMenuItem 
           onClick={() => setTheme("light")} 
-          className="font-light cursor-pointer"
+          className={cn(
+            "font-light cursor-pointer text-foreground hover:bg-accent hover:text-accent-foreground",
+            "py-2 px-3"
+          )}
         >
           <Sun className="mr-2 h-4 w-4" />
           <span>Light</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={() => setTheme("dark")} 
-          className="font-light cursor-pointer"
+          className={cn(
+            "font-light cursor-pointer text-foreground hover:bg-accent hover:text-accent-foreground",
+            "py-2 px-3"
+          )}
         >
           <Moon className="mr-2 h-4 w-4" />
           <span>Dark</span>
         </DropdownMenuItem>
         <DropdownMenuItem 
           onClick={() => setTheme("system")} 
-          className="font-light cursor-pointer"
+          className={cn(
+            "font-light cursor-pointer text-foreground hover:bg-accent hover:text-accent-foreground",
+            "py-2 px-3"
+          )}
         >
           <span className="mr-2 h-4 w-4 flex items-center justify-center">
-            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0" />
-            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100" />
+            <Sun className="h-4 w-4 rotate-0 scale-100 transition-all dark:-rotate-90 dark:scale-0 text-foreground" />
+            <Moon className="absolute h-4 w-4 rotate-90 scale-0 transition-all dark:rotate-0 dark:scale-100 text-foreground" />
           </span>
           <span>System</span>
         </DropdownMenuItem>
         
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-border" />
         
-        <DropdownMenuLabel className="font-light">Language</DropdownMenuLabel>
+        <DropdownMenuLabel className="font-light text-foreground">Language</DropdownMenuLabel>
         {languages.map((lang) => (
           <DropdownMenuItem
             key={lang.code}
-            className={`font-light cursor-pointer ${locale === lang.code ? 'bg-muted' : ''}`}
+            className={cn(
+              "font-light cursor-pointer text-foreground hover:bg-accent hover:text-accent-foreground",
+              locale === lang.code ? 'bg-muted' : '',
+              "py-2 px-3"
+            )}
           >
             <Link 
               href={`/${lang.code}${getPathWithoutLocale()}`} 
@@ -103,11 +117,14 @@ export function SettingsMenu({ locale }: SettingsMenuProps) {
           </DropdownMenuItem>
         ))}
         
-        <DropdownMenuSeparator />
+        <DropdownMenuSeparator className="bg-border" />
         
         <DropdownMenuItem 
           onClick={handleLogout} 
-          className="font-light cursor-pointer text-destructive"
+          className={cn(
+            "font-light cursor-pointer text-destructive hover:bg-destructive/10",
+            "py-2 px-3"
+          )}
         >
           <LogOut className="mr-2 h-4 w-4" />
           <span>Logout</span>

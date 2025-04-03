@@ -18,16 +18,16 @@ interface DataTableProps<T> {
 
 export function DataTable<T>({ data, columns, actions, className }: DataTableProps<T>) {
   return (
-    <div className={cn("rounded-md border", className)}>
+    <div className={cn("rounded-md border border-border", className)}>
       <div className="overflow-x-auto">
         <table className="w-full text-sm">
           <thead>
-            <tr className="border-b bg-gray-50/50">
+            <tr className="border-b border-border bg-muted/50">
               {columns.map((column) => (
                 <th
                   key={String(column.accessorKey)}
                   className={cn(
-                    "px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-gray-500",
+                    "px-4 py-3 text-left text-xs font-medium uppercase tracking-wide text-muted-foreground",
                     column.className
                   )}
                 >
@@ -35,7 +35,7 @@ export function DataTable<T>({ data, columns, actions, className }: DataTablePro
                 </th>
               ))}
               {actions && (
-                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wide text-gray-500">
+                <th className="px-4 py-3 text-right text-xs font-medium uppercase tracking-wide text-muted-foreground">
                   ACTIONS
                 </th>
               )}
@@ -45,7 +45,7 @@ export function DataTable<T>({ data, columns, actions, className }: DataTablePro
             {data.map((item, index) => (
               <tr
                 key={index}
-                className="border-b bg-white transition-colors hover:bg-gray-50/50"
+                className="border-b border-border bg-background transition-colors hover:bg-muted/50"
               >
                 {columns.map((column) => (
                   <td
