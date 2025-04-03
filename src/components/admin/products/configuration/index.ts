@@ -1,0 +1,10 @@
+export { default as GeneralSettings } from './GeneralSettings';
+export { default as SourcesConfiguration } from './SourcesConfiguration';
+export { default as PromptConfiguration } from './PromptConfiguration';
+export { default as ChatAppearance } from './ChatAppearance';
+export { default as UsageAnalytics } from './UsageAnalytics';
+export { default as UserManagement } from './UserManagement';
+export { default as FilesTab } from './FilesTab';
+export { default as WebsitesTab } from './WebsitesTab';
+export { default as QAPairsTab } from './QAPairsTab';
+export { default as FileUploader } from './FileUploader';
