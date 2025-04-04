@@ -525,4 +525,5 @@ function ProductConfiguration({ productId }: ProductConfigurationProps) {
   );
 }
 
+export { ProductConfiguration };
 export default ProductConfiguration;
