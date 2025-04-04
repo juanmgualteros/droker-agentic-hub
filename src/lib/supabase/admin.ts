@@ -1,22 +1,38 @@
 import { createClient } from '@supabase/supabase-js';
 
 // Check if the required environment variables are set
-const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL;
-const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY;
+const supabaseUrl = process.env.NEXT_PUBLIC_SUPABASE_URL || '';
+const supabaseServiceKey = process.env.SUPABASE_SERVICE_ROLE_KEY || '';
 
-if (!supabaseUrl) {
-  console.error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL');
+// Only log errors in development to avoid cluttering production logs
+if (process.env.NODE_ENV !== 'production') {
+  if (!supabaseUrl) {
+    console.error('Missing environment variable: NEXT_PUBLIC_SUPABASE_URL');
+  }
+
+  if (!supabaseServiceKey) {
+    console.error('Missing environment variable: SUPABASE_SERVICE_ROLE_KEY');
+  }
 }
 
-if (!supabaseServiceKey) {
-  console.error('Missing environment variable: SUPABASE_SERVICE_ROLE_KEY');
-}
+// Function to create a Supabase client with safeguards
+const createSafeClient = () => {
+  // Ensure we have minimum required values to create a client
+  if (!supabaseUrl || !supabaseServiceKey) {
+    if (process.env.NODE_ENV === 'production') {
+      // In production, create a dummy client that will gracefully fail
+      // This prevents build failures but will show proper errors in API routes
+      return createClient('https://placeholder-url.supabase.co', 'placeholder-key', {
+        auth: {
+          autoRefreshToken: false,
+          persistSession: false
+        }
+      });
+    }
+  }
 
-// Create a Supabase client with the service role key for admin operations
-export const supabaseAdmin = createClient(
-  supabaseUrl || '',
-  supabaseServiceKey || '',
-  {
+  // Create a real client if we have the required values
+  return createClient(supabaseUrl, supabaseServiceKey, {
     auth: {
       autoRefreshToken: false,
       persistSession: false
@@ -30,8 +46,11 @@ export const supabaseAdmin = createClient(
         'Authorization': `Bearer ${supabaseServiceKey}`
       }
     }
-  }
-);
+  });
+};
+
+// Create a Supabase client with the service role key for admin operations
+export const supabaseAdmin = createSafeClient();
 
 /**
  * Helper function to safely execute Supabase queries with proper error handling

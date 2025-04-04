@@ -3,6 +3,20 @@ import { supabaseAdmin } from '@/lib/supabase/admin';
 
 export async function GET() {
   try {
+    // Check if environment variables are set
+    const missingVars = [];
+    if (!process.env.NEXT_PUBLIC_SUPABASE_URL) missingVars.push('NEXT_PUBLIC_SUPABASE_URL');
+    if (!process.env.SUPABASE_SERVICE_ROLE_KEY) missingVars.push('SUPABASE_SERVICE_ROLE_KEY');
+    
+    if (missingVars.length > 0) {
+      return NextResponse.json({
+        error: 'Missing environment variables',
+        missing: missingVars,
+        environment: process.env.NODE_ENV,
+        hint: 'Please add these variables to your Vercel project settings'
+      }, { status: 500 });
+    }
+    
     // Test connection
     const { data, error } = await supabaseAdmin
       .from('ApiKey')
@@ -14,7 +28,10 @@ export async function GET() {
         { 
           error: error.message,
           hint: 'Check Supabase connection settings and RLS policies',
-          details: error 
+          details: error,
+          environment: process.env.NODE_ENV,
+          serviceKeyPresent: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
+          supabaseUrlPresent: !!process.env.NEXT_PUBLIC_SUPABASE_URL
         }, 
         { status: 500 }
       );
@@ -25,10 +42,15 @@ export async function GET() {
       success: true, 
       count: data.length,
       environment: process.env.NODE_ENV,
-      supabaseUrl: process.env.NEXT_PUBLIC_SUPABASE_URL,
+      supabaseUrlPresent: !!process.env.NEXT_PUBLIC_SUPABASE_URL,
+      serviceKeyPresent: !!process.env.SUPABASE_SERVICE_ROLE_KEY,
       // Don't include actual data for security
     });
   } catch (err: any) {
-    return NextResponse.json({ error: err.message }, { status: 500 });
+    return NextResponse.json({ 
+      error: err.message,
+      stack: process.env.NODE_ENV === 'development' ? err.stack : undefined,
+      environment: process.env.NODE_ENV
+    }, { status: 500 });
   }
 }
