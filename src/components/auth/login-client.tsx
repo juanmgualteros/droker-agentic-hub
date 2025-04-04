@@ -6,6 +6,7 @@ import Link from 'next/link';
 import { LanguageSelector } from '@/components/language-selector';
 import { Button } from '@/components/ui/button';
 import { Copy, Check } from 'lucide-react';
+import { setCookie } from '@/lib/cookies';
 
 export default function LoginClient() {
   const [email, setEmail] = useState('');
@@ -25,22 +26,22 @@ export default function LoginClient() {
       // Here you would typically make an API call to authenticate
       // For now, we'll use a simple mock authentication
       if (email === 'admin@example.com' && password === 'password') {
-        // Set cookies that work in development (no Secure flag)
-        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
-        document.cookie = "userRole=admin; path=/; max-age=86400; SameSite=Lax";
+        // Set cookies that work in both client and server components
+        setCookie('isAuthenticated', 'true');
+        setCookie('userRole', 'admin');
         
-        // Also set localStorage for client-side checks
+        // Also set localStorage for client-side checks (as fallback)
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userRole', 'admin');
         
         // Navigate to admin dashboard with locale
         router.push(`/${locale}/admin`);
       } else if (email === 'superadmin@example.com' && password === 'password') {
-        // Set cookies that work in development (no Secure flag)
-        document.cookie = "isAuthenticated=true; path=/; max-age=86400; SameSite=Lax";
-        document.cookie = "userRole=superadmin; path=/; max-age=86400; SameSite=Lax";
+        // Set cookies that work in both client and server components
+        setCookie('isAuthenticated', 'true');
+        setCookie('userRole', 'superadmin');
         
-        // Also set localStorage for client-side checks
+        // Also set localStorage for client-side checks (as fallback)
         localStorage.setItem('isAuthenticated', 'true');
         localStorage.setItem('userRole', 'superadmin');
         

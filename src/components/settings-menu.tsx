@@ -26,8 +26,11 @@ export function SettingsMenu({ locale }: SettingsMenuProps) {
   const handleLogout = () => {
     localStorage.removeItem("isAuthenticated");
     localStorage.removeItem("userRole");
-    document.cookie = "isAuthenticated=false; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
-    document.cookie = "userRole=; path=/; expires=Thu, 01 Jan 1970 00:00:00 GMT";
+    // Use the new cookie utility to ensure consistent cookie behavior
+    import("@/lib/cookies").then(({ removeCookie }) => {
+      removeCookie("isAuthenticated");
+      removeCookie("userRole");
+    });
     router.replace(`/${locale}/login`);
   };
 
