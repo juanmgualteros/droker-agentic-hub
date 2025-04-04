@@ -3,6 +3,8 @@ import OrganizationsClient from '@/components/superadmin/organizations/Organizat
 import { ApiKeyType, SubStatus } from '@prisma/client';
 import { cookies } from 'next/headers';
 import { redirect } from 'next/navigation';
+// Using next/dynamic for client-side only component
+import { Suspense } from 'react';
 
 async function getOrganizations() {
   try {
@@ -62,7 +64,15 @@ export default async function OrganizationsPage({
 
   try {
     const organizations = await getOrganizations();
-    return <OrganizationsClient organizations={organizations} />;
+    
+    return (
+      <>
+        <OrganizationsClient organizations={organizations} />
+        
+        {/* Client-side only diagnostic component will be included via OrganizationsClient */}
+        <div id="diagnostics-container" className="mt-8"></div>
+      </>
+    );
   } catch (error) {
     console.error('Error in OrganizationsPage:', error);
     redirect(`/${params.locale}/error`);

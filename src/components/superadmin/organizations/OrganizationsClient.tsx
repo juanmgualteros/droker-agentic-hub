@@ -1,9 +1,10 @@
 'use client';
 
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import { DataTable } from '@/components/common/DataTable';
 import Link from 'next/link';
+import dynamic from 'next/dynamic';
 
 interface ApiKey {
   id: string;
@@ -152,6 +153,12 @@ export default function OrganizationsClient({ organizations: initialOrganization
     }
   }
 
+  // Load diagnostics component client-side only
+  const OrganizationDiagnostics = dynamic(
+    () => import('@/components/superadmin/organization-diagnostics'),
+    { ssr: false }
+  );
+
   return (
     <div className="space-y-6">
       <div className="flex items-center justify-between">
@@ -189,6 +196,9 @@ export default function OrganizationsClient({ organizations: initialOrganization
           />
         )}
       </div>
+
+      {/* Diagnostic component to help debug production issues */}
+      <OrganizationDiagnostics />
     </div>
   );
 } 
