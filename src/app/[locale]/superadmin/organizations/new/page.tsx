@@ -87,7 +87,6 @@ export default function NewOrganizationPage() {
     { id: 'products' as const, label: 'Products', icon: Package },
     { id: 'apiKeys' as const, label: 'API Keys', icon: Key },
     { id: 'users' as const, label: 'Users', icon: Users },
-    { id: 'settings' as const, label: 'Settings', icon: Settings },
   ];
 
   const renderContent = () => {
