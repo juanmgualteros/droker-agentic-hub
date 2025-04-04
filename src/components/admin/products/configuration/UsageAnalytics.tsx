@@ -34,7 +34,7 @@ const userSources = [
   { source: "Other", percentage: 10 }
 ];
 
-export const UsageAnalytics: React.FC<UsageAnalyticsProps> = ({
+const UsageAnalytics: React.FC<UsageAnalyticsProps> = ({
   tooltips,
   handleExportReport
 }) => {

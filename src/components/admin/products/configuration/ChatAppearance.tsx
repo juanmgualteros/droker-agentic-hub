@@ -22,7 +22,7 @@ interface ChatAppearanceProps {
   tooltips: Record<string, string>;
 }
 
-export const ChatAppearance: React.FC<ChatAppearanceProps> = ({
+const ChatAppearance: React.FC<ChatAppearanceProps> = ({
   primaryColor,
   setPrimaryColor,
   secondaryColor,

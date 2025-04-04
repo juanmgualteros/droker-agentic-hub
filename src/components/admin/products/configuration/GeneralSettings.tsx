@@ -19,7 +19,7 @@ interface GeneralSettingsProps {
   tooltips: Record<string, string>;
 }
 
-export const GeneralSettings: React.FC<GeneralSettingsProps> = ({
+const GeneralSettings: React.FC<GeneralSettingsProps> = ({
   name,
   setName,
   description,

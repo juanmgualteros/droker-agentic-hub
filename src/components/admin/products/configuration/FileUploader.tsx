@@ -11,7 +11,7 @@ interface FileUploaderProps {
   multiple?: boolean;
 }
 
-export const FileUploader: React.FC<FileUploaderProps> = ({
+const FileUploader: React.FC<FileUploaderProps> = ({
   files,
   onAddFiles,
   onRemoveFile,

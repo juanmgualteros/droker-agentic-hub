@@ -1,5 +1,5 @@
 import React from 'react';
-import { FileUploader } from './FileUploader';
+import FileUploader from './FileUploader';
 import { ConfigSection } from "../ui-components";
 
 interface FilesTabProps {
@@ -9,7 +9,7 @@ interface FilesTabProps {
   tooltips: Record<string, string>;
 }
 
-export const FilesTab: React.FC<FilesTabProps> = ({
+const FilesTab: React.FC<FilesTabProps> = ({
   files,
   handleFileChange,
   handleRemoveFile,

@@ -11,7 +11,7 @@ interface WebsitesTabProps {
   tooltips: Record<string, string>;
 }
 
-export const WebsitesTab: React.FC<WebsitesTabProps> = ({
+const WebsitesTab: React.FC<WebsitesTabProps> = ({
   websites,
   addWebsite,
   removeWebsite,

@@ -1,4 +1,4 @@
-import { ProductConfiguration } from "@/components/admin/products/product-configuration";
+import ProductConfiguration from "@/components/admin/products/product-configuration";
 
 interface ProductConfigurePageProps {
   params: {

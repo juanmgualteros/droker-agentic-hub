@@ -14,7 +14,7 @@ interface SourcesConfigurationProps {
   tooltips: Record<string, string>;
 }
 
-export const SourcesConfiguration: React.FC<SourcesConfigurationProps> = ({
+const SourcesConfiguration: React.FC<SourcesConfigurationProps> = ({
   sources,
   addSource,
   removeSource,

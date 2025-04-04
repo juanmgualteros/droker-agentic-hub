@@ -9,7 +9,7 @@ interface UserManagementProps {
   handleBulkImport: (e: React.ChangeEvent<HTMLInputElement>) => void;
 }
 
-export const UserManagement: React.FC<UserManagementProps> = ({
+const UserManagement: React.FC<UserManagementProps> = ({
   tooltips,
   handleBulkImport
 }) => {

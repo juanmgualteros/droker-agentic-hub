@@ -21,7 +21,7 @@ interface PromptConfigurationProps {
   product?: { chatSettings?: { temperature?: number; maxTokens?: number } };
 }
 
-export const PromptConfiguration: React.FC<PromptConfigurationProps> = ({
+const PromptConfiguration: React.FC<PromptConfigurationProps> = ({
   systemPrompt,
   setSystemPrompt,
   userPrompt,

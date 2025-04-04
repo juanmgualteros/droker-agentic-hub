@@ -24,7 +24,7 @@ interface QAPairsTabProps {
 /**
  * QA Pairs Tab for managing knowledge base question and answer pairs
  */
-export const QAPairsTab: React.FC<QAPairsTabProps> = ({
+const QAPairsTab: React.FC<QAPairsTabProps> = ({
   qaPairs,
   newQA,
   onQuestionChange,
