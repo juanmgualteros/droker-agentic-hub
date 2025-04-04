@@ -6,7 +6,7 @@ const nextConfig = {
     domains: ['qvasgxzdjmldhbinbrgw.supabase.co'],
   },
   env: {
-    _next_intl_trailing_slash: "true"
+    _next_intl_trailing_slash: "never"
   },
   async headers() {
     return [
