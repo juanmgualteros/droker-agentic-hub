@@ -121,31 +121,31 @@ export default function RequestProductPage() {
   return (
     <div className="container mx-auto px-4 py-8 max-w-7xl">
       <div className="mb-8">
-        <h1 className="text-2xl font-semibold text-gray-900">Request New Product</h1>
-        <p className="mt-1 text-sm text-gray-500">
+        <h1 className="text-2xl font-semibold text-foreground">Request New Product</h1>
+        <p className="mt-1 text-sm text-muted-foreground">
           Select a product to request for your organization
         </p>
       </div>
 
       {/* Valueflows Section */}
       <div className="mb-12">
-        <h2 className="text-xl font-medium text-gray-900 mb-6">Valueflows</h2>
+        <h2 className="text-xl font-medium text-foreground mb-6">Valueflows</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {productOptions
             .filter(product => product.type === "VALUEFLOWS")
             .map(product => (
-              <Card key={product.id} className="flex flex-col h-full bg-white overflow-hidden">
+              <Card key={product.id} className="flex flex-col h-full bg-background overflow-hidden">
                 <div className="p-6 flex flex-col h-full">
                   <div className="mb-4">
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">{product.name}</h3>
+                    <h3 className="text-lg font-medium text-foreground mb-2">{product.name}</h3>
                     <Badge variant="secondary" className="mb-3">
                       {product.category}
                     </Badge>
-                    <p className="text-sm text-gray-500">{product.description}</p>
+                    <p className="text-sm text-muted-foreground">{product.description}</p>
                   </div>
                   <div className="flex-grow">
-                    <p className="text-sm font-medium text-gray-900 mb-2">Key Benefits:</p>
-                    <ul className="text-sm text-gray-500 space-y-2 list-disc pl-4 mb-6">
+                    <p className="text-sm font-medium text-foreground mb-2">Key Benefits:</p>
+                    <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-4 mb-6">
                       {product.benefits.map((benefit, index) => (
                         <li key={index}>{benefit}</li>
                       ))}
@@ -153,7 +153,8 @@ export default function RequestProductPage() {
                   </div>
                   <Button
                     onClick={() => handleRequestProduct(product)}
-                    className="w-full bg-black text-white hover:bg-gray-800 mt-auto"
+                    variant="default"
+                    className="w-full mt-auto"
                   >
                     Request Access
                   </Button>
@@ -165,23 +166,23 @@ export default function RequestProductPage() {
 
       {/* Team of Experts Section */}
       <div>
-        <h2 className="text-xl font-medium text-gray-900 mb-6">Team of Experts</h2>
+        <h2 className="text-xl font-medium text-foreground mb-6">Team of Experts</h2>
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
           {productOptions
             .filter(product => product.type === "TEAM_OF_EXPERTS")
             .map(product => (
-              <Card key={product.id} className="flex flex-col h-full bg-white overflow-hidden">
+              <Card key={product.id} className="flex flex-col h-full bg-background overflow-hidden">
                 <div className="p-6 flex flex-col h-full">
                   <div className="mb-4">
-                    <h3 className="text-lg font-medium text-gray-900 mb-2">{product.name}</h3>
+                    <h3 className="text-lg font-medium text-foreground mb-2">{product.name}</h3>
                     <Badge variant="secondary" className="mb-3">
                       {product.category}
                     </Badge>
-                    <p className="text-sm text-gray-500">{product.description}</p>
+                    <p className="text-sm text-muted-foreground">{product.description}</p>
                   </div>
                   <div className="flex-grow">
-                    <p className="text-sm font-medium text-gray-900 mb-2">Key Benefits:</p>
-                    <ul className="text-sm text-gray-500 space-y-2 list-disc pl-4 mb-6">
+                    <p className="text-sm font-medium text-foreground mb-2">Key Benefits:</p>
+                    <ul className="text-sm text-muted-foreground space-y-2 list-disc pl-4 mb-6">
                       {product.benefits.map((benefit, index) => (
                         <li key={index}>{benefit}</li>
                       ))}
@@ -189,7 +190,8 @@ export default function RequestProductPage() {
                   </div>
                   <Button
                     onClick={() => handleRequestProduct(product)}
-                    className="w-full bg-black text-white hover:bg-gray-800 mt-auto"
+                    variant="default"
+                    className="w-full mt-auto"
                   >
                     Request Access
                   </Button>
